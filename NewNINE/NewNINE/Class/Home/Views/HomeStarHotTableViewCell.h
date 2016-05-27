@@ -9,7 +9,13 @@
 
 #import <UIKit/UIKit.h>
 
+
+
 @interface HomeStarHotTableViewCell : UITableViewCell
+
+@property (nonatomic, strong) NSArray *starHotArray;
+
+@property (nonatomic, strong) NSArray *starIdArray;
 
 /**
  *  快速  初始化 一个自定义cell

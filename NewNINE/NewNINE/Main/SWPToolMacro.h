@@ -125,7 +125,7 @@ alpha:1.0]
 
 
 // 导航控制器 文字大小
-#define NAVIGATION_TITLE_FONT_SIZE 16
+#define NAVIGATION_TITLE_FONT_SIZE 18
 
 /** 极光推送 设置取消别名 */
 #define JPUSH_ALIAS @"NO_NAME"

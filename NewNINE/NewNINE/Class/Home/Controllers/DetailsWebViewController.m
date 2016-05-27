@@ -26,6 +26,7 @@
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
 
+@property (nonatomic, strong) UIWebView *webView;
 
 #pragma mark - Data Propertys
 // ---------------------- 数据模型 ----------------------
@@ -43,7 +44,6 @@
     self.fd_interactivePopDisabled = YES;
     // Do any additional setup after loading the view.
     [self initUI];
-    self.view.backgroundColor = [UIColor whiteColor];
 }
 
 /**
@@ -126,7 +126,7 @@
  *  添加控件
  */
 - (void) addUI {
-    
+    [self.view addSubview:self.webView];
 }
 
 
@@ -134,16 +134,23 @@
  *  设置控件的自动布局
  */
 - (void) settingUIAutoLayout {
-    
+    [self.webView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
 }
 
 
 #pragma mark   -  所有控件懒加载
-
+- (UIWebView *) webView {
+    if (!_webView) {
+        _webView = [[UIWebView alloc] initForAutoLayout];
+        _webView.backgroundColor  = [UIColor whiteColor];
+    }
+    return _webView;
+}
 
 
 - (void) setStrUrl:(NSString *)strUrl {
     _strUrl = strUrl;
+    [MainCommonMethod webViewUpLoadUrl:self.webView withString:_strUrl];
 }
 /*
 #pragma mark - Navigation

@@ -25,8 +25,18 @@
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
+//    [self settingBaseViewControllerProperty];
     // Do any additional setup after loading the view.
 //    [self.rdv_tabBarController setTabBarHidden:YES];  //隐藏tabBar
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    // Do any additional setup after loading the view.
+    [SVProgressHUD dismiss];
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+//    self.view.backgroundColor = [UIColor whiteColor];
+
 }
 
 /**
@@ -49,7 +59,6 @@
     
     // 导航控制器的颜色
     [self.navigationController.navigationBar swp_SetBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"NavBar64"]]];
-    
 }
 
 
@@ -63,6 +72,7 @@
  *  @param fontSize     文字大小
  */
 - (void)settingNavigationBarTitle:(NSString *)title textColor:(UIColor *)textColot titleFontSize:(CGFloat)fontSize {
+
     //自定义标题
     UILabel* titleLabel           = [[UILabel alloc] initWithFrame:CGRectMake(0, 0 , 100, 44)];
     titleLabel.font               = [UIFont systemFontOfSize:fontSize];

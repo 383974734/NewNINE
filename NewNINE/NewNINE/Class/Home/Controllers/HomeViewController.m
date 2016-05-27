@@ -22,13 +22,14 @@
 // ---------------------- view       ----------------------
 
 // ---------------------- model      ----------------------
+#import "HomeBannerModels.h"
 // ---------------------- model      ----------------------
 
 static NSString *cellBannerID   = @"cellBannerID";
 static NSString *cellStarHotID  = @"cellStarHotID";
 static NSString *cellID         = @"homeTableViewCellID";
 
-@interface HomeViewController ()<UITableViewDelegate, UITableViewDataSource, HomeBannerTableViewCellDelegate>
+@interface HomeViewController ()<UITableViewDelegate, UITableViewDataSource, HomeBannerTableViewCellDelegate, HomeTableViewCellDelegate>
 
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
@@ -41,9 +42,14 @@ static NSString *cellID         = @"homeTableViewCellID";
 // ---------------------- 数据模型 ----------------------
 /** 头部轮播数据*/
 @property (nonatomic, strong) NSArray *bannerArray;
-/** 头部轮播跳转详情数据*/
-@property (nonatomic, strong) NSArray *bannerUrlArray;
+/** 头部轮播图片数据*/
+@property (nonatomic, strong) NSMutableArray *bannerImageArray;
+/** 明星轮播数据*/
+@property (nonatomic, strong) NSMutableArray *starBannerArray;
+/** 明星轮播id数据*/
+@property (nonatomic, strong) NSMutableArray *starBannerIDArray;
 
+@property (nonatomic, strong) NSArray *cellArray;
 
 @end
 
@@ -96,7 +102,6 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-//    self.navigationController.navigationBar.hidden = NO;
 }
 
 /**
@@ -125,6 +130,8 @@ static NSString *cellID         = @"homeTableViewCellID";
 - (void) initData {
     // 头部轮播数据接口
     [self getHomeBannerWithData];
+    [self getHomeStarHotWithData];
+    [self getHomeTableViewCellWithData];
 }
 
 #pragma mark - Setting UI Methods
@@ -170,15 +177,81 @@ static NSString *cellID         = @"homeTableViewCellID";
         [SVProgressHUD dismiss];
         NSLog(@"%@", resultObject);
         if (resultObject != nil) {
-            
-            NSMutableArray *array = [NSMutableArray array];
-            NSMutableArray *arrayUrl = [NSMutableArray array];
+            self.bannerImageArray = [NSMutableArray array];
             for (NSDictionary *dict in resultObject) {
-                [array addObject:[dict objectForKey:@"activityBanner"]];
-                [arrayUrl addObject:[dict objectForKey:@"actUrl"]];
+                
+                NSString *str = [dict objectForKey:@"activityBanner"];
+                [self.bannerImageArray addObject:str];
             }
-            self.bannerArray = array;
-            self.bannerUrlArray = arrayUrl;
+            self.bannerArray = [self homeBannerDispose:resultObject];
+            NSIndexPath *indexPath =[NSIndexPath indexPathForRow:0 inSection:0];
+            
+            [self.homeTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+            
+        }else {
+            NSLog(@"home/getBanners%@没有数据", url);
+        }
+    } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
+        NSLog(@"home/getBanners数据错误%@", error);
+    }];
+}
+
+- (NSMutableArray *) homeBannerDispose:(NSArray *)param {
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSDictionary * dict in param) {
+        HomeBannerModels *model = [HomeBannerModels homeBannerWithDict:dict];
+        [array addObject:model];
+    }
+    return array;
+}
+
+// 明星轮播数据接口
+- (void) getHomeStarHotWithData {
+    NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"home/getSylists"];
+    NSArray *array = @[];
+    [SVProgressHUD showWithStatus:DATA_GET_DATA];
+    [MainRequestTool mainGET:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
+        [SVProgressHUD dismiss];
+        NSLog(@"%@", resultObject);
+        
+        self.starBannerArray   = [NSMutableArray array];
+        self.starBannerIDArray = [NSMutableArray array];
+        
+        if (resultObject != nil) {
+            for (NSDictionary *dict in resultObject) {
+                [self.starBannerArray addObject:[dict objectForKey:@"photoUrl"]];
+                [self.starBannerIDArray addObject:[dict objectForKey:@"id"]];
+            }
+
+            NSIndexPath *indexPath=[NSIndexPath indexPathForRow:0 inSection:1];
+            [self.homeTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+        }else {
+            NSLog(@"%@没有数据", url);
+        }
+    } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
+        NSLog(@"home/getSylists数据错误%@", error);
+    }];
+}
+
+- (NSMutableArray *) homeStarHotDispose:(NSArray *)param {
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSDictionary *dict in param) {
+        HomeBannerModels *model = [HomeBannerModels homeStarBannerWithDict:dict];
+        [array addObject:model];
+    }
+    return array;
+}
+
+- (void) getHomeTableViewCellWithData {
+    NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"home/getOpusInfos"];
+    NSArray *array = @[];
+    [SVProgressHUD showWithStatus:DATA_GET_DATA];
+    [MainRequestTool mainGET:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
+        [SVProgressHUD dismiss];
+        NSLog(@"%@", resultObject);
+        if (resultObject != nil) {
+            
+            self.cellArray = [self homeCellDispose:resultObject];
             [self.homeTableView reloadData];
             
         }else {
@@ -187,6 +260,15 @@ static NSString *cellID         = @"homeTableViewCellID";
     } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
         NSLog(@"%@", error);
     }];
+}
+
+- (NSMutableArray *) homeCellDispose:(NSArray *)param {
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSDictionary *dict in param) {
+        HomeBannerModels *model = [HomeBannerModels homecellWithDict:dict];
+        [array addObject:model];
+    }
+    return array;
 }
 
 #pragma mark UITableView DataSource
@@ -198,7 +280,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  *  @return NSInteger
  */
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 3;
 }
 
 /**
@@ -211,7 +293,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return 6;
+    return section == 2 ? self.cellArray.count : 1;
 }
 
 /**
@@ -223,7 +305,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  *  @return OrderTableViewCell
  */
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.row == 0 ? [self homeBannerTableViewCell:tableView] : (indexPath.row == 1 ? [self homeStarHotTableViewCell:tableView] : [self homeTableViewCell:tableView]);
+    return indexPath.section == 0 ? [self homeBannerTableViewCell:tableView cellForRowAtIndexPath:indexPath] : (indexPath.section == 1 ? [self homeStarHotTableViewCell:tableView cellForRowAtIndexPath:indexPath] : [self homeTableViewCell:tableView cellForRowAtIndexPath:indexPath]);
 }
 
 /**
@@ -233,9 +315,9 @@ static NSString *cellID         = @"homeTableViewCellID";
  *
  *  @return HomeBannerTableViewCell
  */
-- (UITableViewCell *) homeBannerTableViewCell :(UITableView *) tableView{
+- (UITableViewCell *) homeBannerTableViewCell :(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HomeBannerTableViewCell *cell = [HomeBannerTableViewCell homeBannerCellWithTableView:tableView forCellReuseIdentifier:cellBannerID];
-    cell.bannerArray = self.bannerArray;
+    cell.bannerArray = self.bannerImageArray;
     cell.delegate    = self;
     return cell;
 }
@@ -247,8 +329,10 @@ static NSString *cellID         = @"homeTableViewCellID";
  *
  *  @return HomeStarHotTableViewCell
  */
-- (UITableViewCell *) homeStarHotTableViewCell :(UITableView *) tableView {
+- (UITableViewCell *) homeStarHotTableViewCell :(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HomeStarHotTableViewCell *cell = [HomeStarHotTableViewCell homeStarHotCellWithTableView:tableView forCellReuseIdentifier:cellStarHotID];
+    cell.starHotArray = self.starBannerArray;
+    cell.starIdArray  = self.starBannerIDArray;
     return cell;
 }
 
@@ -259,8 +343,11 @@ static NSString *cellID         = @"homeTableViewCellID";
  *
  *  @return HomeTableViewCell
  */
-- (UITableViewCell *) homeTableViewCell :(UITableView *) tableView {
+- (UITableViewCell *) homeTableViewCell :(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HomeTableViewCell *cell = [HomeTableViewCell homeCellWithTableView:tableView forCellReuseIdentifier:cellID];
+    cell.delegate = self;
+    HomeBannerModels *model = self.cellArray[indexPath.row];
+    cell.cellModel = model;
     return cell;
 }
 
@@ -285,20 +372,23 @@ static NSString *cellID         = @"homeTableViewCellID";
  *  @return CGFloat
  */
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.row == 0 ? SCREEN_HEIGHT * 0.29 : (indexPath.row == 1 ? SCREEN_HEIGHT * 0.37 : SCREEN_HEIGHT * 0.54);
+    return indexPath.section == 0 ? SCREEN_HEIGHT * 0.29 : (indexPath.section == 1 ? SCREEN_HEIGHT * 0.37 : SCREEN_HEIGHT * 0.54);
 }
 
 #pragma mark - 头部轮播cell 代理 -- HomeBannerTableViewCellDelegate
 - (void)stPushBannerView:(HomeBannerTableViewCell *)stBannerView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"头部轮播cell代理 ----- %@", self.bannerUrlArray[indexPath.row]);
-    if (self.bannerUrlArray.count> 0) {
-        if (!([self.bannerUrlArray[indexPath.row] length] > 0)) {
-            return;
-        }
+    if (!(self.bannerArray.count > 0)){
+        return;
     }
+    HomeBannerModels *model = self.bannerArray[indexPath.row];
     DetailsWebViewController *webViewController = [[DetailsWebViewController alloc] init];
-    webViewController.strUrl = self.bannerUrlArray[indexPath.row];
+    webViewController.strUrl = model.homeActUrlBanner;
     [self.navigationController pushViewController:webViewController animated:YES];
+}
+
+#pragma mark - 首页cell的预约点击代理  HomeTableViewCellDelegate
+- (void) HomeTableViewCell:(HomeTableViewCell *)HomeTableViewCell buttonIndex:(NSIndexPath *)indexPath {
+    NSLog(@"");
 }
 
 #pragma mark - 下拉刷新 -- 上拉加载

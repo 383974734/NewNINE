@@ -13,6 +13,7 @@
 		193A1E4D1CF6C84B003D7DE8 /* HomeBannerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E4C1CF6C84B003D7DE8 /* HomeBannerTableViewCell.m */; };
 		193A1E501CF6C881003D7DE8 /* HomeStarHotTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E4F1CF6C881003D7DE8 /* HomeStarHotTableViewCell.m */; };
 		193A1E531CF6F58B003D7DE8 /* DetailsWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E521CF6F58B003D7DE8 /* DetailsWebViewController.m */; };
+		1956B31F1CF80C7300489316 /* HomeBannerModels.m in Sources */ = {isa = PBXBuildFile; fileRef = 1956B31E1CF80C7300489316 /* HomeBannerModels.m */; };
 		197CE9AD1CF6981000085C7D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 197CE9AC1CF6981000085C7D /* main.m */; };
 		197CE9B01CF6981000085C7D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 197CE9AF1CF6981000085C7D /* AppDelegate.m */; };
 		197CE9B21CF6981000085C7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 197CE9B11CF6981000085C7D /* Assets.xcassets */; };
@@ -70,6 +71,8 @@
 		193A1E4F1CF6C881003D7DE8 /* HomeStarHotTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeStarHotTableViewCell.m; sourceTree = "<group>"; };
 		193A1E511CF6F58B003D7DE8 /* DetailsWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsWebViewController.h; sourceTree = "<group>"; };
 		193A1E521CF6F58B003D7DE8 /* DetailsWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsWebViewController.m; sourceTree = "<group>"; };
+		1956B31D1CF80C7300489316 /* HomeBannerModels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeBannerModels.h; sourceTree = "<group>"; };
+		1956B31E1CF80C7300489316 /* HomeBannerModels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeBannerModels.m; sourceTree = "<group>"; };
 		197CE9A81CF6981000085C7D /* NewNINE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewNINE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		197CE9AC1CF6981000085C7D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		197CE9AE1CF6981000085C7D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -390,6 +393,8 @@
 		197CEA171CF69B3700085C7D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1956B31D1CF80C7300489316 /* HomeBannerModels.h */,
+				1956B31E1CF80C7300489316 /* HomeBannerModels.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -677,6 +682,7 @@
 				197CEA251CF69B3700085C7D /* DesignerViewController.m in Sources */,
 				197CEA271CF69B3700085C7D /* HomeViewController.m in Sources */,
 				193A1E3D1CF6BDA3003D7DE8 /* STBannerView.m in Sources */,
+				1956B31F1CF80C7300489316 /* HomeBannerModels.m in Sources */,
 				197CEA281CF69B3700085C7D /* MakeAppointmentViewController.m in Sources */,
 				197CEA031CF69B3200085C7D /* MainNavigationController.m in Sources */,
 				197CE9FC1CF69B3200085C7D /* JYJSON.m in Sources */,

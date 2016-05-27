@@ -9,8 +9,23 @@
 
 #import <UIKit/UIKit.h>
 
+@class HomeBannerModels;
+@class HomeTableViewCell;
+
+@protocol HomeTableViewCellDelegate <NSObject>
+
+@optional
+-(void) HomeTableViewCell:(HomeTableViewCell *)HomeTableViewCell buttonIndex:(NSIndexPath *)indexPath;
+
+@end
+
 @interface HomeTableViewCell : UITableViewCell
 
+@property (nonatomic, strong) NSIndexPath *indexPath;
+
+@property (nonatomic, strong) HomeBannerModels *cellModel;
+
+@property (nonatomic, assign) id<HomeTableViewCellDelegate> delegate;
 
 /**
  *  快速  初始化 一个自定义cell
