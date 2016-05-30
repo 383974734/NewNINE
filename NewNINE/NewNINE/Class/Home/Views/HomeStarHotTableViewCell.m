@@ -61,6 +61,7 @@
 + (instancetype) homeStarHotCellWithTableView:(UITableView *)tableView forCellReuseIdentifier:(NSString *)cellID {
     HomeStarHotTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     cell.selectionStyle     = UITableViewCellEditingStyleNone;
+    cell.backgroundColor    = SWPColor(248, 248, 248, 1);
     return cell;
 }
 
@@ -103,9 +104,9 @@
     [self.starView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeBottom];
     [self.starView autoSetDimension:ALDimensionHeight toSize:39];
     
-    [self.starScrollerView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(39, 0, 39, 0)];
+//    [self.starScrollerView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(49, 15, 49, 15)];
     
-    [self.hotView  autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeTop];
+    [self.hotView  autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 15, 0) excludingEdge:ALEdgeTop];
     [self.hotView  autoSetDimension:ALDimensionHeight toSize:39];
     
     [self.starImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(12, 20, 12, 0) excludingEdge:ALEdgeRight];
@@ -122,6 +123,7 @@
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
     
 }
 
@@ -181,13 +183,14 @@
 - (UIScrollView *) starScrollerView {
     //http://www.xuanyusong.com/archives/1713
     if (!_starScrollerView) {
-        _starScrollerView = [[UIScrollView alloc] initForAutoLayout];
-        _starScrollerView.delegate          = self;
-        _starScrollerView.backgroundColor   = SWPColor(248, 248, 248, 1);
-        _starScrollerView.bounces           = YES;
-        _starScrollerView.pagingEnabled     = YES;
-        _starScrollerView.contentInset      = UIEdgeInsetsMake(0, 15, 0, 0);
+        _starScrollerView = [[UIScrollView alloc] init];
         _starScrollerView.showsHorizontalScrollIndicator = NO;
+        _starScrollerView.delegate                       = self;
+        _starScrollerView.clipsToBounds                  = NO;
+//        _starScrollerView.frame = CGRectMake(15, 49, SCREEN_WIDTH * 0.84, self.frame.size.height - 98);
+//        _starScrollerView.frame = CGRectMake(40, 49, SCREEN_WIDTH - 80, 170);
+        _starScrollerView.frame = CGRectMake(15, 49, SCREEN_WIDTH - 30, 150);
+        
 
     }
     return _starScrollerView;
@@ -202,21 +205,40 @@
     }
     [array insertObject:@"http:baidu" atIndex:self.starHotArray.count];
     
-    for (int i = 0; (self.starHotArray.count + 1) > i; i++) {
-        int a = [NSString stringWithFormat:@"%lu", (unsigned long)self.starHotArray.count].intValue + 1;
-        
-        self.starScrollerView.contentSize           = CGSizeMake(SCREEN_WIDTH * a + 15, SCREEN_HEIGHT * 0.37 - 100);
-        self.starScrollerImageView                  = [[UIImageView alloc] init];
-        self.starScrollerImageView.layer.borderWidth = 1;
-        self.starScrollerImageView.frame            = CGRectMake((i * (SCREEN_WIDTH - 50)) + 15, 10, SCREEN_WIDTH - 60, SCREEN_HEIGHT * 0.37 - 100);
-//        NSLog(@"%@", self.starHotArray[i]);
+    for (int i = 0; array.count > i; i++) {
 
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH -30) *i, 0, SCREEN_WIDTH -30, 150)];
+        view.backgroundColor = [UIColor whiteColor];
+        [_starScrollerView addSubview:view];
+
+        self.starScrollerImageView                   = [[UIImageView alloc] init];
+        self.starScrollerImageView.frame             = CGRectMake(0, 0, SCREEN_WIDTH - 40, 150);
+        self.starScrollerImageView.layer.borderWidth = 1;
+        [view addSubview:self.starScrollerImageView];
+
+        _starScrollerView.contentSize   = CGSizeMake((SCREEN_WIDTH -30) *starHotArray.count, 150);
+        _starScrollerView.pagingEnabled = YES;
+
+        
+//        UIView *view = [[UIView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH * 0.84) * i, 0, SCREEN_WIDTH * 0.84, self.frame.size.height - 98)];
+//        view.backgroundColor = [UIColor whiteColor];
+//        [_starScrollerView addSubview:view];
+//        
+//        self.starScrollerImageView                   = [[UIImageView alloc] init];
+//        self.starScrollerImageView.frame             = CGRectMake(0, 0, (SCREEN_WIDTH * 0.84 - 10), self.frame.size.height - 98);
+//        self.starScrollerImageView.layer.borderWidth = 1;
+//        [view addSubview:self.starScrollerImageView];
+//        
+//        _starScrollerView.contentSize   = CGSizeMake((SCREEN_WIDTH * 0.84) * starHotArray.count, self.frame.size.height - 98);
+//        _starScrollerView.pagingEnabled = YES;
+        
+        
+        
         if (array.count == i + 1) {
             self.starScrollerImageView.backgroundColor = [UIColor redColor];
         }else {
             [self.starScrollerImageView sd_setImageWithURL:[NSURL URLWithString:array[i]] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
         }
-        [self.starScrollerView addSubview:self.starScrollerImageView];
 
     }
     [self.contentView addSubview:self.starScrollerView];

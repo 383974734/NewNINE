@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19375A801CFC0C8900DF0663 /* HomeDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19375A7F1CFC0C8900DF0663 /* HomeDetailsViewController.m */; };
+		19375A831CFC0CE400DF0663 /* HomeCommonDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19375A821CFC0CE400DF0663 /* HomeCommonDetailsViewController.m */; };
+		19375A871CFC0EE200DF0663 /* DetailsViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19375A861CFC0EE200DF0663 /* DetailsViewControllerCell.m */; };
 		193A1E3D1CF6BDA3003D7DE8 /* STBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E3A1CF6BDA3003D7DE8 /* STBannerView.m */; };
 		193A1E3E1CF6BDA3003D7DE8 /* STBannerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E3C1CF6BDA3003D7DE8 /* STBannerViewCell.m */; };
 		193A1E411CF6C446003D7DE8 /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E401CF6C446003D7DE8 /* HomeTableViewCell.m */; };
@@ -59,6 +62,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		19375A7E1CFC0C8900DF0663 /* HomeDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeDetailsViewController.h; sourceTree = "<group>"; };
+		19375A7F1CFC0C8900DF0663 /* HomeDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeDetailsViewController.m; sourceTree = "<group>"; };
+		19375A811CFC0CE400DF0663 /* HomeCommonDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeCommonDetailsViewController.h; sourceTree = "<group>"; };
+		19375A821CFC0CE400DF0663 /* HomeCommonDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeCommonDetailsViewController.m; sourceTree = "<group>"; };
+		19375A851CFC0EE200DF0663 /* DetailsViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewControllerCell.h; sourceTree = "<group>"; };
+		19375A861CFC0EE200DF0663 /* DetailsViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewControllerCell.m; sourceTree = "<group>"; };
 		193A1E391CF6BDA3003D7DE8 /* STBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STBannerView.h; sourceTree = "<group>"; };
 		193A1E3A1CF6BDA3003D7DE8 /* STBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STBannerView.m; sourceTree = "<group>"; };
 		193A1E3B1CF6BDA3003D7DE8 /* STBannerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STBannerViewCell.h; sourceTree = "<group>"; };
@@ -156,6 +165,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		19375A7D1CFC0C5D00DF0663 /* HomeDetailsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				19375A7E1CFC0C8900DF0663 /* HomeDetailsViewController.h */,
+				19375A7F1CFC0C8900DF0663 /* HomeDetailsViewController.m */,
+				19375A811CFC0CE400DF0663 /* HomeCommonDetailsViewController.h */,
+				19375A821CFC0CE400DF0663 /* HomeCommonDetailsViewController.m */,
+			);
+			path = HomeDetailsViewController;
+			sourceTree = "<group>";
+		};
+		19375A841CFC0EC300DF0663 /* HomeDetailsViewControllerCell */ = {
+			isa = PBXGroup;
+			children = (
+				19375A851CFC0EE200DF0663 /* DetailsViewControllerCell.h */,
+				19375A861CFC0EE200DF0663 /* DetailsViewControllerCell.m */,
+			);
+			path = HomeDetailsViewControllerCell;
+			sourceTree = "<group>";
+		};
 		193A1E381CF6BDA3003D7DE8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -386,6 +415,7 @@
 				197CEA161CF69B3700085C7D /* HomeViewController.m */,
 				193A1E511CF6F58B003D7DE8 /* DetailsWebViewController.h */,
 				193A1E521CF6F58B003D7DE8 /* DetailsWebViewController.m */,
+				19375A7D1CFC0C5D00DF0663 /* HomeDetailsViewController */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -408,6 +438,7 @@
 				193A1E4C1CF6C84B003D7DE8 /* HomeBannerTableViewCell.m */,
 				193A1E4E1CF6C881003D7DE8 /* HomeStarHotTableViewCell.h */,
 				193A1E4F1CF6C881003D7DE8 /* HomeStarHotTableViewCell.m */,
+				19375A841CFC0EC300DF0663 /* HomeDetailsViewControllerCell */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -680,9 +711,11 @@
 				197CE9FF1CF69B3200085C7D /* RequestToolSha256.m in Sources */,
 				197CE9FD1CF69B3200085C7D /* MainRequestTool.m in Sources */,
 				197CEA251CF69B3700085C7D /* DesignerViewController.m in Sources */,
+				19375A871CFC0EE200DF0663 /* DetailsViewControllerCell.m in Sources */,
 				197CEA271CF69B3700085C7D /* HomeViewController.m in Sources */,
 				193A1E3D1CF6BDA3003D7DE8 /* STBannerView.m in Sources */,
 				1956B31F1CF80C7300489316 /* HomeBannerModels.m in Sources */,
+				19375A801CFC0C8900DF0663 /* HomeDetailsViewController.m in Sources */,
 				197CEA281CF69B3700085C7D /* MakeAppointmentViewController.m in Sources */,
 				197CEA031CF69B3200085C7D /* MainNavigationController.m in Sources */,
 				197CE9FC1CF69B3200085C7D /* JYJSON.m in Sources */,
@@ -695,6 +728,7 @@
 				193A1E531CF6F58B003D7DE8 /* DetailsWebViewController.m in Sources */,
 				197CE9B01CF6981000085C7D /* AppDelegate.m in Sources */,
 				197CEA291CF69B3700085C7D /* MyViewController.m in Sources */,
+				19375A831CFC0CE400DF0663 /* HomeCommonDetailsViewController.m in Sources */,
 				197CEA051CF69B3200085C7D /* TabBarViewController.m in Sources */,
 				197CE9AD1CF6981000085C7D /* main.m in Sources */,
 				197CE9FB1CF69B3200085C7D /* JSONOfNetWork.m in Sources */,

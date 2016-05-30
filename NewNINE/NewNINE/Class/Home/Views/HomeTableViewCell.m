@@ -87,7 +87,7 @@
  */
 - (void) layoutSubviews {
     [super layoutSubviews];
-    [self.backgroundImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(15, 15, 0, 15)];
+    [self.backgroundImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 15, 15, 15)];
     
     [self.makeAppointmentImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 0, 0) excludingEdge:ALEdgeTop];
     [self.makeAppointmentImageView autoSetDimension:ALDimensionHeight toSize:57];
@@ -146,6 +146,16 @@
     [self.backgroundImageView sd_setImageWithURL:[NSURL URLWithString:_cellModel.homeHairPhotoUrl] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
     self.contentLable.text = _cellModel.homeInfoDescription;
 
+}
+
+- (void) setBtnHidden:(BOOL)btnHidden {
+    _btnHidden = btnHidden;
+    self.makeAppointmentImageView.hidden = _btnHidden;
+}
+
+- (void) setPhotoUrl:(NSString *)photoUrl {
+    _photoUrl = photoUrl;
+    [self.backgroundImageView sd_setImageWithURL:[NSURL URLWithString:_photoUrl] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
 }
 
 @end

@@ -13,6 +13,7 @@
 
 // ---------------------- controller ----------------------
 #import "DetailsWebViewController.h"    //web-----------> web控制器
+#import "HomeDetailsViewController.h"   //首页-----------> 首页发型详情控制器
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -83,6 +84,7 @@ static NSString *cellID         = @"homeTableViewCellID";
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    
 }
 
 /**
@@ -92,7 +94,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+    [self.rdv_tabBarController setTabBarHidden:NO animated:NO];
 }
 
 /**
@@ -242,6 +244,7 @@ static NSString *cellID         = @"homeTableViewCellID";
     return array;
 }
 
+// 列表数据接口
 - (void) getHomeTableViewCellWithData {
     NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"home/getOpusInfos"];
     NSArray *array = @[];
@@ -360,7 +363,10 @@ static NSString *cellID         = @"homeTableViewCellID";
  *  @param indexPath
  */
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    HomeBannerModels *model = self.cellArray[indexPath.row];
+    HomeDetailsViewController *detailsViewController = [[HomeDetailsViewController alloc] init];
+    detailsViewController.dataModel = model;
+    [self.navigationController pushViewController:detailsViewController animated:YES];
 }
 
 /**
@@ -372,7 +378,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  *  @return CGFloat
  */
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.section == 0 ? SCREEN_HEIGHT * 0.29 : (indexPath.section == 1 ? SCREEN_HEIGHT * 0.37 : SCREEN_HEIGHT * 0.54);
+    return indexPath.section == 0 ? SCREEN_HEIGHT * 0.29 : (indexPath.section == 1 ? SCREEN_HEIGHT * 0.395 : SCREEN_HEIGHT * 0.54);
 }
 
 #pragma mark - 头部轮播cell 代理 -- HomeBannerTableViewCellDelegate

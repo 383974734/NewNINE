@@ -26,31 +26,31 @@
 
 //首页cell
 //------------------------------------------
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeBuyCount;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeCollectCount;
 /** Cell 背景图片*/
 @property (nonatomic, copy) NSString *homeHairPhotoUrl;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeIconPhotoUrl;
-/** 明星轮播图片*/
+/** 发型Id*/
 @property (nonatomic, copy) NSString *homeID;
 /** cell 图片说明*/
 @property (nonatomic, copy) NSString *homeInfoDescription;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeInfoValues;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeIntroduce;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeLevlNames;
-/** 明星轮播图片*/
+/** 1、设计师  2、门店  1跳转原发型详细页面 2跳转新的发型详细页面*/
 @property (nonatomic, copy) NSString *homeLinkType;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeName;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeStarLevel;
-/** 明星轮播图片*/
+/** */
 @property (nonatomic, copy) NSString *homeStylistId;
 
 /**

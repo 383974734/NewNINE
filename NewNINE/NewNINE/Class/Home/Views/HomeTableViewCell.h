@@ -21,11 +21,15 @@
 
 @interface HomeTableViewCell : UITableViewCell
 
+@property (nonatomic, assign, getter=isBtnHidden) BOOL btnHidden;
+
 @property (nonatomic, strong) NSIndexPath *indexPath;
 
 @property (nonatomic, strong) HomeBannerModels *cellModel;
 
 @property (nonatomic, assign) id<HomeTableViewCellDelegate> delegate;
+/** 发型师详情的图片url*/
+@property (nonatomic, copy) NSString *photoUrl;
 
 /**
  *  快速  初始化 一个自定义cell

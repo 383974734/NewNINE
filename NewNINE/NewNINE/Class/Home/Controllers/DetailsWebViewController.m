@@ -41,7 +41,7 @@
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.fd_interactivePopDisabled = YES;
+//    self.fd_interactivePopDisabled = YES;
     // Do any additional setup after loading the view.
     [self initUI];
 }
@@ -73,7 +73,7 @@
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = YES;
-    [self.rdv_tabBarController setTabBarHidden:NO animated:NO];
+    
 }
 
 /**
@@ -83,6 +83,7 @@
  */
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    [self.rdv_tabBarController setTabBarHidden:NO animated:NO];
     
 }
 
@@ -120,6 +121,15 @@
 - (void) settingNav {
     
     [self settingNavigationBarTitle:@"详情" textColor:nil titleFontSize:NAVIGATION_TITLE_FONT_SIZE];
+    self.navigationItem.leftBarButtonItem  = [MainCommonMethod settingNavBarButtonItemWithImage:[UIImage imageNamed:@"nav-返回"] highlightedImage:[UIImage imageNamed:@"nav-返回"] target:self action:@selector(didView:) buttonTag:1 leftButton:YES];
+}
+
+- (void)didView:(UIButton *)btn {
+    if ([self.webView canGoBack]) {
+        [self.webView goBack];
+        return;
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /**
