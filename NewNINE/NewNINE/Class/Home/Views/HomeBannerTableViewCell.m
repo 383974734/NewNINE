@@ -112,7 +112,7 @@
  *  @return NSInteger
  */
 - (NSInteger)stBannerView:(STBannerView *)stBannerView numberOfItemsInSection:(NSInteger)section {
-        NSLog(@"看看有几个小点点 --- %lu", (unsigned long)self.bannerArray.count);
+//        NSLog(@"看看有几个小点点 --- %lu", (unsigned long)self.bannerArray.count);
     return self.bannerArray.count;
 }
 

@@ -409,7 +409,7 @@ static NSString *const stBannerCellID = @"stBannerCellID";
     int page = (scrollView.contentOffset.x + scrollView.frame.size.width * 0.5) / scrollView.frame.size.width;
     //scrollView.contentOffset.x / scrollView.frame.size.width;
     self.stBannerPageControlView.currentPage = page;
-    NSLog(@"page是几%d", page);
+//    NSLog(@"page是几%d", page);
     
     NSString *str = [NSString stringWithFormat:@"%ld", (long)[self.dataSource stBannerView:self numberOfItemsInSection:self.section]];
 

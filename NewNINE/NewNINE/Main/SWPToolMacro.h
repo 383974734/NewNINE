@@ -105,7 +105,7 @@ alpha:1.0]
 #define UMENG_IMAGE_NAME    @"logo"
 
 /** 友盟三方key */
-#define UMENG_APP_KEY       @"56175e2f67e58e330200164c"
+#define UMENG_APP_KEY       @"56af1b8967e58ec528001e19"
 
 
 /** QQ and QQ空间 ID and Key  tencent1104558561 */
@@ -113,14 +113,16 @@ alpha:1.0]
 #define UMENG_QQ_KEY        @"5cL4Fx96VxnIw8Oa"
 
 /** 微信 ID and Key */
-#define UMENG_WX_ID         @"wx058eec63b225be87"
-#define UMENG_WX_KEY        @"d4624c36b6795d1d99dcf0547af5443d"
+#define UMENG_WX_ID         @"wxe94f6ebf0daa4bda"
+#define UMENG_WX_KEY        @"e2f4f10444b6399f18e151737a0b653e"
 
 /** QQ 和 微信的URL 两个用的一个 */
 #define UMENG_TX_URL        @"http://www.umeng.com/social"
 
 /** 新浪微博打开 SSO */
-#define OPEN_SSO_URL        @"http://sns.whalecloud.com/sina2/callback"
+#define UMENG_SSO_ID         @"3272947599"
+#define UMENG_SSO_KEY        @"66bbef3a8d63eb51eca20dcc3f088c61"
+#define OPEN_SSO_URL         @"http://sns.whalecloud.com/sina2/callback"
 //------------------
 
 

@@ -9,6 +9,11 @@
 #import "AppDelegate.h"
 // ---------------------- 框架工具类 ----------------------
 #import "TabBarViewController.h"
+// 友盟
+#import "UMSocial.h"
+#import "UMSocialWechatHandler.h"       // 微信
+#import "UMSocialSinaSSOHandler.h"      // 新浪
+
 // ---------------------- 框架工具类 ----------------------
 
 // ---------------------- controller ----------------------
@@ -31,12 +36,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    
-    SetUserDefault(@"15645102347", userUid);
+    SetUserDefault(@"13811111111", userUid);
     
     self.window.backgroundColor     = [UIColor whiteColor];
     self.window.rootViewController  = [TabBarViewController new];
     [self.window makeKeyAndVisible];
+    
+    //设置友盟
+    [self settingUM];
+    
+    
+    
     return YES;
 }
 
@@ -60,6 +70,26 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - 设置友盟，分享
+/**
+ *  设置友盟分享
+ */
+- (void) settingUM {
+    // 设置友盟社会化组件appkey
+    [UMSocialData setAppKey:UMENG_APP_KEY];
+    
+    // 打开调试log的开关
+    [UMSocialData openLog:YES];
+    
+    [UMSocialConfig setSupportedInterfaceOrientations:UIInterfaceOrientationMaskAll];
+
+    [UMSocialSinaSSOHandler openNewSinaSSOWithAppKey:UMENG_SSO_ID secret:UMENG_SSO_KEY RedirectURL:OPEN_SSO_URL];
+
+    //设置微信AppId、appSecret，分享url
+    [UMSocialWechatHandler setWXAppId:UMENG_WX_ID appSecret:UMENG_WX_KEY url:UMENG_TX_URL];
+    
 }
 
 @end

@@ -83,7 +83,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+//    [self.rdv_tabBarController setTabBarHidden:NO animated:NO];
     
 }
 
@@ -94,7 +94,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.rdv_tabBarController setTabBarHidden:NO animated:NO];
+    [self.rdv_tabBarController setTabBarHidden:NO animated:YES];
 }
 
 /**
@@ -166,7 +166,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  *  设置控件的自动布局
  */
 - (void) settingUIAutoLayout {
-    [self.homeTableView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(-22, 0, 46, 0)];
+    [self.homeTableView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(-22, 0, 0, 0)];
 }
 
 #pragma mark - 接口数据

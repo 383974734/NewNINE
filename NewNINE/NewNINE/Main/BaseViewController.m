@@ -28,6 +28,7 @@
 //    [self settingBaseViewControllerProperty];
     // Do any additional setup after loading the view.
 //    [self.rdv_tabBarController setTabBarHidden:YES];  //隐藏tabBar
+//    self.view.backgroundColor = Color(248, 248, 248, 1);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
