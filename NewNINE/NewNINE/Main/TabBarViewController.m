@@ -24,7 +24,7 @@
 
 // ---------------------- controller ----------------------
 
-@interface TabBarViewController ()
+@interface TabBarViewController ()<RDVTabBarControllerDelegate>
 
 @end
 
@@ -38,6 +38,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self settingViewControllers];
+    self.delegate = self;
 }
 
 /**
@@ -56,7 +57,7 @@
     NSArray *controllerNames = @[
                                  @"HomeViewController",
                                  @"DesignerViewController",
-                                 @"MakeAppointmentViewController",
+                                 @"temp",//MakeAppointmentViewController
                                  @"HairstyleViewController",
                                  @"MyViewController",
                                  ];
@@ -171,15 +172,32 @@
     return UIStatusBarStyleDefault;
 }
 
+/**
+ * Tells the delegate that the user selected an item in the tab bar.
+ */
+- (void)tabBarController:(RDVTabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    [self.navigationController pushViewController:[MakeAppointmentViewController alloc] animated:YES];
 }
-*/
+
+- (void)tabBar:(RDVTabBar *)tabBar didSelectItemAtIndex:(NSInteger)index {
+    NSLog(@"%ld", (long)index);
+    if (index == 2) {
+        
+//       [self.navigationController pushViewController:[MakeAppointmentViewController alloc] animated:YES];
+        self.rdv_tabBarController.selectedIndex = index;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"cancelOrderCallBack" object:nil userInfo:nil];
+    }else {
+        if (index < 0 || index >= [[self viewControllers] count]) {
+            return;
+        }
+        [self setSelectedIndex:index];
+        NSLog(@"%@", [self viewControllers][index]);
+        if ([[self delegate] respondsToSelector:@selector(tabBarController:didSelectViewController:)]) {
+            [[self delegate] tabBarController:self didSelectViewController:[self viewControllers][index]];
+        }
+    }
+}
+
 
 @end

@@ -31,6 +31,7 @@
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _titleLabel.numberOfLines = 0;
 
         [self.contentView addSubview:_titleLabel];
 

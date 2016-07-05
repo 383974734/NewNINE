@@ -14,6 +14,8 @@
 // ---------------------- controller ----------------------
 #import "DetailsWebViewController.h"    //web-----------> web控制器
 #import "HomeDetailsViewController.h"   //首页-----------> 首页发型详情控制器
+
+#import "MakeAppointmentViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -64,8 +66,16 @@ static NSString *cellID         = @"homeTableViewCellID";
     [super viewDidLoad];
     
     // Do any additional setup after loading the view.
-    [self initUI];
     [self initData];
+    [self initUI];
+    
+    
+    
+}
+
+#pragma mark - 通知回调
+-(void)cancelOrderCallBack:(NSNotification*)notify {
+    [self.navigationController pushViewController:[MakeAppointmentViewController alloc] animated:YES];
 }
 
 /**
@@ -83,8 +93,8 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self.rdv_tabBarController setTabBarHidden:NO animated:NO];
-    
+        SetUserDefault(@"0", @"selectedIndex");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelOrderCallBack:) name:@"cancelOrderCallBack" object:nil];
 }
 
 /**
@@ -113,7 +123,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -123,6 +133,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (void) dealloc {
     NSLog(@" selfViewController Destroy ");
+    
 }
 
 #pragma mark - Init Data Method
@@ -152,7 +163,7 @@ static NSString *cellID         = @"homeTableViewCellID";
  *  设置导航控制器
  */
 - (void) settingNav {
-    self.navigationController.navigationBar.hidden = YES;
+//    self.navigationController.navigationBar.hidden = YES;
 }
 
 /**
@@ -322,6 +333,7 @@ static NSString *cellID         = @"homeTableViewCellID";
     HomeBannerTableViewCell *cell = [HomeBannerTableViewCell homeBannerCellWithTableView:tableView forCellReuseIdentifier:cellBannerID];
     cell.bannerArray = self.bannerImageArray;
     cell.delegate    = self;
+    
     return cell;
 }
 
@@ -348,9 +360,10 @@ static NSString *cellID         = @"homeTableViewCellID";
  */
 - (UITableViewCell *) homeTableViewCell :(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HomeTableViewCell *cell = [HomeTableViewCell homeCellWithTableView:tableView forCellReuseIdentifier:cellID];
-    cell.delegate = self;
     HomeBannerModels *model = self.cellArray[indexPath.row];
+    cell.delegate  = self;
     cell.cellModel = model;
+    cell.indexPath = indexPath;
     return cell;
 }
 
@@ -388,13 +401,20 @@ static NSString *cellID         = @"homeTableViewCellID";
     }
     HomeBannerModels *model = self.bannerArray[indexPath.row];
     DetailsWebViewController *webViewController = [[DetailsWebViewController alloc] init];
-    webViewController.strUrl = model.homeActUrlBanner;
-    [self.navigationController pushViewController:webViewController animated:YES];
+    if (model.homeActUrlBanner.length > 0) {
+        webViewController.strUrl = model.homeActUrlBanner;
+        [self.navigationController pushViewController:webViewController animated:YES];
+    }
+    
 }
 
 #pragma mark - 首页cell的预约点击代理  HomeTableViewCellDelegate
 - (void) HomeTableViewCell:(HomeTableViewCell *)HomeTableViewCell buttonIndex:(NSIndexPath *)indexPath {
     NSLog(@"");
+    HomeBannerModels *model = self.cellArray[indexPath.row];
+    MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
+    viewController.stylistinfoId = model.homeStylistId;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 #pragma mark - 下拉刷新 -- 上拉加载

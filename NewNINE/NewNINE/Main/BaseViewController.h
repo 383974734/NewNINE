@@ -55,6 +55,21 @@ static NSString *notHaveDataTitle         = @"没有数据啦";
  */
 - (void) settingCollectionViewRefreshing:(UICollectionView *)collectionView target:(id)target headerAction:(SEL)headerAction footerAction:(SEL)footerAction;
 
+- (void)setNavWithLeftBarButton:(BOOL)leftBarButton title:(NSString *)title;
+
+- (void) messageWithOK:(NSString *)title;
+//NSString转NSDate
+- (NSDate *)dateFromString:(NSString *)string;
+
+/**
+ *  加密
+ *
+ *  @param content 预加密字符串
+ *
+ *  @return 加密后字符串
+ */
+- (NSString*) sha256:(NSString *)content;
+
 /** 获取网路数据返回的参数 */
 typedef void (^getData)(id param);
 

@@ -18,6 +18,7 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
 // ---------------------- 框架工具类 ----------------------
 
 // ---------------------- controller ----------------------
+#import "MakeAppointmentViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -28,6 +29,7 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
 
 // ---------------------- model      ----------------------
 #import "HomeBannerModels.h"
+#import "HairstyleViewControllerModel.h"
 // ---------------------- model      ----------------------
 
 @interface HomeDetailsViewController ()<UITableViewDelegate, UITableViewDataSource, DetailsViewControllerCellDelegate, PublicDesignerTableViewCellDelegate>
@@ -437,11 +439,12 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
  *
  *  @param detailsViewControllerCell DetailsViewControllerCell
  */
-- (void)detailsAppointmentBtnViewControllerCell:(DetailsViewControllerCell *)detailsViewControllerCell {
+- (void)detailsAppointmentBtnViewControllerCell:(DetailsViewControllerCell *)detailsViewControllerCell didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"点击预约按钮触发事件");
+    MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
+    viewController.stylistinfoId = [[self.detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"id"];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
-
-
 
 - (void) didButton:(UIButton *)btn {
     [self.navigationController popViewControllerAnimated:YES];
@@ -495,6 +498,12 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
 - (void) setDataModel:(HomeBannerModels *)dataModel {
     _dataModel = dataModel;
     [self getDetailsWithData:_dataModel.homeID];
+//    SetUserDefault(_dataModel.homeStylistId, @"StylistId");//预约id
+}
+
+- (void) setHairstyleModel:(HairstyleViewControllerModel *)hairstyleModel {
+    _hairstyleModel = hairstyleModel;
+    [self getDetailsWithData:_hairstyleModel.hairstyleID];
 }
 
 /*

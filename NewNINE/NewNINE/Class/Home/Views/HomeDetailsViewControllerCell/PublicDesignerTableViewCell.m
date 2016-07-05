@@ -26,6 +26,19 @@ static NSString *cellID = @"PublicDesignerCollectionViewCell";
 /** 公共设计师展示列表*/
 @property (nonatomic, strong) UICollectionView *collectionViewPD;
 
+/** 推荐设计师\nSTYLIST  线*/
+@property (nonatomic, strong) UILabel *xxLable;
+/** 推荐设计师\nSTYLIST  文字*/
+@property (nonatomic, strong) UILabel *nameLable;
+
+
+/** 查看更多\nVIEW MORE  线*/
+@property (nonatomic, strong) UILabel  *xxxLable;
+/** 查看更多\nVIEW MORE  文字*/
+@property (nonatomic, strong) UILabel  *xxxnameLable;
+/** 查看更多\nVIEW MORE  按钮*/
+@property (nonatomic, strong) UIButton *xxxButton;
+
 
 @end
 
@@ -80,6 +93,13 @@ static NSString *cellID = @"PublicDesignerCollectionViewCell";
     [self.contentView addSubview:self.imageViewHead];
     [self.contentView addSubview:self.imageViewFooter];
     [self.contentView addSubview:self.collectionViewPD];
+    
+    [self.imageViewHead addSubview:self.xxLable];
+    [self.imageViewHead addSubview:self.nameLable];
+    
+    [self.imageViewFooter addSubview:self.xxxLable];
+    [self.imageViewFooter addSubview:self.xxxnameLable];
+    [self.imageViewFooter addSubview:self.xxxButton];
 }
 
 /**
@@ -90,8 +110,20 @@ static NSString *cellID = @"PublicDesignerCollectionViewCell";
     [self.imageViewHead autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeBottom];
     [self.imageViewHead autoSetDimension:ALDimensionHeight toSize:35];
     
-    [self.imageViewFooter autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 35, 0) excludingEdge:ALEdgeTop];
-    [self.imageViewFooter autoSetDimension:ALDimensionHeight toSize:28];
+    [self.imageViewFooter autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 20, 0) excludingEdge:ALEdgeTop];
+    [self.imageViewFooter autoSetDimension:ALDimensionHeight toSize:35];
+    
+    [self.xxLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(14, 15, 0, 15) excludingEdge:ALEdgeBottom];
+    [self.xxLable autoSetDimension:ALDimensionHeight toSize:1];
+    
+    [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, SCREEN_WIDTH / 2 - 80, 0, SCREEN_WIDTH / 2 - 80)];
+    
+    [self.xxxLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(14, 45, 0, 45) excludingEdge:ALEdgeBottom];
+    [self.xxxLable autoSetDimension:ALDimensionHeight toSize:1];
+    
+    [self.xxxnameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, SCREEN_WIDTH / 2 - 80, 0, SCREEN_WIDTH / 2 - 80)];
+    
+    [self.xxxButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, SCREEN_WIDTH / 2 - 50, 0, SCREEN_WIDTH / 2 - 50)];
 }
 
 #pragma mark - UICollectionView Delegate
@@ -133,7 +165,7 @@ static NSString *cellID = @"PublicDesignerCollectionViewCell";
 - (UIImageView *) imageViewHead {
     if (!_imageViewHead) {
         _imageViewHead = [[UIImageView alloc] initForAutoLayout];
-        _imageViewHead.backgroundColor = [UIColor redColor];
+//        _imageViewHead.backgroundColor = [UIColor redColor];
     }
     return _imageViewHead;
 }
@@ -141,9 +173,61 @@ static NSString *cellID = @"PublicDesignerCollectionViewCell";
 - (UIImageView *) imageViewFooter {
     if (!_imageViewFooter) {
         _imageViewFooter = [[UIImageView alloc] initForAutoLayout];
-        _imageViewFooter.backgroundColor = [UIColor orangeColor];
+//        _imageViewFooter.backgroundColor = [UIColor orangeColor];
     }
     return _imageViewFooter;
+}
+
+- (UILabel *) xxLable {
+    if (!_xxLable) {
+        _xxLable = [[UILabel alloc] initForAutoLayout];
+        _xxLable.backgroundColor = Color(154, 154, 154, 1);
+    }
+    return _xxLable;
+}
+
+- (UILabel *) nameLable {
+    if (!_nameLable) {
+        _nameLable = [[UILabel alloc] initForAutoLayout];
+        _nameLable.numberOfLines   = 0;
+        _nameLable.font            = SWP_SYSTEM_FONT_SIZE(13);
+        _nameLable.textAlignment   = NSTextAlignmentCenter;
+        _nameLable.text            = @"推荐设计师\nSTYLIST";
+        _nameLable.backgroundColor = Color(248, 248, 248, 1);
+        _nameLable.textColor       = Color(154, 154, 154, 1);
+    }
+    return _nameLable;
+}
+
+- (UILabel *) xxxLable {
+    if (!_xxxLable) {
+        _xxxLable = [[UILabel alloc] initForAutoLayout];
+        _xxxLable.backgroundColor = Color(154, 154, 154, 1);
+    }
+    return _xxxLable;
+}
+
+- (UILabel *) xxxnameLable {
+    if (!_xxxnameLable) {
+        _xxxnameLable = [[UILabel alloc] initForAutoLayout];
+        _xxxnameLable.numberOfLines     = 0;
+        _xxxnameLable.font              = SWP_SYSTEM_FONT_SIZE(12);
+        _xxxnameLable.textAlignment     = NSTextAlignmentCenter;
+        _xxxnameLable.text              = @"查看更多\nVIEW MORE";
+        _xxxnameLable.backgroundColor   = Color(248, 248, 248, 1);
+        _xxxnameLable.textColor         = Color(154, 154, 154, 1);
+    }
+    return _xxxnameLable;
+}
+
+- (UIButton *) xxxButton {
+    if (!_xxxButton) {
+        _xxxButton = [[UIButton alloc] initForAutoLayout];
+        _xxxButton.layer.borderWidth = 0.5;
+        _xxxButton.layer.borderColor = Color(154, 154, 154, 1).CGColor;
+        [_xxxButton.layer setCornerRadius:18.0];//button圆角
+    }
+    return _xxxButton;
 }
 
 - (UICollectionView *) collectionViewPD {

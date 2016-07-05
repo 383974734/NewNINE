@@ -13,4 +13,6 @@
 
 @property (nonatomic, strong) NSString *strUrl;
 
+@property (nonatomic, strong) NSString *titleStr;
+
 @end

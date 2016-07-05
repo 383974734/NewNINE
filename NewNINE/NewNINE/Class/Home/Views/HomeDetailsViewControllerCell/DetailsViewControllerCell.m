@@ -56,6 +56,11 @@
 /** 收藏数字控件*/
 @property (nonatomic, strong) UILabel       *collectionNumberLable;
 
+/** 竖线一*/
+@property (nonatomic, strong) UILabel       *oneLable;
+/** 竖线二*/
+@property (nonatomic, strong) UILabel       *twoLable;
+
 @end
 
 @implementation DetailsViewControllerCell
@@ -129,6 +134,9 @@
     [self.detailsImageVIew addSubview:self.collectionButton];
     [self.detailsImageVIew addSubview:self.collectionNumberImageView];
     [self.detailsImageVIew addSubview:self.collectionNumberLable];
+    
+    [self.introduceView addSubview:self.oneLable];
+    [self.introduceView addSubview:self.twoLable];
 }
 
 - (void)didBtton:(UIButton *)btn {
@@ -141,8 +149,8 @@
             [self.delegate detailsShareViewControllerCell:self];
         }
     }else if (btn.tag == 2) {
-        if ([self.delegate respondsToSelector:@selector(detailsAppointmentBtnViewControllerCell:)]) {
-            [self.delegate detailsAppointmentBtnViewControllerCell:self];
+        if ([self.delegate respondsToSelector:@selector(detailsAppointmentBtnViewControllerCell: didSelectRowAtIndexPath:)]) {
+            [self.delegate detailsAppointmentBtnViewControllerCell:self didSelectRowAtIndexPath:self.indexPath];
         }
     }else if (btn.tag == 3) {
         if ([self.delegate respondsToSelector:@selector(detailsCollectionViewControllerCell:)]) {
@@ -264,7 +272,7 @@
     //http://blog.csdn.net/wuzehai02/article/details/8546288
     if (!_headImageVIew) {
         _headImageVIew = [[UIImageView alloc] initForAutoLayout];
-        _headImageVIew.contentMode          = UIViewContentModeScaleAspectFit;
+//        _headImageVIew.contentMode          = UIViewContentModeScaleAspectFit;
         _headImageVIew.layer.cornerRadius   = 27;
         _headImageVIew.layer.masksToBounds  = YES;
         _headImageVIew.image                = [UIImage imageNamed:@"发型缺省图"];
@@ -277,7 +285,7 @@
         _nameLable = [[UILabel alloc] init];
         _nameLable.textColor = Color(64, 64, 64, 1);
         _nameLable.font      = SWP_SYSTEM_FONT_SIZE(15);
-        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
+//        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
     }
     return _nameLable;
 }
@@ -370,6 +378,22 @@
 }
 
 
+- (UILabel *) oneLable {
+    if (!_oneLable) {
+        _oneLable = [[UILabel alloc] init];
+        _oneLable.backgroundColor = Color(154, 154, 154, 1);
+    }
+    return _oneLable;
+}
+
+- (UILabel *) twoLable {
+    if (!_twoLable) {
+        _twoLable = [[UILabel alloc] init];
+        _twoLable.backgroundColor = Color(154, 154, 154, 1);
+    }
+    return _twoLable;
+}
+
 - (void) setDetailsDict:(NSDictionary *)detailsDict {
     _detailsDict = detailsDict;
     if (detailsDict != nil) {
@@ -406,48 +430,55 @@
             [_headImageVIew sd_setImageWithURL:[NSURL URLWithString:[[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"iconPhotoUrl"]] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
 
             self.nameLable.text = [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"name"];
-            UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
-            CGSize size = CGSizeMake(320,20);
-            CGSize nameSize = [self.nameLable.text sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+//            UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
+//            CGSize size = CGSizeMake(320,20);
+            CGSize nameSize = [self uiWithConstrained:self.nameLable.text];//[self.nameLable.text sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
             self.nameLable.frame = CGRectMake(80, 12, nameSize.width + 10, 20);
             
             self.levelLable.text = [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"leveName"];
-            UIFont *levelFnt = [UIFont fontWithName:[[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"leveName"] size:10];
-            CGSize levelSize = [self.levelLable.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:levelFnt, NSFontAttributeName, nil]];
+//            UIFont *levelFnt = [UIFont fontWithName:[[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"leveName"] size:10];
+            CGSize levelSize = [self uiWithConstrained:self.levelLable.text];//[self.levelLable.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:levelFnt, NSFontAttributeName, nil]];
             self.levelLable.frame = CGRectMake(90 + nameSize.width, 14, levelSize.width, 16);
             
             self.autographLable.text = [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"introduce"];
             
             
-            UIFont *tempFnt = [UIFont fontWithName:@"Arial" size:13];
-            CGSize tempSize = CGSizeMake(320,14);
+//            UIFont *tempFnt = [UIFont fontWithName:@"Arial" size:10];
+//            CGSize tempSize = CGSizeMake(320,14);
             
             self.collectionLable.text = [NSString stringWithFormat:@"%@收藏", [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"collected"]];
-            CGSize atempSize = [self.collectionLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+            CGSize atempSize = [self uiWithConstrained:self.collectionLable.text];//[self.collectionLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
             self.collectionLable.frame = CGRectMake(80, 53, atempSize.width + 5, 14);
             
-            UILabel *lable1 = [[UILabel alloc] initWithFrame:CGRectMake(atempSize.width + 87, 54, 1, 12)];
-            lable1.backgroundColor = Color(64, 64, 64, 1);
-            [self.introduceView addSubview:lable1];
+            self.oneLable.frame = CGRectMake(atempSize.width + 87, 54, 1, 12);
             
             self.singleLable.text = [NSString stringWithFormat:@"%@美单", [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"bought"]];
-            atempSize = [self.singleLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+            atempSize = [self uiWithConstrained:self.singleLable.text];//[self.singleLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
             self.singleLable.frame = CGRectMake(90 + self.collectionLable.frame.size.width, 53, atempSize.width + 5, 14);
             
-            UILabel *lable2 = [[UILabel alloc] initWithFrame:CGRectMake(atempSize.width + 97 + self.collectionLable.frame.size.width, 54, 1, 12)];
-            lable2.backgroundColor = Color(64, 64, 64, 1);
-            [self.introduceView addSubview:lable2];
+            self.twoLable.frame = CGRectMake(atempSize.width + 97 + self.collectionLable.frame.size.width, 54, 1, 12);
             
             self.titleLable.frame = CGRectMake(self.singleLable.frame.origin.x + self.singleLable.frame.size.width + 10, 53, 40, 14);
             
             self.priceLable.text = [NSString stringWithFormat:@"￥%@", [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"priceMast"]];
-            atempSize = [self.priceLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+            atempSize = [self uiWithConstrained:self.priceLable.text];//[self.priceLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
             self.priceLable.frame = CGRectMake(self.titleLable.frame.origin.x + 40, 53, atempSize.width + 5, 14);
         }
     }
 }
 
+- (CGSize)uiWithConstrained:(NSString *)title {
+    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
+    CGSize size = CGSizeMake(320,20);
+    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+    return nameSize;
+}
+
 @end
+
+
+
+
 //UIFont *fnt = [UIFont fontWithName:collectionLable.text size:12];
 //CGSize size = [collectionLable.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:fnt, NSFontAttributeName, nil]];
 //CGFloat numberW = size.width;

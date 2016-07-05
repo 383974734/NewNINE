@@ -96,6 +96,7 @@
 #pragma mark - Methods
 
 - (UIViewController *)selectedViewController {
+
     return [[self viewControllers] objectAtIndex:[self selectedIndex]];
 }
 
@@ -260,7 +261,7 @@
     }
     
     [self setSelectedIndex:index];
-    
+    NSLog(@"%@", [self viewControllers][index]);
     if ([[self delegate] respondsToSelector:@selector(tabBarController:didSelectViewController:)]) {
         [[self delegate] tabBarController:self didSelectViewController:[self viewControllers][index]];
     }

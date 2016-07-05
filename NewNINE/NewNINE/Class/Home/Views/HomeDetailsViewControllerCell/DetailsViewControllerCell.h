@@ -40,13 +40,15 @@
  *
  *  @param detailsViewControllerCell DetailsViewControllerCell
  */
-- (void)detailsAppointmentBtnViewControllerCell:(DetailsViewControllerCell *)detailsViewControllerCell;
+- (void)detailsAppointmentBtnViewControllerCell:(DetailsViewControllerCell *)detailsViewControllerCell didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
 @interface DetailsViewControllerCell : UITableViewCell
 
 @property (nonatomic, strong) NSDictionary *detailsDict;
+
+@property (nonatomic, strong) NSIndexPath *indexPath;
 
 @property (nonatomic, assign) id<DetailsViewControllerCellDelegate> delegate;
 

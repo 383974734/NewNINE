@@ -103,6 +103,35 @@
     }];
 }
 
+//字典
++ (void)mainGET:(NSString *)URLString parametersDict:(NSDictionary *)parameters isEncrypt:(BOOL)encrypt swpResultSuccess:(SwpResultSuccessHandle)swpResultSuccess swpResultError:(SwpResultErrorHandle)swpResultError {
+    MainRequestTool *swpRequest          = [MainRequestTool shareInstance];
+    
+    // 字典加密
+    //    NSDictionary         *dictionary     = encrypt ? [swpRequest encryptedParamsWithDict:parameters] : parameters;
+    
+    NSDictionary         *dictionary     = parameters;
+    
+    // 返回结果集
+    __block NSDictionary *resultObject   = [NSDictionary dictionary];
+    
+    // 显示 状态栏 请求数据的菊花
+    [swpRequest settingNetworkPicture:YES];
+    
+    // 发起请求
+    [swpRequest.swpSessionManager GET:URLString parameters:dictionary progress:^(NSProgress * _Nonnull downloadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        resultObject = [swpRequest requestDispose:responseObject isBase64:encrypt];
+        swpResultSuccess(task, resultObject);
+        [swpRequest settingNetworkPicture:NO];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSString *errorInfo = error == nil ? nil : [NSString stringWithFormat:@"错误代码%ld \n 错误信息%@", (long)error.code, error.localizedDescription];
+        swpResultError(task, error, errorInfo);
+        [swpRequest settingNetworkPicture:NO];
+    }];
+}
+
 /*!
  *  @author swp_song, 2016-01-05 22:31:06
  *
@@ -413,6 +442,75 @@
     return _swpSessionManager;
 }
 
+
+//sha256加密方式
+- (NSString *)getSha256String:(NSString *)srcString
+{
+    const char *cstr = [srcString cStringUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = nil ; //[NSData dataWithBytes:cstr length:content.length];
+    
+    data = [srcString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    uint8_t digest[CC_SHA256_DIGEST_LENGTH];
+    
+    CC_SHA256(data.bytes, data.length, digest);
+    
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return output;
+}
+
+
+- (NSDictionary *) requestDitc:(NSArray *)array {
+    NSMutableDictionary *tempdic = [NSMutableDictionary new];
+    NSString *str = @"";
+    for (int i = 0; array.count > i; i++) {
+        
+        if ([array[i] componentsSeparatedByString:@","].count > 2) {
+            
+            NSMutableArray *arrayTemp = [[NSMutableArray alloc] init];
+            for (int a = 0; [array[i] componentsSeparatedByString:@","].count > a; a++) {
+                [arrayTemp addObject:[array[i] componentsSeparatedByString:@","][a]];
+            }
+            [arrayTemp removeObjectAtIndex:0];
+            [tempdic setObject:[arrayTemp componentsJoinedByString:@","] forKey:[array[i] componentsSeparatedByString:@","][0]];
+        }else {
+            [tempdic setObject:[array[i] componentsSeparatedByString:@","][1] forKey:[array[i] componentsSeparatedByString:@","][0]];
+        }
+        
+        // 这里要注意拼接的时候， 判断是否为空。
+        if ([[array[i] componentsSeparatedByString:@","][1] isEqualToString:@""]) {
+            str = [NSString stringWithFormat:@"%@%@=%@&",str,[array[i] componentsSeparatedByString:@","][0], @""];
+        }else {
+            if ([array[i] componentsSeparatedByString:@","].count > 2) {
+                
+                NSMutableArray *arrayTemp = [[NSMutableArray alloc] init];
+                for (int a = 0; [array[i] componentsSeparatedByString:@","].count > a; a++) {
+                    [arrayTemp addObject:[array[i] componentsSeparatedByString:@","][a]];
+                }
+                [arrayTemp removeObjectAtIndex:0];
+                str = [NSString stringWithFormat:@"%@%@=%@&",str,[array[i] componentsSeparatedByString:@","][0],[arrayTemp componentsJoinedByString:@","]];
+            }else {
+                str = [NSString stringWithFormat:@"%@%@=%@&",str,[array[i] componentsSeparatedByString:@","][0],[array[i] componentsSeparatedByString:@","][1]];
+            }
+        }
+        
+    }
+    str = [NSString stringWithFormat:@"%@%@",str , @"key=3e9bb86c6980c3b79e5b936ce10b9b96"];
+    
+    str = [self getSha256String:str];
+    
+    [tempdic setObject:str forKey:@"sign"];
+    
+    NSLog(@"------sign-------%@",tempdic);
+    
+    return tempdic;
+}
+
+/*
 //sha256加密方式
 - (NSString *)getSha256String:(NSString *)srcString
 {
@@ -456,5 +554,5 @@
     
     return tempdic;
 }
-
+*/
 @end

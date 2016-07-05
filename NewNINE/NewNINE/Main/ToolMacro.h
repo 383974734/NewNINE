@@ -129,6 +129,4 @@ alpha:1.0]
 
 
 
-
-
 #endif /* ToolMacro_h */

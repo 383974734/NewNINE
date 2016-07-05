@@ -142,7 +142,22 @@
 }
 
 
+
+#pragma mark - 所有控件的点击事件
+/**
+ *  UIButton 点击事件
+ *
+ *  @param button UIButton
+ */
+- (void) didButton:(UIButton *)button {
+    
+}
+
 #pragma mark   -  所有控件懒加载
+
+
+
+
 
 /*
 #pragma mark - Navigation

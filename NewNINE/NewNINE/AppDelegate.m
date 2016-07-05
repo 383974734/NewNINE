@@ -35,17 +35,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    SetUserDefault(@"13811111111", userUid);
     
+    [self getUserinfoWithData];
+    SetUserDefault(@"哈尔滨", @"cityName");
     self.window.backgroundColor     = [UIColor whiteColor];
     self.window.rootViewController  = [TabBarViewController new];
     [self.window makeKeyAndVisible];
     
     //设置友盟
     [self settingUM];
-    
-    
     
     return YES;
 }
@@ -72,6 +70,7 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+
 #pragma mark - 设置友盟，分享
 /**
  *  设置友盟分享
@@ -90,6 +89,31 @@
     //设置微信AppId、appSecret，分享url
     [UMSocialWechatHandler setWXAppId:UMENG_WX_ID appSecret:UMENG_WX_KEY url:UMENG_TX_URL];
     
+}
+
+- (void) getUserinfoWithData{
+    if (!([GetUserDefault(userUid) length] > 0)) {
+        return;
+    }
+    NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"userinfo/getUserinfo"];
+    NSArray *array = @[
+                       [NSString stringWithFormat:@"mobile,%@", GetUserDefault(userUid)],//账号
+                       ];
+    [SVProgressHUD showWithStatus:HEADER_RERESHING_DATA_TITLE];
+    [MainRequestTool mainPOST:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
+        //        [SVProgressHUD showInfoWithStatus:@"登录成功"];
+        [SVProgressHUD dismiss];
+        NSLog(@"%@", resultObject);
+        if (resultObject != nil) {
+            
+            SetUserDefault(resultObject, @"getUserinfo");
+
+        }else {
+            
+        }
+    } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
+        NSLog(@"login/login数据错误%@", error);
+    }];
 }
 
 @end

@@ -133,6 +133,7 @@ typedef void(^SwpResultErrorHandle)(NSURLSessionDataTask *task, NSError *error, 
  */
 + (void)mainGET:(NSString *)URLString parameters:(NSArray *)parameters isEncrypt:(BOOL)encrypt swpResultSuccess:(SwpResultSuccessHandle)swpResultSuccess swpResultError:(SwpResultErrorHandle)swpResultError;
 
-
+//字典
++ (void)mainGET:(NSString *)URLString parametersDict:(NSDictionary *)parameters isEncrypt:(BOOL)encrypt swpResultSuccess:(SwpResultSuccessHandle)swpResultSuccess swpResultError:(SwpResultErrorHandle)swpResultError;
 @end
 NS_ASSUME_NONNULL_END

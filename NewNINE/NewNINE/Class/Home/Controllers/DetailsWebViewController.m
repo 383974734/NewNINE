@@ -63,7 +63,6 @@
  */
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.hidden = NO;
     [self.rdv_tabBarController setTabBarHidden:YES animated:NO];
 }
 
@@ -74,7 +73,7 @@
  */
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    self.navigationController.navigationBar.hidden = YES;
+
     
 }
 
@@ -85,7 +84,7 @@
  */
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.rdv_tabBarController setTabBarHidden:NO animated:NO];
+
     
 }
 
@@ -121,9 +120,12 @@
  *  设置导航控制器
  */
 - (void) settingNav {
+    if (self.titleStr.length > 0) {
+        [self setNavWithLeftBarButton:NO title:self.titleStr];
+    }else {
+        [self setNavWithLeftBarButton:NO title:@"详情"];
+    }
     
-    [self settingNavigationBarTitle:@"详情" textColor:nil titleFontSize:NAVIGATION_TITLE_FONT_SIZE];
-    self.navigationItem.leftBarButtonItem  = [MainCommonMethod settingNavBarButtonItemWithImage:[UIImage imageNamed:@"nav-返回"] highlightedImage:[UIImage imageNamed:@"nav-返回"] target:self action:@selector(didView:) buttonTag:1 leftButton:YES];
 }
 
 - (void)didView:(UIButton *)btn {
@@ -146,7 +148,7 @@
  *  设置控件的自动布局
  */
 - (void) settingUIAutoLayout {
-    [self.webView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+    [self.webView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(67, 0, 0, 0)];
 }
 
 

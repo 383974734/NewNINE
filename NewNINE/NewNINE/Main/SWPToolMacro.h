@@ -29,9 +29,13 @@
 #define userInvitation_num @"invitation_num"
 //#define userNickname       @"nickname"
 #define userUid            @"UserID"
-#define userWeb            @"web"
+#define UserMobile         @"UserMobile"
+#define UserPasswd         @"UserMobile"
 
 
+
+
+//---------------------------------------------------------
 /** 网络连接获取数据 */
 //      开发环境
 #define BaseURL @"http://121.40.92.117:8080/api/"
@@ -41,6 +45,19 @@
 //#define BaseURL @"http://api.mlmsalon.com/newapi/api/"
 //      本地环境
 //#define BaseURL @"http://192.168.0.106:1080/api/"
+
+//---------------------------------------------------------
+
+/** web网络连接获取数据 */
+//      开发环境
+#define developmentURL @"http://121.40.92.117:1080/Home/"
+//      生产环境  ---  1.1版本
+//#define developmentURL @"http://share.mlmsalon.com/Home/"
+//      生产环境  ---  1.2版本
+//#define developmentURL @"http://share.mlmsalon.com/Home/"
+
+//http://192.168.0.106:1080/
+//---------------------------------------------------------
 
 
 

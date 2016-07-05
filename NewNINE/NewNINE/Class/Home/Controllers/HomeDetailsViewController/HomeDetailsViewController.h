@@ -10,10 +10,13 @@
 #import "BaseViewController.h"
 
 @class HomeBannerModels;
+@class HairstyleViewControllerModel;
 
 @interface HomeDetailsViewController : BaseViewController
 
 
 @property (nonatomic, strong) HomeBannerModels *dataModel;
+
+@property (nonatomic, strong) HairstyleViewControllerModel *hairstyleModel;
 
 @end

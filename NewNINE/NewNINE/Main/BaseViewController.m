@@ -10,6 +10,7 @@
 
 // ---------------------- 框架工具类 ----------------------
 #import "UINavigationBar+BackgroundColor.h"
+#import<CommonCrypto/CommonDigest.h>
 
 // ---------------------- 框架工具类 ----------------------
 
@@ -29,6 +30,8 @@
     // Do any additional setup after loading the view.
 //    [self.rdv_tabBarController setTabBarHidden:YES];  //隐藏tabBar
 //    self.view.backgroundColor = Color(248, 248, 248, 1);
+    self.navigationController.navigationBar.hidden = YES;
+    self.view.backgroundColor    = SWPColor(248, 248, 248, 1);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -200,16 +203,69 @@
     return footer;
 }
 
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)setNavWithLeftBarButton:(BOOL)leftBarButton title:(NSString *)title{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 22, SCREEN_WIDTH, 44)];
+    view.backgroundColor = [UIColor whiteColor];
+    
+    UILabel *lable = [[UILabel alloc] initWithFrame:CGRectMake(64, 0, SCREEN_WIDTH - 128, 44)];
+    lable.text = title;
+    lable.textAlignment = NSTextAlignmentCenter;
+    [view addSubview:lable];
+    
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(20, 10, 24, 24)];
+    [button setImage:[UIImage imageNamed:@"nav-返回"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
+    button.hidden = leftBarButton;
+    [view addSubview:button];
+    [self.view addSubview:view];
 }
-*/
+
+- (void)didView:(UIButton *)btn {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void) messageWithOK:(NSString *)title {
+    UIAlertView *alerView = [[UIAlertView alloc] initWithTitle:title message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+    [alerView show];
+}
+
+//NSString转NSDate
+- (NSDate *)dateFromString:(NSString *)string
+{
+    //需要转换的字符串
+//    NSString *dateString = @"2015-06-26 08:08:08";
+    NSString *dateString = string;
+    //设置转换格式
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+//    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    //NSString转NSDate
+    NSDate *date=[formatter dateFromString:dateString];
+    return date;
+}
+
+/**
+ *  加密
+ *
+ *  @param content 预加密字符串
+ *
+ *  @return 加密后字符串
+ */
+- (NSString*) sha256:(NSString *)content
+{
+    const char *cstr = [content cStringUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [NSData dataWithBytes:cstr length:content.length];
+    
+    uint8_t digest[CC_SHA256_DIGEST_LENGTH];
+    
+    CC_SHA256(data.bytes, data.length, digest);
+    
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return output;
+}
 
 @end

@@ -11,4 +11,8 @@
 
 @interface MakeAppointmentViewController : BaseViewController
 
+/** 设计师ID*/
+@property (nonatomic, copy) NSString *stylistinfoId;
+
+
 @end
