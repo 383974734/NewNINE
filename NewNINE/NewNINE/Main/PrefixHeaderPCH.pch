@@ -1,0 +1,30 @@
+//
+//  PrefixHeaderPCH.pch
+//  ClientNINE
+//
+//  Created by yinduo-zdy on 16/5/3.
+//  Copyright © 2016年 yinduo-zdy. All rights reserved.
+//
+
+#ifndef PrefixHeaderPCH_pch
+#define PrefixHeaderPCH_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+        #import "ToolMacro.h"
+        #import "SWPToolMacro.h"
+
+        #import "AppDelegate.h"
+        #import "MainCommonMethod.h"
+        #import "JSONOfNetWork.h"
+
+        #import "RequestToolSha256.h"
+        #import "MainRequestTool.h"
+        #import <MJRefresh/MJRefresh.h>
+        #import <UIImageView+WebCache.h>
+        #import <PureLayout/PureLayout.h>
+        #import <SVProgressHUD/SVProgressHUD.h>
+        #import <RDVTabBarController/RDVTabBarController.h>
+
+#endif /* PrefixHeaderPCH_pch */
