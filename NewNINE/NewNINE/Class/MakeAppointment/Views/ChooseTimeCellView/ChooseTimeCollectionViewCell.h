@@ -21,6 +21,9 @@
 
 @interface ChooseTimeCollectionViewCell : UICollectionViewCell
 
+/** 已经选定的预约时间*/
+@property (nonatomic, copy) NSString *makeTime;
+
 @property (nonatomic, strong) ChooseTimeModel *timeModel;
 
 @property (nonatomic, strong) NSIndexPath *indexPath;

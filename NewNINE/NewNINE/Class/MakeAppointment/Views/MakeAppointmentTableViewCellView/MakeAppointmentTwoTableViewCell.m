@@ -160,13 +160,19 @@
     self.titleLable.text = _title;
 }
 
+- (void)setProductType:(NSString *)productType {
+    _productType = productType;
+    self.nameLable.text = _productType;
+}
 
 
 - (void) setDict:(NSDictionary *)dict {
     _dict = dict;
     if ([[dict objectForKey:@"cutvalues"] intValue] > 0) {
         self.minusButton.hidden = NO;
-        [_minusButton setTitle:[NSString stringWithFormat:@"立减%@元", [dict objectForKey:@"cutvalues"]] forState:UIControlStateNormal];
+        [self.minusButton setTitle:[NSString stringWithFormat:@"立减%@元", [dict objectForKey:@"cutvalues"]] forState:UIControlStateNormal];
+    }else {
+        self.minusButton.hidden = YES;
     }
 }
 

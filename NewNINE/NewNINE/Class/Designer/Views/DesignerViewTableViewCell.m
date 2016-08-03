@@ -166,10 +166,8 @@
 - (UIButton *) appointmentBtn {
     if (!_appointmentBtn) {
         _appointmentBtn = [[UIButton alloc] initForAutoLayout];
-        [_appointmentBtn setTitle:@"预约按钮" forState:UIControlStateNormal];
+        [_appointmentBtn setImage:[UIImage imageNamed:@"发型详情"] forState:UIControlStateNormal];
         [_appointmentBtn addTarget:self action:@selector(didBtton:) forControlEvents:UIControlEventTouchUpInside];
-        _appointmentBtn.backgroundColor = [UIColor lightGrayColor];
-        //按钮的图片宽和高一样
     }
     return _appointmentBtn;
 }
@@ -181,7 +179,7 @@
         _nameLable = [[UILabel alloc] init];
         _nameLable.textColor = Color(64, 64, 64, 1);
         _nameLable.font      = SWP_SYSTEM_FONT_SIZE(15);
-        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
+//        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
     }
     return _nameLable;
 }
@@ -293,10 +291,30 @@
 
 - (void) setDataModel:(DesignerViewModel *)dataModel {
     _dataModel = dataModel;
-    [self.oneImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoOne] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-    [self.twoImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoTwo] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-    [self.threeImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoThr] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-    [self.headImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图" ]];
+//    
+//    
+//    [self.oneImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoOne] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.twoImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoTwo] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.threeImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoThr] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.headImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图" ]];
+    
+    [self.oneImageVIew  sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoOne]
+                            placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                   completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                   }];
+    [self.twoImageVIew  sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoTwo]
+                          placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                 }];
+    [self.threeImageVIew  sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoThr]
+                          placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                 }];
+    [self.headImageVIew  sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerIconPhotoUrl]
+                          placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                 }];
+    
     
     self.nameLable.text = _dataModel.designerName;
     CGSize nameSize = [self uiWithConstrained:self.nameLable.text];
@@ -327,7 +345,7 @@
     
     self.titleLable.frame = CGRectMake(self.singleLable.frame.origin.x + self.singleLable.frame.size.width + 10, 53, 40, 14);
     
-    NSString *strPrice = [NSString stringWithFormat:@"%@",_dataModel.designerPriceMast];
+    NSString *strPrice = [NSString stringWithFormat:@"￥%@",_dataModel.designerPriceMast];
     self.priceLable.text = strPrice;
     atempSize = [self uiWithConstrained:self.priceLable.text];//[self.priceLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
     self.priceLable.frame = CGRectMake(self.titleLable.frame.origin.x + 40, 53, atempSize.width + 5, 14);
@@ -338,7 +356,10 @@
 - (CGSize)uiWithConstrained:(NSString *)title {
     UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,20);
-    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+
+    NSDictionary *dict = @{NSFontAttributeName : nameFnt};
+    
+    CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
     return nameSize;
 }
 

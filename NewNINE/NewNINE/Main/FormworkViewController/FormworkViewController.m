@@ -280,4 +280,11 @@
 //}
 
 
+
+//                [SVProgressHUD showWithStatus:@"请选择设计师"];// 加载圈
+//                [SVProgressHUD showSuccessWithStatus:@"请选择设计师"];// 对号
+//                [SVProgressHUD setStatus:@"请选择设计师"];// 不显示
+//                [SVProgressHUD showInfoWithStatus:@"请选择设计师"];// 感叹号
+//                [SVProgressHUD showErrorWithStatus:@"请选择设计师"];//叉
+
 @end

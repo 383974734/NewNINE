@@ -222,7 +222,9 @@
     
     // calculating size of all index items
     for (NSString *item in self.indexItems) {
-        CGSize currentItemSize = [item sizeWithFont:self.font];
+        NSDictionary *dictTemp = @{NSFontAttributeName : self.font};
+        CGSize currentItemSize = [item sizeWithAttributes:dictTemp];
+        
         indexSize.height += entireHeight;
         if (currentItemSize.width > indexSize.width) {
             indexSize.width = currentItemSize.width;
@@ -231,7 +233,10 @@
     
     // calculating if deflectionRange is not too small based on the width of the longest index item using the font for selected item
     for (NSString *item in self.indexItems) {
-        CGSize currentItemSize = [item sizeWithFont:self.selectedItemFont];
+        
+        NSDictionary *dictTemp = @{NSFontAttributeName : self.selectedItemFont};
+        
+        CGSize currentItemSize = [item sizeWithAttributes:dictTemp];
         if (currentItemSize.width > self.maxWidth) {
             self.maxWidth = currentItemSize.width;
         }
@@ -310,6 +315,8 @@
     CGFloat verticalPos = self.firstItemOrigin.y;
     NSMutableArray *newItemsAttributes = [NSMutableArray new];
     
+    NSDictionary *dictTemp = @{NSFontAttributeName : self.font};
+    
     int count = 0;
     
     for (NSString *item in self.indexItems) {
@@ -319,11 +326,11 @@
         
         if (self.itemsAligment == NSTextAlignmentCenter){
             
-            CGSize itemSize = [item sizeWithFont:self.font];
+            CGSize itemSize = [item sizeWithAttributes:dictTemp];
             point.x = self.firstItemOrigin.x - itemSize.width/2;
         } else if (self.itemsAligment == NSTextAlignmentRight) {
             
-            CGSize itemSize = [item sizeWithFont:self.font];
+            CGSize itemSize = [item sizeWithAttributes:dictTemp];
             point.x = self.firstItemOrigin.x - itemSize.width;
         } else point.x = self.firstItemOrigin.x;
         
@@ -417,7 +424,7 @@
             float arcusTan = fabs(atan(angleInRadians));
             
             // now we have to calculate the deflected position of an item
-            point.x = origin.x - (self.maxItemDeflection) + (fabsf(point.y - location.y) * mappedAmplitude) * (arcusTan);
+            point.x = origin.x - (self.maxItemDeflection) + (fabs(point.y - location.y) * mappedAmplitude) * (arcusTan);
             
             point.x = MIN(point.x, origin.x);
             

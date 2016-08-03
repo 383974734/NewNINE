@@ -14,7 +14,10 @@
     int indexPage ;
 }
 
-
+/** 已经选定的预约时间*/
+@property (nonatomic, copy) NSString *makeTime;
 
 @property (nonatomic, copy) NSString *stylistinfoId;
+
+
 @end

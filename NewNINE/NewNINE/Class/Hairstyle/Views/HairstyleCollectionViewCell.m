@@ -107,7 +107,12 @@
     _dataModel = dataModel;
     
     _lable.text = dataModel.hairstyleInfoDescription;
-    [self.imageHairstyleCell sd_setImageWithURL:[NSURL URLWithString:_dataModel.hairstyleHairPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.imageHairstyleCell sd_setImageWithURL:[NSURL URLWithString:_dataModel.hairstyleHairPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+    
+    [self.imageHairstyleCell  sd_setImageWithURL:[NSURL URLWithString:_dataModel.hairstyleHairPhotoUrl]
+                           placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                  }];
 }
 
 @end

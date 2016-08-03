@@ -27,6 +27,8 @@
 /** 背景图片*/
 @property (nonatomic, strong) UIImageView   *backgroundImageView;
 /** 用户头像*/
+@property (nonatomic, strong) UIImageView   *userImage;
+/** 用户头像*/
 @property (nonatomic, strong) UIButton      *userImageView;
 /** 用户名字*/
 @property (nonatomic, strong) UIButton      *userName;
@@ -107,6 +109,8 @@
     [self.backgroundVeiw addSubview:self.nextImageView];
     [self.backgroundVeiw addSubview:self.seeLable];
     
+    [self.userImageView addSubview:self.userImage];
+    
     [self.contentView addSubview:self.noPaymenView];
     [self.contentView addSubview:self.appointmentSuccessView];
     [self.contentView addSubview:self.completeView];
@@ -118,6 +122,8 @@
  */
 - (void) layoutSubviews {
     [super layoutSubviews];
+    [self.userImage autoPinEdgesToSuperviewEdges];
+    
     [self.backgroundImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 110, 0)];
     [self.backgroundVeiw      autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(-1, -1, 65, -1) excludingEdge:ALEdgeTop];
     [self.backgroundVeiw      autoSetDimension:ALDimensionHeight toSize:45];
@@ -145,6 +151,17 @@
         [_userImageView addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _userImageView;
+}
+
+- (UIImageView *)userImage {
+    if (!_userImage) {
+        _userImage = [[UIImageView alloc] initForAutoLayout];
+        _userImage.layer.cornerRadius       = 36;
+        _userImage.layer.masksToBounds      = YES;
+        _userImage.image                    = [UIImage imageNamed:@"160Wow"];
+        _userImage.userInteractionEnabled   = YES;
+    }
+    return _userImage;
 }
 
 - (UIButton *) userName {
@@ -285,7 +302,14 @@
         [_nuDiscountdView setWithNumber:@"0"];
     }else {
         if ([[_userDict objectForKey:@"iconPhotoUrl"]length] > 0) {
-            [self.userImageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[_userDict objectForKey:@"iconPhotoUrl"]]]] forState:UIControlStateNormal];
+            
+            [self.userImage  sd_setImageWithURL:[NSURL URLWithString:[_userDict objectForKey:@"iconPhotoUrl"]]
+                                       placeholderImage:[UIImage imageNamed:@"160Wow"]
+                                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                              }];
+            
+            
+//            [self.userImageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[_userDict objectForKey:@"iconPhotoUrl"]]]] forState:UIControlStateNormal];
         }
         
         [self.userName setTitle:[NSString stringWithFormat:@"%@", [_userDict objectForKey:@"userName"]] forState:UIControlStateNormal];
@@ -297,10 +321,11 @@
         NSString *str = [NSString stringWithFormat:@"%@", [_userDict objectForKey:@"userName"]];
         UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
         CGSize size = CGSizeMake(320,20);
-        CGSize nameSize = [str sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+        NSDictionary *dict = @{NSFontAttributeName : nameFnt};
+        
+        CGSize nameSize = [str boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
         self.userName.frame = CGRectMake((SCREEN_WIDTH  - nameSize.width) / 2 , 115, nameSize.width, 30);
     }
-    
 }
 
 #pragma mark -MyNumberViewDelegate

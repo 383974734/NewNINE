@@ -549,6 +549,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
         [self settingTableViewRefreshing:_designerTableView target:self headerAction:@selector(headerRereshingData) footerAction:@selector(footerRereshingData)];
 //        _designerTableView.separatorStyle = NO;//cell线隐藏
         _designerTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+        [_designerTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     }
     return _designerTableView;
 }

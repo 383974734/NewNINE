@@ -191,7 +191,7 @@ static NSString *cellID = @"StoreAddressViewControllerCell";
  *  @return NSInteger
  */
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1;
 }
 
 /**

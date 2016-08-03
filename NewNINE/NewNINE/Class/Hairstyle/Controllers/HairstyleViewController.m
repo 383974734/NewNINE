@@ -203,9 +203,9 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
                        [NSString stringWithFormat:@"created,%@", created],
                        [NSString stringWithFormat:@"clasId,%@", clasId],
                        ];
-    [SVProgressHUD showWithStatus:DATA_GET_DATA];
+//    [SVProgressHUD showWithStatus:DATA_GET_DATA];
     [MainRequestTool mainGET:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
-        [SVProgressHUD dismiss];
+//        [SVProgressHUD dismiss];
         NSLog(@"%@", resultObject);
         if (resultObject != nil) {
             if ([page isEqualToString:@"0"]) {
@@ -235,9 +235,9 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
 - (void) getOpusClassWithData{
     NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"opusinfo/getOpusClass"];
     NSArray *array = @[];
-    [SVProgressHUD showWithStatus:DATA_GET_DATA];
+//    [SVProgressHUD showWithStatus:DATA_GET_DATA];
     [MainRequestTool mainGET:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
-        [SVProgressHUD dismiss];
+//        [SVProgressHUD dismiss];
         NSLog(@"%@", resultObject);
         if (resultObject != nil) {
             

@@ -66,7 +66,12 @@
 - (void) settingData {
     
     if (self.isLoadNetworkImage) {
-        [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.imageName] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+//        [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.imageName] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+        
+        [self.imageView  sd_setImageWithURL:[NSURL URLWithString:self.imageName]
+                             placeholderImage:[UIImage imageNamed:@"banner缺省图"]
+                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                    }];
     } else {
         self.imageView.image = [UIImage imageNamed:self.imageName];
     }

@@ -67,4 +67,34 @@
 }
 
 
+
+/**
+ *  快速 初始化一个 预约发型选择分类显示控制器模型（字典转化数据模型）
+ *
+ *  @param dict
+ *
+ *  @return ChooseTimeModel
+ */
++ (instancetype) productInfosWithDict:(NSDictionary *)dict {
+    return [[self alloc] initProductInfosDic:dict];
+}
+
+/**
+ *  预约发型选择分类显示控制器模型控制器模型（字典转数据模型）
+ *
+ *  @param dict
+ *
+ *  @return ChooseTimeModel
+ */
+- (instancetype) initProductInfosDic:(NSDictionary *)dict {
+    if (self = [super init]) {
+        self.originalPrice      = dict[@"originalPrice"];
+        self.price              = dict[@"price"];
+        self.productId          = dict[@"productId"];
+        self.productName        = dict[@"productName"];
+    }
+    return self;
+}
+
+
 @end

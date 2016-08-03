@@ -127,8 +127,8 @@ static NSString *cellContentCellID = @"cellContentCellID";
  *  数据初始化
  */
 - (void) initData {
-    self.arrayImage = @[@[],@[@"签到有奖"], @[@"我的推广", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
-    self.arrayLable = @[@[],@[@"签到有奖"], @[@"合伙人", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
+    self.arrayImage = @[@[],@[@"限时抢购", @"积分购买",@"签到有奖"], @[@"我的推广", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
+    self.arrayLable = @[@[],@[@"限时抢购", @"积分购买", @"签到有奖"], @[@"合伙人", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
 }
 
 #pragma mark - Setting UI Methods
@@ -217,7 +217,7 @@ static NSString *cellContentCellID = @"cellContentCellID";
  *  @return NSInteger
  */
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return 4;
+    return self.arrayImage.count;
 }
 
 /**
@@ -229,14 +229,22 @@ static NSString *cellContentCellID = @"cellContentCellID";
  *  @return NSInteger
  */
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 2) {
-        return 3;
-    }
-    if (section == 3) {
-        return 2;
-    }else {
+//    if (section == 2) {
+//        return 3;
+//    }
+//    if (section == 3) {
+//        return 2;
+//    }
+//    if (section == 1) {
+//        return 3;
+//    }else {
+//        return 1;
+//    }
+    
+    if (section == 0) {
         return 1;
     }
+    return [self.arrayImage[section] count];
 }
 
 /**
@@ -276,9 +284,29 @@ static NSString *cellContentCellID = @"cellContentCellID";
         NSString *sign = [self sha256:[NSString stringWithFormat:@"mobile=%@&key=3e9bb86c6980c3b79e5b936ce10b9b96",GetUserDefault(userUid)]];
         DetailsWebViewController *webView = [[DetailsWebViewController alloc] init];
         if (indexPath.section == 1) {
-            webView.titleStr = @"签到";
-            webView.strUrl    = [NSString stringWithFormat:@"%@Activity/sign/mobile/%@/sign/%@",developmentURL,GetUserDefault(userUid),sign] ;
-            [self.navigationController pushViewController:webView animated:YES];
+            switch (indexPath.row) {
+                case 0:
+                {
+                    
+                }
+                    break;
+                case 1:
+                {
+                    
+                }
+                    break;
+                case 2:
+                {
+                    webView.titleStr = @"签到";
+                    webView.strUrl    = [NSString stringWithFormat:@"%@Activity/sign/mobile/%@/sign/%@",developmentURL,GetUserDefault(userUid),sign] ;
+                    [self.navigationController pushViewController:webView animated:YES];
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+            
         }
         if (indexPath.section == 2) {
             switch (indexPath.row) {

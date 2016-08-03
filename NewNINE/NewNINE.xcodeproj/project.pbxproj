@@ -126,6 +126,11 @@
 		19B1C62F1CFE8D2100441D7B /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 19B1C6251CFE8D2100441D7B /* README.txt */; };
 		19B1C6321CFEB45F00441D7B /* PublicDesignerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19B1C6311CFEB45F00441D7B /* PublicDesignerTableViewCell.m */; };
 		19B1C6351CFEC0BC00441D7B /* PublicDesignerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19B1C6341CFEC0BC00441D7B /* PublicDesignerCollectionViewCell.m */; };
+		19D1D4801D3CD77000FA701F /* PlaceOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D47F1D3CD77000FA701F /* PlaceOrderViewController.m */; };
+		19D1D4851D3CDF5D00FA701F /* ClassificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D4841D3CDF5D00FA701F /* ClassificationTableViewCell.m */; };
+		19D1D4881D3CDF7000FA701F /* InformationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D4871D3CDF7000FA701F /* InformationTableViewCell.m */; };
+		19D1D48B1D3CDF7F00FA701F /* PaymentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D48A1D3CDF7F00FA701F /* PaymentTableViewCell.m */; };
+		19D1D48E1D3CDFB000FA701F /* DepositTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D48D1D3CDFB000FA701F /* DepositTableViewCell.m */; };
 		19D887C81D2A33D2005DA1A1 /* ModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19D887C71D2A33D2005DA1A1 /* ModalViewController.m */; };
 		19FAB9231D126A0D0090B686 /* DiscountViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 19FAB9221D126A0D0090B686 /* DiscountViewModel.m */; };
 		19FAB9261D12817C0090B686 /* MyEvaluationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19FAB9251D12817C0090B686 /* MyEvaluationViewController.m */; };
@@ -393,6 +398,16 @@
 		19B1C6311CFEB45F00441D7B /* PublicDesignerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicDesignerTableViewCell.m; sourceTree = "<group>"; };
 		19B1C6331CFEC0BC00441D7B /* PublicDesignerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicDesignerCollectionViewCell.h; sourceTree = "<group>"; };
 		19B1C6341CFEC0BC00441D7B /* PublicDesignerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicDesignerCollectionViewCell.m; sourceTree = "<group>"; };
+		19D1D47E1D3CD77000FA701F /* PlaceOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceOrderViewController.h; sourceTree = "<group>"; };
+		19D1D47F1D3CD77000FA701F /* PlaceOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceOrderViewController.m; sourceTree = "<group>"; };
+		19D1D4831D3CDF5D00FA701F /* ClassificationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassificationTableViewCell.h; sourceTree = "<group>"; };
+		19D1D4841D3CDF5D00FA701F /* ClassificationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassificationTableViewCell.m; sourceTree = "<group>"; };
+		19D1D4861D3CDF7000FA701F /* InformationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InformationTableViewCell.h; sourceTree = "<group>"; };
+		19D1D4871D3CDF7000FA701F /* InformationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InformationTableViewCell.m; sourceTree = "<group>"; };
+		19D1D4891D3CDF7F00FA701F /* PaymentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentTableViewCell.h; sourceTree = "<group>"; };
+		19D1D48A1D3CDF7F00FA701F /* PaymentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentTableViewCell.m; sourceTree = "<group>"; };
+		19D1D48C1D3CDFB000FA701F /* DepositTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DepositTableViewCell.h; sourceTree = "<group>"; };
+		19D1D48D1D3CDFB000FA701F /* DepositTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DepositTableViewCell.m; sourceTree = "<group>"; };
 		19D887C61D2A33D2005DA1A1 /* ModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalViewController.h; sourceTree = "<group>"; };
 		19D887C71D2A33D2005DA1A1 /* ModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalViewController.m; sourceTree = "<group>"; };
 		19FAB9211D126A0D0090B686 /* DiscountViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscountViewModel.h; sourceTree = "<group>"; };
@@ -939,6 +954,8 @@
 				196881501D1BE81200A19685 /* ChooseTimeViewController.m */,
 				19D887C61D2A33D2005DA1A1 /* ModalViewController.h */,
 				19D887C71D2A33D2005DA1A1 /* ModalViewController.m */,
+				19D1D47E1D3CD77000FA701F /* PlaceOrderViewController.h */,
+				19D1D47F1D3CD77000FA701F /* PlaceOrderViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -955,6 +972,7 @@
 		197CEA1E1CF69B3700085C7D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				19D1D4821D3CDEBC00FA701F /* PlaceOrderCellView */,
 				1960CDBD1D2B6053008B5834 /* ModalCellView */,
 				1956C3BD1D24EB1900A7CC3D /* ChooseTimeCellView */,
 				196B26371D190D9700FEE6D8 /* MakeAppointmentTableViewCellView */,
@@ -1134,6 +1152,21 @@
 				19B1C6291CFE8D2100441D7B /* WXApiObject.h */,
 			);
 			path = Wechat;
+			sourceTree = "<group>";
+		};
+		19D1D4821D3CDEBC00FA701F /* PlaceOrderCellView */ = {
+			isa = PBXGroup;
+			children = (
+				19D1D4831D3CDF5D00FA701F /* ClassificationTableViewCell.h */,
+				19D1D4841D3CDF5D00FA701F /* ClassificationTableViewCell.m */,
+				19D1D4861D3CDF7000FA701F /* InformationTableViewCell.h */,
+				19D1D4871D3CDF7000FA701F /* InformationTableViewCell.m */,
+				19D1D4891D3CDF7F00FA701F /* PaymentTableViewCell.h */,
+				19D1D48A1D3CDF7F00FA701F /* PaymentTableViewCell.m */,
+				19D1D48C1D3CDFB000FA701F /* DepositTableViewCell.h */,
+				19D1D48D1D3CDFB000FA701F /* DepositTableViewCell.m */,
+			);
+			path = PlaceOrderCellView;
 			sourceTree = "<group>";
 		};
 		B81C8F4BA22A310CF6AD3E08 /* Pods */ = {
@@ -1376,10 +1409,12 @@
 				197CEA251CF69B3700085C7D /* DesignerViewController.m in Sources */,
 				1978062A1D10FA92005D9651 /* ModifyPasswordViewController.m in Sources */,
 				19FC41CE1D13F7C000671F1F /* MyEvaluationModel.m in Sources */,
+				19D1D48E1D3CDFB000FA701F /* DepositTableViewCell.m in Sources */,
 				19FAB9231D126A0D0090B686 /* DiscountViewModel.m in Sources */,
 				19375A871CFC0EE200DF0663 /* DetailsViewControllerCell.m in Sources */,
 				197CEA271CF69B3700085C7D /* HomeViewController.m in Sources */,
 				197806561D1143F8005D9651 /* OrderTableViewCell.m in Sources */,
+				19D1D48B1D3CDF7F00FA701F /* PaymentTableViewCell.m in Sources */,
 				19692D881D0F946E00347E3F /* MyHeadTableViewCell.m in Sources */,
 				193A1E3D1CF6BDA3003D7DE8 /* STBannerView.m in Sources */,
 				197806301D10FDCC005D9651 /* IntegralViewController.m in Sources */,
@@ -1409,12 +1444,14 @@
 				19FAB92F1D1290E70090B686 /* StoreAddressModel.m in Sources */,
 				199C740C1D17EEA600CAC044 /* UIViewController+LewPopupViewController.m in Sources */,
 				197CE9DB1CF69B2A00085C7D /* UINavigationBar+BackgroundColor.m in Sources */,
+				19D1D4801D3CD77000FA701F /* PlaceOrderViewController.m in Sources */,
 				197CEA001CF69B3200085C7D /* UZCommonMethod.m in Sources */,
 				1978065A1D11490A005D9651 /* AccountSettingViewController.m in Sources */,
 				197CE9FA1CF69B3200085C7D /* BaseViewController.m in Sources */,
 				197806291D10FA92005D9651 /* ModifyNameViewController.m in Sources */,
 				193A1E3E1CF6BDA3003D7DE8 /* STBannerViewCell.m in Sources */,
 				199C740B1D17EEA600CAC044 /* LewPopupViewAnimationSpring.m in Sources */,
+				19D1D4881D3CDF7000FA701F /* InformationTableViewCell.m in Sources */,
 				1955979D1D0E606D00A0D251 /* StylistLevlsModel.m in Sources */,
 				197806361D10FDE7005D9651 /* OrderViewController.m in Sources */,
 				193EB71B1D00147A0054426B /* HairstyleCollectionViewCell.m in Sources */,
@@ -1451,6 +1488,7 @@
 				1960CDC01D2B6073008B5834 /* ModalTableViewCell.m in Sources */,
 				195597971D0E4EBB00A0D251 /* CityViewController.m in Sources */,
 				199C74071D17EEA600CAC044 /* LewPopupBackgroundView.m in Sources */,
+				19D1D4851D3CDF5D00FA701F /* ClassificationTableViewCell.m in Sources */,
 				1985AD081D1237400029630A /* ChangePasswordViewController.m in Sources */,
 				19692D891D0F946E00347E3F /* MyNumberView.m in Sources */,
 				197CEA041CF69B3200085C7D /* MJNIndexView.m in Sources */,

@@ -186,7 +186,7 @@
     [self.headImageVIew autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(10, 15, 10, 0) excludingEdge:ALEdgeRight];
     [self.headImageVIew autoSetDimension:ALDimensionWidth toSize:55];
     
-    [self.shareBtn autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeLeft];
+    [self.shareBtn autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 0, 10) excludingEdge:ALEdgeLeft];
     [self.shareBtn autoSetDimension:ALDimensionWidth toSize:60];
     
     [self.appointmentBtn autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeLeft];
@@ -236,12 +236,9 @@
 - (UIButton *) shareBtn {
     if (!_shareBtn) {
         _shareBtn = [[UIButton alloc] initForAutoLayout];
-        [_shareBtn setTitle:@"分享按钮" forState:UIControlStateNormal];
+        [_shareBtn setImage:[UIImage imageNamed:@"Group 2"] forState:UIControlStateNormal];
         [_shareBtn addTarget:self action:@selector(didBtton:) forControlEvents:UIControlEventTouchUpInside];
         _shareBtn.tag = 1;
-        _shareBtn.backgroundColor = [UIColor lightGrayColor];
-        
-        //按钮的图片宽和高一样
     }
     return _shareBtn;
 }
@@ -249,11 +246,10 @@
 - (UIButton *) appointmentBtn {
     if (!_appointmentBtn) {
         _appointmentBtn = [[UIButton alloc] initForAutoLayout];
-        [_appointmentBtn setTitle:@"预约按钮" forState:UIControlStateNormal];
+        [_appointmentBtn setImage:[UIImage imageNamed:@"发型详情"] forState:UIControlStateNormal];
         [_appointmentBtn addTarget:self action:@selector(didBtton:) forControlEvents:UIControlEventTouchUpInside];
         _appointmentBtn.tag = 2;
-        _appointmentBtn.backgroundColor = [UIColor lightGrayColor];
-        //按钮的图片宽和高一样
+
     }
     return _appointmentBtn;
 }
@@ -403,7 +399,12 @@
         }else {
             self.introduceView.hidden = NO;
         }
-        [_detailsImageVIew sd_setImageWithURL:[NSURL URLWithString:[_detailsDict objectForKey:@"mainPhoto"]] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+   
+        [_detailsImageVIew  sd_setImageWithURL:[NSURL URLWithString:[_detailsDict objectForKey:@"mainPhoto"]]
+        placeholderImage:[UIImage imageNamed:@"banner缺省图"]
+        completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        }];
+        
         self.detailsLable.text = [_detailsDict objectForKey:@"infoDescription"];
         
         if ([[_detailsDict objectForKey:@"isCollect"] intValue] == 1) {
@@ -412,7 +413,6 @@
         }
         if ([[_detailsDict objectForKey:@"isCollect"] intValue] == 2) {
             NSLog(@"没收藏过");
-//            _collectionImageView.image = [UIImage imageNamed:@"已收藏-+nub--拷贝1"];
             [_collectionButton setImage:[UIImage imageNamed:@"已收藏-+nub--拷贝1"] forState:UIControlStateNormal];
         }
         
@@ -427,33 +427,35 @@
         _collectionNumberImageView.frame = CGRectMake(SCREEN_WIDTH - numberW - 60, 41, numberW + 10, 36);
         
         if ([[_detailsDict objectForKey:@"stylistInfos"] count] > 0) {
-            [_headImageVIew sd_setImageWithURL:[NSURL URLWithString:[[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"iconPhotoUrl"]] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+
+            
+            [self.headImageVIew  sd_setImageWithURL:[NSURL URLWithString:[[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"iconPhotoUrl"]]
+                                   placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                          }];
+            
 
             self.nameLable.text = [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"name"];
-//            UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
-//            CGSize size = CGSizeMake(320,20);
-            CGSize nameSize = [self uiWithConstrained:self.nameLable.text];//[self.nameLable.text sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+
+            CGSize nameSize = [self uiWithConstrained:self.nameLable.text];
             self.nameLable.frame = CGRectMake(80, 12, nameSize.width + 10, 20);
             
             self.levelLable.text = [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"leveName"];
-//            UIFont *levelFnt = [UIFont fontWithName:[[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"leveName"] size:10];
-            CGSize levelSize = [self uiWithConstrained:self.levelLable.text];//[self.levelLable.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:levelFnt, NSFontAttributeName, nil]];
+           
+            CGSize levelSize = [self uiWithConstrained:self.levelLable.text];
             self.levelLable.frame = CGRectMake(90 + nameSize.width, 14, levelSize.width, 16);
             
             self.autographLable.text = [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"introduce"];
-            
-            
-//            UIFont *tempFnt = [UIFont fontWithName:@"Arial" size:10];
-//            CGSize tempSize = CGSizeMake(320,14);
+ 
             
             self.collectionLable.text = [NSString stringWithFormat:@"%@收藏", [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"collected"]];
-            CGSize atempSize = [self uiWithConstrained:self.collectionLable.text];//[self.collectionLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+            CGSize atempSize = [self uiWithConstrained:self.collectionLable.text];
             self.collectionLable.frame = CGRectMake(80, 53, atempSize.width + 5, 14);
             
             self.oneLable.frame = CGRectMake(atempSize.width + 87, 54, 1, 12);
             
             self.singleLable.text = [NSString stringWithFormat:@"%@美单", [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"bought"]];
-            atempSize = [self uiWithConstrained:self.singleLable.text];//[self.singleLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+            atempSize = [self uiWithConstrained:self.singleLable.text];
             self.singleLable.frame = CGRectMake(90 + self.collectionLable.frame.size.width, 53, atempSize.width + 5, 14);
             
             self.twoLable.frame = CGRectMake(atempSize.width + 97 + self.collectionLable.frame.size.width, 54, 1, 12);
@@ -461,7 +463,7 @@
             self.titleLable.frame = CGRectMake(self.singleLable.frame.origin.x + self.singleLable.frame.size.width + 10, 53, 40, 14);
             
             self.priceLable.text = [NSString stringWithFormat:@"￥%@", [[_detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"priceMast"]];
-            atempSize = [self uiWithConstrained:self.priceLable.text];//[self.priceLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+            atempSize = [self uiWithConstrained:self.priceLable.text];
             self.priceLable.frame = CGRectMake(self.titleLable.frame.origin.x + 40, 53, atempSize.width + 5, 14);
         }
     }
@@ -470,7 +472,11 @@
 - (CGSize)uiWithConstrained:(NSString *)title {
     UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,20);
-    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+//    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+    
+    NSDictionary *dict = @{NSFontAttributeName : nameFnt};
+    
+    CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
     return nameSize;
 }
 

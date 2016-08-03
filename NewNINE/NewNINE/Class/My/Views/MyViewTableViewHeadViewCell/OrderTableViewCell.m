@@ -230,7 +230,12 @@
 - (void) setDataModel:(OrderViewModel *)dataModel {
     _dataModel = dataModel;
     
-    [self.userImageView sd_setImageWithURL:[NSURL URLWithString:_dataModel.orderIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.userImageView sd_setImageWithURL:[NSURL URLWithString:_dataModel.orderIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+    [self.userImageView  sd_setImageWithURL:[NSURL URLWithString:_dataModel.orderIconPhotoUrl]
+                            placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                   completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                   }];
+    
     self.userName.text = _dataModel.orderName;
     CGSize userNameSize = [self uiWithConstrained:self.userName.text];
     self.userName.frame = CGRectMake(65, 15, userNameSize.width + 10, 21);
@@ -310,7 +315,10 @@
 - (CGSize)uiWithConstrained:(NSString *)title {
     UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,20);
-    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+
+    NSDictionary *dict = @{NSFontAttributeName : nameFnt};
+    
+    CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
     return nameSize;
 }
 

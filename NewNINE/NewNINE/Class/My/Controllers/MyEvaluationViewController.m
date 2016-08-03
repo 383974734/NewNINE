@@ -261,12 +261,19 @@ static NSString *cellID = @"myEvaluationTableViewCell";
     NSDictionary *dict = model.myUserComment;
     UIFont *font = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,2000);
-    CGSize labelsize = [[dict objectForKey:@"content"] sizeWithFont:font constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+//    CGSize labelsize = [[dict objectForKey:@"content"] sizeWithFont:font constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    NSDictionary *dictTemp = @{NSFontAttributeName : font};
+    
+    CGSize nameSize = [[dict objectForKey:@"content"] boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dictTemp context:nil].size;
+    
+    
     NSArray *array = [dict objectForKey:@"photos"];
     if (array.count > 0) {
-        return 120 + labelsize.height + 80;
+        return 120 + nameSize.height + 80;
     }else {
-        return 120 + labelsize.height;
+        return 120 + nameSize.height;
     }
 }
 

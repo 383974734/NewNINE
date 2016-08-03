@@ -14,6 +14,7 @@
 // ---------------------- 框架工具类 ----------------------
 
 // ---------------------- controller ----------------------
+#import "MakeAppointmentViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -27,7 +28,9 @@
 static NSString *cellID = @"collectionViewChooseTimeCell";
 
 @interface ChooseTimeViewController ()<HTHorizontalSelectionListDataSource, HTHorizontalSelectionListDelegate,UICollectionViewDelegate, UICollectionViewDataSource, ChooseTimeModelDelegate>
-
+{
+    NSDateComponents*comps;
+}
 
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
@@ -54,6 +57,10 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
 @property (nonatomic, strong) NSArray *arrayAppointsTimes;
 
 @property (nonatomic, strong) NSMutableArray *statusTime;
+/** 用来记录选择年月日 */
+@property (nonatomic, copy) NSString *timeStr;
+/** 用来记录选择日期 */
+@property (nonatomic, copy) NSString *timeOldStr;
 
 @end
 
@@ -124,6 +131,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
  */
 - (void) dealloc {
     NSLog(@" selfViewController Destroy ");
+    [self removeObserver:self forKeyPath:@"timeOldStr"];
 }
 
 #pragma mark - Init Data Method
@@ -131,6 +139,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
  *  数据初始化
  */
 - (void) initData {
+    [self addObserver:self forKeyPath:@"timeOldStr" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
     self.statusTime = [NSMutableArray array];
     [self getAppointDatesWithData:self.stylistinfoId];
 }
@@ -144,6 +153,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
     [self settingNav];
     [self addUI];
     [self settingUIAutoLayout];
+    
 }
 
 /**
@@ -191,7 +201,8 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
  *  @param button UIButton
  */
 - (void) didButton:(UIButton *)button {
-    
+    SetUserDefault(self.makeTime, @"makeTime");//显示预约时间
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - 接口数据
@@ -209,9 +220,22 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
             self.hTHorizontalArray = [self appointDatesaDispose:resultObject];
             [self.hTHorizontalSelectionList reloadData];
             
-            ChooseTimeModel *model = self.hTHorizontalArray[0];
+            ChooseTimeModel *model;
+            if (self.hTHorizontalArray.count > 0) {
+                model = self.hTHorizontalArray[0];
+                self.timeStr = model.chooseAppointDate;
+            }
             
-            [self getAppointsTimesWithData:stylistinfoId currentDate:model.chooseAppointDate];
+            for (int i = 0; i < self.hTHorizontalArray.count; i++) {
+                model = self.hTHorizontalArray[i];
+                if (self.makeTime.length > 11) {
+                    if ([model.chooseAppointDate isEqualToString:[self.makeTime substringToIndex:10]]) {
+                        self.hTHorizontalSelectionList.selectedButtonIndex = i;
+                        self.timeStr = model.chooseAppointDate;
+                    }
+                }
+            }
+            [self getAppointsTimesWithData:stylistinfoId currentDate:self.timeStr];
         }else {
             NSLog(@"book/getAppointDates%@没有数据", url);
         }
@@ -244,9 +268,26 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
         if (resultObject != nil) {
             self.arrayAppointsTimes = [self appointTimesDispose:resultObject];
             [self.statusTime removeAllObjects];
+            
             for (int i = 0; i < self.arrayAppointsTimes.count; i++) {
-                [self.statusTime addObject:@"11"];
+                ChooseTimeModel *model = self.arrayAppointsTimes[i];
+                NSString *one = model.chooseAppointTimes;
+                if (self.makeTime.length > 11) {
+                    NSString *two = [self.makeTime substringFromIndex:11];
+                    if ([one isEqualToString:two]) {
+                        if ([currentDate isEqualToString:[self.makeTime substringToIndex:10]]) {
+                            [self.statusTime addObject:@"22"];
+                        }else {
+                            [self.statusTime addObject:@"11"];
+                        }
+                    }else {
+                        [self.statusTime addObject:@"11"];
+                    }
+                }else {
+                    [self.statusTime addObject:@"11"];
+                }
             }
+            
             [self.collectionViewChooseTime reloadData];
         }else {
             NSLog(@"book/getAppointsTimes%@没有数据", url);
@@ -281,6 +322,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ChooseTimeModel *model             = self.arrayAppointsTimes[indexPath.row];
     ChooseTimeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
+    cell.makeTime  = self.makeTime;
     cell.timeModel = model;
     if (self.arrayAppointsTimes.count == self.statusTime.count) {
         cell.status    = self.statusTime[indexPath.row];
@@ -302,11 +344,12 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
     for (int i = 0 ; i < self.statusTime.count; i ++) {
         [self.statusTime replaceObjectAtIndex:i withObject:@"11"];
     }
-    
     [self.statusTime replaceObjectAtIndex:indexPath.row withObject:@"22"];
     [self.collectionViewChooseTime reloadData];
     ChooseTimeModel *model = self.arrayAppointsTimes[indexPath.row];
-    [self titleWithName:[NSString stringWithFormat:@"预约时间:\n%@", model.chooseAppointTimes] lable:self.lableAppointment len:5 index:6];
+    self.timeOldStr = [NSString stringWithFormat:@"预约时间:\n%@  %@", self.timeStr, model.chooseAppointTimes];
+    self.makeTime = [NSString stringWithFormat:@"%@ %@", self.timeStr, model.chooseAppointTimes];
+    [self titleWithName:self.timeOldStr lable:self.lableAppointment len:5 index:6];
 }
 
 //文字颜色
@@ -339,32 +382,79 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
  */
 - (NSString *)selectionList:(HTHorizontalSelectionList *)selectionList titleForItemWithIndex:(NSInteger)index {
     ChooseTimeModel *model = self.hTHorizontalArray[index];
-//    NSDate *date = [self dateFromString:model.chooseAppointDate];
-//    NSCalendar * calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar]; // 指定日历的算法 NSCalendarIdentifierGregorian,NSGregorianCalendar
-//    // NSDateComponent 可以获得日期的详细信息，即日期的组成
-//    NSDateComponents *comps = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit|NSWeekCalendarUnit|NSWeekdayCalendarUnit fromDate:date];
-//    
-//    NSLog(@"年 = year = %ld",comps.year);
-//    NSLog(@"月 = month = %ld",comps.month);
-//    NSLog(@"日 = day = %ld",comps.day);
-    return model.chooseAppointDate;
+
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSDate *date = [dateFormatter dateFromString:model.chooseAppointDate];
+
+    NSCalendar*calendar = [NSCalendar currentCalendar];
+    comps = [calendar components:(NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitMonth) fromDate:date];
+    
+    NSInteger weekday = [comps weekday]; // 星期几（注意，周日是“1”，周一是“2”。。。。）
+
+    NSString *timeStr;
+    switch (weekday) {
+        case 1:
+            timeStr = [NSString stringWithFormat:@"周日\n%ld月%ld日",(long)[comps month], (long)[comps day]];
+            break;
+        case 2:
+            timeStr = [NSString stringWithFormat:@"周一\n%ld月%ld日",(long)[comps month], (long)[comps day]];
+            break;
+        case 3:
+            timeStr = [NSString stringWithFormat:@"周二\n%ld月%ld日",(long)[comps month], (long)[comps day]];
+            break;
+        case 4:
+            timeStr = [NSString stringWithFormat:@"周三\n%ld月%ld日",(long)[comps month], (long)[comps day]];
+            break;
+        case 5:
+            timeStr = [NSString stringWithFormat:@"周四\n%ld月%ld日",(long)[comps month], (long)[comps day]];
+            break;
+        case 6:
+            timeStr = [NSString stringWithFormat:@"周五\n%ld月%ld日",(long)[comps month], (long)[comps day]];
+            break;
+        case 7:
+            timeStr = [NSString stringWithFormat:@"周六\n%ld月%ld日",(long)[comps month], (long)[comps day]];
+            break;
+            
+        default:
+            break;
+    }
+
+    return timeStr;
+//    return model.chooseAppointDate;
 }
 
 #pragma mark HTHorizontalSelectionList delegate
 /**
- *  tableView 代理方法 点击每个cell (进入详情)
+ *  HTHorizontalSelectionList 代理方法 点击每个cell (进入详情)
  *
  *  @param tableView
  *  @param indexPath
  */
 - (void)selectionList:(HTHorizontalSelectionList *)selectionList didSelectButtonWithIndex:(NSInteger)index {
+    [self.statusTime removeAllObjects];
+    [self titleWithName:self.timeOldStr lable:self.lableAppointment len:5 index:6];
+//    self.timeOldStr        = @"预约时间:\n未预约";
     ChooseTimeModel *model = self.hTHorizontalArray[index];
+    self.timeStr           = model.chooseAppointDate;
     [self getAppointsTimesWithData:self.stylistinfoId currentDate:model.chooseAppointDate];
 
 }
 
-#pragma mark   -  所有控件懒加载
+#pragma 预约时间的KVO 监听
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if ([self.timeOldStr isEqualToString:@"预约时间:\n未预约"]) {
+        self.determine.layer.borderColor     = [UIColor lightGrayColor].CGColor;
+        [self.determine setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        self.determine.userInteractionEnabled = NO;
+    }else {
+        self.determine.layer.borderColor     = [UIColor redColor].CGColor;
+        [self.determine setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        self.determine.userInteractionEnabled = YES;
+    }
+}
 
+#pragma mark   -  所有控件懒加载
 - (HTHorizontalSelectionList *) hTHorizontalSelectionList {
     
     if (!_hTHorizontalSelectionList) {
@@ -374,7 +464,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
         _hTHorizontalSelectionList.dataSource = self;
         _hTHorizontalSelectionList.centerAlignButtons = YES;
         [_hTHorizontalSelectionList setTitleFont:SWP_SYSTEM_FONT_SIZE(18) forState:UIControlStateNormal];
-        [_hTHorizontalSelectionList setTitleFont:SWP_SYSTEM_FONT_SIZE(16) forState:UIControlStateSelected];
+        [_hTHorizontalSelectionList setTitleFont:SWP_SYSTEM_FONT_SIZE(14) forState:UIControlStateSelected];
         _hTHorizontalSelectionList.selectionIndicatorColor = [UIColor redColor];
         [_hTHorizontalSelectionList setTitleFont:[UIFont systemFontOfSize:14] forState:UIControlStateNormal];
     }
@@ -391,7 +481,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
 
 - (UIView *) backView {
     if (!_backView) {
-        _backView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 40, 72, 40, 43)];
+        _backView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 40, 67, 45, 48)];
         _backView.backgroundColor = [UIColor whiteColor];
     }
     return _backView;
@@ -433,10 +523,10 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
     if (!_lableAppointment) {
         _lableAppointment = [[UILabel alloc] initForAutoLayout];
         _lableAppointment.numberOfLines = 0;
-        _lableAppointment.font = SWP_SYSTEM_FONT_SIZE(14);
-        _lableAppointment.text = @"预约时间:\n未预约";
-        [self titleWithName:@"预约时间:\n未预约" lable:self.lableAppointment len:5 index:6];
-        _lableAppointment.textAlignment =NSTextAlignmentLeft;
+        _lableAppointment.font = SWP_SYSTEM_FONT_SIZE(16);
+        _lableAppointment.text = self.timeOldStr;
+        _lableAppointment.textAlignment = NSTextAlignmentLeft;
+        
     }
     return _lableAppointment;
 }
@@ -444,13 +534,31 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
 - (UIButton *)determine {
     if (!_determine) {
         _determine = [[UIButton alloc] initForAutoLayout];
-        _determine.layer.borderColor     = [UIColor lightGrayColor].CGColor;
-        _determine.layer.borderWidth     = 1;
+        _determine.layer.borderColor      = [UIColor lightGrayColor].CGColor;
+        _determine.layer.borderWidth      = 1;
+        _determine.userInteractionEnabled = NO;
         [_determine.layer setCornerRadius:3];
         [_determine setTitle:@"确定" forState:UIControlStateNormal];
         [_determine setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [_determine addTarget:self action:@selector(didButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _determine;
+}
+
+
+- (void) setMakeTime:(NSString *)makeTime {
+    _makeTime = makeTime;
+    if (_makeTime != nil) {
+        [self titleWithName:[NSString stringWithFormat:@"预约时间:\n%@", _makeTime] lable:self.lableAppointment len:5 index:6];
+        [self.determine setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        self.determine.layer.borderColor        = [UIColor redColor].CGColor;
+        self.determine.userInteractionEnabled   = YES;
+        self.timeOldStr                         = [NSString stringWithFormat:@"预约时间:\n%@", _makeTime];
+    }else {
+        [self titleWithName:@"预约时间:\n未预约" lable:self.lableAppointment len:5 index:6];
+        self.determine.userInteractionEnabled = NO;
+        self.timeOldStr = @"预约时间:\n未预约";
+    }
 }
 
 @end

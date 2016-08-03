@@ -25,6 +25,8 @@
 
 
 @interface MakeAppointmentTwoTableViewCell : UITableViewCell
+/** 选择的护理分类*/
+@property (nonatomic, copy) NSString *productType;
 
 @property (nonatomic, copy) NSString *title;
 

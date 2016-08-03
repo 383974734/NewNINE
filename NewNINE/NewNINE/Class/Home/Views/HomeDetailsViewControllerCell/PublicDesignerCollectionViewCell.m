@@ -181,7 +181,13 @@
 - (void) setDictData:(NSDictionary *)dictData {
     _dictData = dictData;
     
-    [self.imageViewPD sd_setImageWithURL:[NSURL URLWithString:[_dictData objectForKey:@"iconPhotoUrl"]] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.imageViewPD sd_setImageWithURL:[NSURL URLWithString:[_dictData objectForKey:@"iconPhotoUrl"]] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+    
+    [self.imageViewPD  sd_setImageWithURL:[NSURL URLWithString:[_dictData objectForKey:@"iconPhotoUrl"]]
+                           placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                  }];
+    
     
     self.nameLable.text = [_dictData objectForKey:@"name"];
 //    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
@@ -214,7 +220,11 @@
 - (CGSize)uiWithConstrained:(NSString *)title {
     UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,20);
-    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+//    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+    
+    NSDictionary *dict = @{NSFontAttributeName : nameFnt};
+    
+    CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
     return nameSize;
 }
 

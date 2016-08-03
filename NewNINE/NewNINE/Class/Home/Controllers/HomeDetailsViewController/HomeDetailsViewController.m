@@ -333,7 +333,7 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
  */
 - (UITableViewCell *) homeTableViewCell: (UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     HomeTableViewCell *cell = [HomeTableViewCell homeCellWithTableView:tableView forCellReuseIdentifier:cellID];
-    if ([[self.detailsDict objectForKey:@"photos"] count] > 0) {
+    if ([[self.detailsDict objectForKey:@"photos"] count] > indexPath.row) {
         cell.photoUrl  = [[self.detailsDict objectForKey:@"photos"][indexPath.row] objectForKey:@"photoUrl"];
     }
     cell.btnHidden = YES;
@@ -441,6 +441,8 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
  */
 - (void)detailsAppointmentBtnViewControllerCell:(DetailsViewControllerCell *)detailsViewControllerCell didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"点击预约按钮触发事件");
+    if (!([[self.detailsDict objectForKey:@"stylistInfos"] count] > 0)) return;
+        
     MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
     viewController.stylistinfoId = [[self.detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"id"];
     [self.navigationController pushViewController:viewController animated:YES];

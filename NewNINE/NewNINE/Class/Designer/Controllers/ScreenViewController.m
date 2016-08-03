@@ -313,9 +313,14 @@
             model = [self.arrayData objectAtIndex:i];
             NSString *levlNames = model.stylistLevlsLevlNames;
             
-            CGSize size = [levlNames sizeWithFont:[UIFont boldSystemFontOfSize:13] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 50)lineBreakMode:UILineBreakModeCharacterWrap];
+//            CGSize size = [levlNames sizeWithFont:[UIFont boldSystemFontOfSize:13] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 50)lineBreakMode:UILineBreakModeCharacterWrap];
+            CGSize size = CGSizeMake(320,20);
             
-            int buttonWidth = size.width + 20 ;
+            NSDictionary *dict = @{NSFontAttributeName : [UIFont boldSystemFontOfSize:13]};
+            
+            CGSize nameSize = [levlNames boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
+            
+            int buttonWidth = nameSize.width + 20 ;
             
             if (x + buttonWidth + 10 >SCREEN_WIDTH) {
                 y+= 36 ;

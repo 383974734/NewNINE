@@ -8,14 +8,22 @@
 
 #import "ModalTableViewCell.h"
 
+#import "ChooseTimeModel.h"
+
 
 @interface ModalTableViewCell ()
+
+/**   遮罩*/
+@property (nonatomic, strong) UIButton  *backBtn;
+
 
 @property (nonatomic, strong) UIButton  *imageViewBtn;
 
 @property (nonatomic, strong) UILabel   *nameLable;
 
 @property (nonatomic, strong) UILabel   *moneyLable;
+
+@property (nonatomic, strong) UILabel   *originalPrice;
 
 @end
 
@@ -58,6 +66,11 @@
  */
 - (void) addUI {
     [self.contentView addSubview:self.imageViewBtn];
+    [self.contentView addSubview:self.nameLable];
+    [self.contentView addSubview:self.moneyLable];
+    [self.contentView addSubview:self.originalPrice];
+    
+    [self.contentView addSubview:self.backBtn];
 }
 
 /**
@@ -65,10 +78,33 @@
  */
 - (void) layoutSubviews {
     [super layoutSubviews];
+    
+    [self.imageViewBtn autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(8, 15, 8, 0) excludingEdge:ALEdgeRight];
+    [self.imageViewBtn autoSetDimension:ALDimensionWidth toSize:29];
+   
+    [self.moneyLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(8, 0, 8, 15) excludingEdge:ALEdgeLeft];
+    [self.moneyLable autoSetDimension:ALDimensionWidth toSize:70];
+    
+    [self.originalPrice autoSetDimension:ALDimensionWidth toSize:60];
+    [self.originalPrice autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:8];
+    [self.originalPrice autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:8];
+    [self.originalPrice autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:90];
+    
+    [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(8, 55, 8, 165)];
+    
+    [self.backBtn autoPinEdgesToSuperviewEdges];
 }
 
-
-
+- (void)didButton:(UIButton *)btn {
+    if (btn.selected) {
+        [_imageViewBtn setImage:[UIImage imageNamed:@"未选中"] forState:UIControlStateNormal];
+    }else {
+        [_imageViewBtn setImage:[UIImage imageNamed:@"选中"] forState:UIControlStateNormal];
+    }
+    if ([self.delegate respondsToSelector:@selector(modalTableViewCell:didSelectRowAtIndexPath:)]) {
+        [self.delegate modalTableViewCell:self didSelectRowAtIndexPath:self.indexPath];
+    }
+}
 
 -(UIButton *)imageViewBtn {
     if (!_imageViewBtn) {
@@ -82,17 +118,74 @@
     if (!_nameLable) {
         _nameLable = [[UILabel alloc] initForAutoLayout];
         _nameLable.textColor = [UIColor redColor];
+        _nameLable.adjustsFontSizeToFitWidth = YES;
+
     }
     return _nameLable;
 }
 
 - (UILabel *)moneyLable {
-    if (_moneyLable) {
+    if (!_moneyLable) {
         _moneyLable = [[UILabel alloc] initForAutoLayout];
         _moneyLable.textColor       = [UIColor redColor];
         _moneyLable.textAlignment   = NSTextAlignmentRight;
+        _moneyLable.adjustsFontSizeToFitWidth = YES;
     }
     return _moneyLable;
 }
+
+- (UILabel *)originalPrice {
+    if (!_originalPrice) {
+        _originalPrice = [[UILabel alloc] initForAutoLayout];
+//        _originalPrice.textColor       = [UIColor grayColor];
+        _originalPrice.textAlignment             = NSTextAlignmentRight;
+        _originalPrice.adjustsFontSizeToFitWidth = YES;
+        self.originalPrice.hidden                = YES;
+    }
+    return _originalPrice;
+}
+
+
+
+-(UIButton *)backBtn {
+    if (!_backBtn) {
+        _backBtn = [[UIButton alloc] initForAutoLayout];
+        [_backBtn addTarget:self action:@selector(didButton:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _backBtn;
+}
+
+- (void)setModel:(ChooseTimeModel *)model {
+    _model = model;
+    self.nameLable.text = _model.productName;
+    self.moneyLable.text = [NSString stringWithFormat:@"￥%@", _model.price];
+    
+    if (_model.price.intValue != _model.originalPrice.intValue) {
+        self.originalPrice.hidden = NO;
+        NSString *testString1 = [NSString stringWithFormat:@"￥%@", _model.originalPrice];
+        NSMutableAttributedString * testAttriString1 = [[NSMutableAttributedString alloc] initWithString:testString1];
+        // 实现文本内容颜色和下划线,删除线的颜色不一样
+        // NSStrokeColorAttributeName 单独设置没有效果
+        // 必须与NSStrokeWidthAttributeName一起设置
+        [testAttriString1 addAttribute:NSStrikethroughStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:NSMakeRange(0, testAttriString1.length)];
+        [testAttriString1 addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0, testAttriString1.length)];
+        [testAttriString1 addAttribute:NSStrokeColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0, testAttriString1.length)];
+        //    [testAttriString1 addAttribute:NSStrokeWidthAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleDouble] range:NSMakeRange(0, testAttriString1.length)];
+        self.originalPrice.attributedText = testAttriString1;
+    }else {
+        self.originalPrice.hidden = YES;
+    }
+
+}
+
+- (void)setBtnSele:(NSString *)btnSele {
+    _btnSele = btnSele;
+    if (_btnSele.intValue == 1) {
+        [_imageViewBtn setImage:[UIImage imageNamed:@"未选中"] forState:UIControlStateNormal];
+    }else {
+        [_imageViewBtn setImage:[UIImage imageNamed:@"选中"] forState:UIControlStateNormal];
+    }
+}
+
 
 @end

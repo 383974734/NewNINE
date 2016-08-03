@@ -172,13 +172,13 @@
         if (_dataModel.OrderBookProducts.count > 0) {
             
             for (int i = 0; _dataModel.OrderBookProducts.count > i; i++) {
-                UILabel *name  = [[UILabel alloc] initWithFrame:CGRectMake(15, (i * 21) + 71, SCREEN_WIDTH - 120, 21)];
+                UILabel *name  = [[UILabel alloc] initWithFrame:CGRectMake(15, (i * 30) + 71, SCREEN_WIDTH - 120, 30)];
                 name.textColor = Color(154, 154, 154, 1);
                 name.tag       = 10010 + i;
                 name.font      = SWP_SYSTEM_FONT_SIZE(15);
                 name.text      = [_dataModel.OrderBookProducts[i] objectForKey:@"productName"];
                 
-                UILabel *nameTitle  = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 120, (i * 21) + 71, 105, 21)];
+                UILabel *nameTitle  = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 120, (i * 30) + 71, 105, 30)];
                 nameTitle.textColor = Color(154, 154, 154, 1);
                 nameTitle.tag       = 10020 + i;
                 nameTitle.font      = SWP_SYSTEM_FONT_SIZE(15);

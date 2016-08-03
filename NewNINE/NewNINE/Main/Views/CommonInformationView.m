@@ -116,9 +116,10 @@
 - (UIButton *) appointmentBtn {
     if (!_appointmentBtn) {
         _appointmentBtn = [[UIButton alloc] initForAutoLayout];
-        [_appointmentBtn setTitle:@"预约按钮" forState:UIControlStateNormal];
+//        [_appointmentBtn setTitle:@"预约按钮" forState:UIControlStateNormal];
+        [_appointmentBtn setImage:[UIImage imageNamed:@"发型详情"] forState:UIControlStateNormal];
         [_appointmentBtn addTarget:self action:@selector(didBtton:) forControlEvents:UIControlEventTouchUpInside];
-        _appointmentBtn.backgroundColor = [UIColor lightGrayColor];
+//        _appointmentBtn.backgroundColor = [UIColor lightGrayColor];
         //按钮的图片宽和高一样
     }
     return _appointmentBtn;
@@ -131,7 +132,7 @@
         _nameLable = [[UILabel alloc] init];
         _nameLable.textColor = Color(64, 64, 64, 1);
         _nameLable.font      = SWP_SYSTEM_FONT_SIZE(15);
-        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
+//        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
     }
     return _nameLable;
 }
@@ -162,7 +163,7 @@
     if (!_collectionLable) {
         _collectionLable = [[UILabel alloc] init];
         _collectionLable.textColor  = Color(154, 154, 154, 1);
-        _collectionLable.font       = SWP_SYSTEM_FONT_SIZE(10);
+        _collectionLable.font       = SWP_SYSTEM_FONT_SIZE(14);
     }
     return _collectionLable;
 }
@@ -171,7 +172,7 @@
     if (!_singleLable) {
         _singleLable = [[UILabel alloc] init];
         _singleLable.textColor  = Color(154, 154, 154, 1);
-        _singleLable.font       = SWP_SYSTEM_FONT_SIZE(10);
+        _singleLable.font       = SWP_SYSTEM_FONT_SIZE(14);
     }
     return _singleLable;
 }
@@ -180,7 +181,7 @@
     if (!_titleLable) {
         _titleLable = [[UILabel alloc] init];
         _titleLable.textColor = Color(154, 154, 154, 1);
-        _titleLable.font      = SWP_SYSTEM_FONT_SIZE(10);
+        _titleLable.font      = SWP_SYSTEM_FONT_SIZE(14);
         _titleLable.text      = @"洗剪吹";
     }
     return _titleLable;
@@ -190,7 +191,7 @@
     if (!_priceLable) {
         _priceLable = [[UILabel alloc] init];
         _priceLable.textColor = [UIColor redColor];
-        _priceLable.font      = SWP_SYSTEM_FONT_SIZE(10);
+        _priceLable.font      = SWP_SYSTEM_FONT_SIZE(14);
     }
     return _priceLable;
 }
@@ -206,7 +207,10 @@
 - (void) setDataModel:(DesignerViewModel *)dataModel {
     _dataModel = dataModel;
     
-    [self.headImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图" ]];
+    [self.headImageVIew  sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerIconPhotoUrl]
+                          placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                 completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                 }];
     
     self.nameLable.text = _dataModel.designerName;
 //    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
@@ -249,7 +253,10 @@
 - (CGSize)uiWithConstrained:(NSString *)title {
     UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,20);
-    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+//    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+    NSDictionary *dict = @{NSFontAttributeName : nameFnt};
+    
+    CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
     return nameSize;
 }
 

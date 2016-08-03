@@ -166,7 +166,12 @@
     self.phone.text = _dataModel.storeAddressPhone;
     self.names.text = _dataModel.storeAddressNames;
     self.addr.text  = _dataModel.storeAddressShopDistrict;
-    [self.photoUrl sd_setImageWithURL:[NSURL URLWithString:_dataModel.storeAddressPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.photoUrl sd_setImageWithURL:[NSURL URLWithString:_dataModel.storeAddressPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+    
+    [self.photoUrl  sd_setImageWithURL:[NSURL URLWithString:_dataModel.storeAddressPhotoUrl]
+                       placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                              }];
 }
 
 @end

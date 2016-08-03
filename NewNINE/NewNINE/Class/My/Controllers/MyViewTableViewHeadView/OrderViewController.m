@@ -21,6 +21,7 @@
 
 // ---------------------- controller ----------------------
 #import "MyEvaluationViewController.h"
+#import "PlaceOrderViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -299,6 +300,12 @@ static NSString *cellID = @"orderTableViewCellID";
  */
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    OrderViewModel *model = self.orderArray[indexPath.row];
+    
+    PlaceOrderViewController *viewController = [[PlaceOrderViewController alloc] init];
+    viewController.titleString               = @"订单详情";
+    viewController.orderViewModel            = model;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 /**
@@ -468,10 +475,10 @@ static NSString *cellID = @"orderTableViewCellID";
         _orderTableView                  = [[UITableView alloc] initForAutoLayout];
         _orderTableView.delegate         = self;
         _orderTableView.dataSource       = self;
-        _orderTableView.separatorStyle   = NO;//cell线隐藏
+//        _orderTableView.separatorStyle   = NO;//cell线隐藏
         [_orderTableView registerClass:[OrderTableViewCell class] forCellReuseIdentifier:cellID];
         [self settingTableViewRefreshing:_orderTableView target:self headerAction:@selector(headerRereshingData) footerAction:@selector(footerRereshingData)];
-        
+        [_orderTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];//隐藏多余的cell
 //        _orderTableView.estimatedRowHeight = 200;
 //        _orderTableView.rowHeight = UITableViewAutomaticDimension;
     }

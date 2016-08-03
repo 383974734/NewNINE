@@ -143,7 +143,12 @@
 
 - (void) setCellModel:(HomeBannerModels *)cellModel {
     _cellModel = cellModel;
-    [self.backgroundImageView sd_setImageWithURL:[NSURL URLWithString:_cellModel.homeHairPhotoUrl] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+//    [self.backgroundImageView sd_setImageWithURL:[NSURL URLWithString:_cellModel.homeHairPhotoUrl] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+    [self.backgroundImageView  sd_setImageWithURL:[NSURL URLWithString:_cellModel.homeHairPhotoUrl]
+                                   placeholderImage:[UIImage imageNamed:@"banner缺省图"]
+                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                          }];
+    
     self.contentLable.text = _cellModel.homeInfoDescription;
 
 }
@@ -155,7 +160,11 @@
 
 - (void) setPhotoUrl:(NSString *)photoUrl {
     _photoUrl = photoUrl;
-    [self.backgroundImageView sd_setImageWithURL:[NSURL URLWithString:_photoUrl] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+//    [self.backgroundImageView sd_setImageWithURL:[NSURL URLWithString:_photoUrl] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+    [self.backgroundImageView  sd_setImageWithURL:[NSURL URLWithString:_photoUrl]
+                                 placeholderImage:[UIImage imageNamed:@"banner缺省图"]
+                                        completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                        }];
 }
 
 @end

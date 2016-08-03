@@ -144,7 +144,7 @@
         _nameLable = [[UILabel alloc] init];
         _nameLable.textColor = Color(64, 64, 64, 1);
         _nameLable.font      = SWP_SYSTEM_FONT_SIZE(15);
-        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
+//        _nameLable.lineBreakMode = UILineBreakModeWordWrap;
     }
     return _nameLable;
 }
@@ -237,7 +237,13 @@
     
     self.autographLable.text = [stylistInfoDict objectForKey:@"introduce"];
     
-    [self.headImageVIew sd_setImageWithURL:[NSURL URLWithString:[stylistInfoDict objectForKey:@"iconPhotoUrl"]] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+//    [self.headImageVIew sd_setImageWithURL:[NSURL URLWithString:[stylistInfoDict objectForKey:@"iconPhotoUrl"]] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
+    
+    [self.headImageVIew  sd_setImageWithURL:[NSURL URLWithString:[stylistInfoDict objectForKey:@"iconPhotoUrl"]]
+                           placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                  }];
+    
     [self frameWithUI:userCommentDict stylistInfoDict:stylistInfoDict];
 }
 
@@ -264,13 +270,25 @@
         NSArray *array = [userCommentDict objectForKey:@"photos"];
         for (int i = 0; array.count > i; i++) {
             if (i == 0) {
-                [self.oneImageVIew sd_setImageWithURL:[NSURL URLWithString:[array[0] objectForKey:@"photoUrl"]]];
+//                [self.oneImageVIew sd_setImageWithURL:[NSURL URLWithString:[array[0] objectForKey:@"photoUrl"]]];
+                [self.oneImageVIew  sd_setImageWithURL:[NSURL URLWithString:[array[0] objectForKey:@"photoUrl"]]
+                                       placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                              }];
             }
             if (i == 1) {
-                [self.twoImageVIew sd_setImageWithURL:[NSURL URLWithString:[array[1] objectForKey:@"photoUrl"]]];
+//                [self.twoImageVIew sd_setImageWithURL:[NSURL URLWithString:[array[1] objectForKey:@"photoUrl"]]];
+                [self.twoImageVIew  sd_setImageWithURL:[NSURL URLWithString:[array[1] objectForKey:@"photoUrl"]]
+                                      placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                             }];
             }
             if (i == 2) {
-                [self.threeImageVIew sd_setImageWithURL:[NSURL URLWithString:[array[2] objectForKey:@"photoUrl"]]];
+//                [self.threeImageVIew sd_setImageWithURL:[NSURL URLWithString:[array[2] objectForKey:@"photoUrl"]]];
+                [self.threeImageVIew  sd_setImageWithURL:[NSURL URLWithString:[array[2] objectForKey:@"photoUrl"]]
+                                      placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                             }];
             }
         }
         self.oneImageVIew.hidden = NO;
@@ -287,7 +305,10 @@
 - (CGSize)uiWithConstrained:(NSString *)title {
     UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,20);
-    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+//    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+    NSDictionary *dict = @{NSFontAttributeName : nameFnt};
+    
+    CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
     return nameSize;
 }
 

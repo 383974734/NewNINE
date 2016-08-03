@@ -118,7 +118,9 @@
 - (void) setStatus:(NSString *)status {
     _status = status;
     if (self.timeLable.textColor == [UIColor lightGrayColor]) {
-        
+        self.timeButton.layer.borderColor       = [UIColor lightGrayColor].CGColor;
+        self.timeLable.textColor                = [UIColor lightGrayColor];
+        self.timeButton.backgroundColor         = [UIColor whiteColor];
     }else {
         if (status.intValue == 22) {
             self.timeButton.backgroundColor = [UIColor redColor];

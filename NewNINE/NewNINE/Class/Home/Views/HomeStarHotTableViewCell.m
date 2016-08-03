@@ -237,7 +237,12 @@
         if (array.count == i + 1) {
             self.starScrollerImageView.backgroundColor = [UIColor redColor];
         }else {
-            [self.starScrollerImageView sd_setImageWithURL:[NSURL URLWithString:array[i]] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+//            [self.starScrollerImageView sd_setImageWithURL:[NSURL URLWithString:array[i]] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
+            
+            [self.starScrollerImageView  sd_setImageWithURL:[NSURL URLWithString:array[i]]
+                                        placeholderImage:[UIImage imageNamed:@"发型缺省图"]
+                                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                               }];
         }
 
     }
