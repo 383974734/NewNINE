@@ -408,7 +408,6 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
 }
 
 - (void) didView:(UIButton *)btn{
-//    [self.hairstyleArray removeAllObjects];
     if (btn.tag == 0) {
         if ([self.followStr isEqualToString:@"1"]) {
             self.fucosDataStr       = @"DESC" ;

@@ -11,6 +11,7 @@
 		19375A801CFC0C8900DF0663 /* HomeDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19375A7F1CFC0C8900DF0663 /* HomeDetailsViewController.m */; };
 		19375A831CFC0CE400DF0663 /* HomeCommonDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19375A821CFC0CE400DF0663 /* HomeCommonDetailsViewController.m */; };
 		19375A871CFC0EE200DF0663 /* DetailsViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19375A861CFC0EE200DF0663 /* DetailsViewControllerCell.m */; };
+		193952741D59A17A00900BB7 /* ServiceClassificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 193952731D59A17A00900BB7 /* ServiceClassificationViewController.m */; };
 		193A1E3D1CF6BDA3003D7DE8 /* STBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E3A1CF6BDA3003D7DE8 /* STBannerView.m */; };
 		193A1E3E1CF6BDA3003D7DE8 /* STBannerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E3C1CF6BDA3003D7DE8 /* STBannerViewCell.m */; };
 		193A1E411CF6C446003D7DE8 /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E401CF6C446003D7DE8 /* HomeTableViewCell.m */; };
@@ -19,10 +20,12 @@
 		193A1E531CF6F58B003D7DE8 /* DetailsWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 193A1E521CF6F58B003D7DE8 /* DetailsWebViewController.m */; };
 		193EB71B1D00147A0054426B /* HairstyleCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 193EB71A1D00147A0054426B /* HairstyleCollectionViewCell.m */; };
 		193EB71E1D0026200054426B /* HairstyleViewControllerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 193EB71D1D0026200054426B /* HairstyleViewControllerModel.m */; };
+		194927711D5AC55C009739DE /* ServiceClassificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 194927701D5AC55C009739DE /* ServiceClassificationTableViewCell.m */; };
 		194CCDB61D07E33900BEC7E7 /* DesignerViewTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 194CCDB51D07E33900BEC7E7 /* DesignerViewTableViewCell.m */; };
 		194CCDB81D07F0F200BEC7E7 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 194CCDB71D07F0F200BEC7E7 /* CoreLocation.framework */; };
 		194CCDBB1D07FB4100BEC7E7 /* RMMapLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 194CCDBA1D07FB4100BEC7E7 /* RMMapLocation.m */; };
 		194CCDBE1D08210500BEC7E7 /* DesignerViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 194CCDBD1D08210500BEC7E7 /* DesignerViewModel.m */; };
+		19550A841D616B6700D46E03 /* DesignerModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19550A831D616B6700D46E03 /* DesignerModalViewController.m */; };
 		195597971D0E4EBB00A0D251 /* CityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 195597961D0E4EBB00A0D251 /* CityViewController.m */; };
 		1955979A1D0E52AA00A0D251 /* ScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 195597991D0E52AA00A0D251 /* ScreenViewController.m */; };
 		1955979D1D0E606D00A0D251 /* StylistLevlsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1955979C1D0E606D00A0D251 /* StylistLevlsModel.m */; };
@@ -170,6 +173,8 @@
 		19375A821CFC0CE400DF0663 /* HomeCommonDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeCommonDetailsViewController.m; sourceTree = "<group>"; };
 		19375A851CFC0EE200DF0663 /* DetailsViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewControllerCell.h; sourceTree = "<group>"; };
 		19375A861CFC0EE200DF0663 /* DetailsViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewControllerCell.m; sourceTree = "<group>"; };
+		193952721D59A17A00900BB7 /* ServiceClassificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceClassificationViewController.h; sourceTree = "<group>"; };
+		193952731D59A17A00900BB7 /* ServiceClassificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceClassificationViewController.m; sourceTree = "<group>"; };
 		193A1E391CF6BDA3003D7DE8 /* STBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STBannerView.h; sourceTree = "<group>"; };
 		193A1E3A1CF6BDA3003D7DE8 /* STBannerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STBannerView.m; sourceTree = "<group>"; };
 		193A1E3B1CF6BDA3003D7DE8 /* STBannerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STBannerViewCell.h; sourceTree = "<group>"; };
@@ -186,6 +191,8 @@
 		193EB71A1D00147A0054426B /* HairstyleCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HairstyleCollectionViewCell.m; sourceTree = "<group>"; };
 		193EB71C1D0026200054426B /* HairstyleViewControllerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HairstyleViewControllerModel.h; sourceTree = "<group>"; };
 		193EB71D1D0026200054426B /* HairstyleViewControllerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HairstyleViewControllerModel.m; sourceTree = "<group>"; };
+		1949276F1D5AC55C009739DE /* ServiceClassificationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceClassificationTableViewCell.h; sourceTree = "<group>"; };
+		194927701D5AC55C009739DE /* ServiceClassificationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceClassificationTableViewCell.m; sourceTree = "<group>"; };
 		194CCDB41D07E33900BEC7E7 /* DesignerViewTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesignerViewTableViewCell.h; sourceTree = "<group>"; };
 		194CCDB51D07E33900BEC7E7 /* DesignerViewTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesignerViewTableViewCell.m; sourceTree = "<group>"; };
 		194CCDB71D07F0F200BEC7E7 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -193,6 +200,8 @@
 		194CCDBA1D07FB4100BEC7E7 /* RMMapLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMMapLocation.m; sourceTree = "<group>"; };
 		194CCDBC1D08210500BEC7E7 /* DesignerViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesignerViewModel.h; sourceTree = "<group>"; };
 		194CCDBD1D08210500BEC7E7 /* DesignerViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesignerViewModel.m; sourceTree = "<group>"; };
+		19550A821D616B6700D46E03 /* DesignerModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesignerModalViewController.h; sourceTree = "<group>"; };
+		19550A831D616B6700D46E03 /* DesignerModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesignerModalViewController.m; sourceTree = "<group>"; };
 		195597951D0E4EBB00A0D251 /* CityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityViewController.h; sourceTree = "<group>"; };
 		195597961D0E4EBB00A0D251 /* CityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityViewController.m; sourceTree = "<group>"; };
 		195597981D0E52AA00A0D251 /* ScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenViewController.h; sourceTree = "<group>"; };
@@ -516,6 +525,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		1949276E1D5AC538009739DE /* ServiceClassificationView */ = {
+			isa = PBXGroup;
+			children = (
+				1949276F1D5AC55C009739DE /* ServiceClassificationTableViewCell.h */,
+				194927701D5AC55C009739DE /* ServiceClassificationTableViewCell.m */,
+			);
+			path = ServiceClassificationView;
+			sourceTree = "<group>";
+		};
 		1955979E1D0EA8E200A0D251 /* GBTagListView2.0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -825,6 +843,8 @@
 				195597961D0E4EBB00A0D251 /* CityViewController.m */,
 				195597981D0E52AA00A0D251 /* ScreenViewController.h */,
 				195597991D0E52AA00A0D251 /* ScreenViewController.m */,
+				19550A821D616B6700D46E03 /* DesignerModalViewController.h */,
+				19550A831D616B6700D46E03 /* DesignerModalViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -956,6 +976,8 @@
 				19D887C71D2A33D2005DA1A1 /* ModalViewController.m */,
 				19D1D47E1D3CD77000FA701F /* PlaceOrderViewController.h */,
 				19D1D47F1D3CD77000FA701F /* PlaceOrderViewController.m */,
+				193952721D59A17A00900BB7 /* ServiceClassificationViewController.h */,
+				193952731D59A17A00900BB7 /* ServiceClassificationViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -972,6 +994,7 @@
 		197CEA1E1CF69B3700085C7D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1949276E1D5AC538009739DE /* ServiceClassificationView */,
 				19D1D4821D3CDEBC00FA701F /* PlaceOrderCellView */,
 				1960CDBD1D2B6053008B5834 /* ModalCellView */,
 				1956C3BD1D24EB1900A7CC3D /* ChooseTimeCellView */,
@@ -1411,6 +1434,7 @@
 				19FC41CE1D13F7C000671F1F /* MyEvaluationModel.m in Sources */,
 				19D1D48E1D3CDFB000FA701F /* DepositTableViewCell.m in Sources */,
 				19FAB9231D126A0D0090B686 /* DiscountViewModel.m in Sources */,
+				193952741D59A17A00900BB7 /* ServiceClassificationViewController.m in Sources */,
 				19375A871CFC0EE200DF0663 /* DetailsViewControllerCell.m in Sources */,
 				197CEA271CF69B3700085C7D /* HomeViewController.m in Sources */,
 				197806561D1143F8005D9651 /* OrderTableViewCell.m in Sources */,
@@ -1452,6 +1476,7 @@
 				193A1E3E1CF6BDA3003D7DE8 /* STBannerViewCell.m in Sources */,
 				199C740B1D17EEA600CAC044 /* LewPopupViewAnimationSpring.m in Sources */,
 				19D1D4881D3CDF7000FA701F /* InformationTableViewCell.m in Sources */,
+				19550A841D616B6700D46E03 /* DesignerModalViewController.m in Sources */,
 				1955979D1D0E606D00A0D251 /* StylistLevlsModel.m in Sources */,
 				197806361D10FDE7005D9651 /* OrderViewController.m in Sources */,
 				193EB71B1D00147A0054426B /* HairstyleCollectionViewCell.m in Sources */,
@@ -1483,6 +1508,7 @@
 				19FAB9291D1282710090B686 /* StoreAddressViewController.m in Sources */,
 				193A1E411CF6C446003D7DE8 /* HomeTableViewCell.m in Sources */,
 				1978065E1D114E2E005D9651 /* UserMessageOneableViewCell.m in Sources */,
+				194927711D5AC55C009739DE /* ServiceClassificationTableViewCell.m in Sources */,
 				197CE9FE1CF69B3200085C7D /* NSString+JSON.m in Sources */,
 				193A1E4D1CF6C84B003D7DE8 /* HomeBannerTableViewCell.m in Sources */,
 				1960CDC01D2B6073008B5834 /* ModalTableViewCell.m in Sources */,

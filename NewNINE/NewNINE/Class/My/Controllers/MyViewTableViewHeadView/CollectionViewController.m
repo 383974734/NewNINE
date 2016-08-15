@@ -15,6 +15,7 @@
 
 // ---------------------- controller ----------------------
 #import "MakeAppointmentViewController.h"
+#import "HomeDetailsViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -24,6 +25,7 @@
 
 // ---------------------- model      ----------------------
 #import "DesignerViewModel.h"
+#import "HomeBannerModels.h"
 //#import "HairstyleViewControllerModel.h"
 // ---------------------- model      ----------------------
 
@@ -392,6 +394,11 @@ static NSString *cellControllerView = @"CollectionViewHairstyleViewCell";
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"%@",indexPath);
     
+    HairstyleViewControllerModel *model = self.hairstyleArray[indexPath.row];
+    HomeDetailsViewController *detailsViewController = [[HomeDetailsViewController alloc] init];
+    detailsViewController.hairstyleModel = model;
+    [self.navigationController pushViewController:detailsViewController animated:YES];
+    
 }
 
 
@@ -510,7 +517,7 @@ static NSString *cellControllerView = @"CollectionViewHairstyleViewCell";
         _collectionViewHairstyle.pagingEnabled                  = NO;
         _collectionViewHairstyle.showsHorizontalScrollIndicator = NO;
         _collectionViewHairstyle.showsVerticalScrollIndicator   = NO;
-                [self settingCollectionViewRefreshing:_collectionViewHairstyle target:self headerAction:@selector(headerRereshingDataCollectionView) footerAction:@selector(footerRereshingDataCollectionView)];
+        [self settingCollectionViewRefreshing:_collectionViewHairstyle target:self headerAction:@selector(headerRereshingDataCollectionView) footerAction:@selector(footerRereshingDataCollectionView)];
         [_collectionViewHairstyle registerClass:[HairstyleCollectionViewCell class] forCellWithReuseIdentifier:cellControllerView];
         _collectionViewHairstyle.hidden = YES;
     }

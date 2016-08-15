@@ -17,7 +17,7 @@
 @property (nonatomic, strong) UIImageView   *imageHairstyleCell;
 /** 发型师背景*/
 @property (nonatomic, strong) UIView        *titleView;
-/** 发型师介绍背景*/
+/** 发型师介绍*/
 @property (nonatomic, strong) UILabel       *lable;
 
 @end
@@ -98,6 +98,7 @@
 - (UILabel *) lable{
     if (!_lable) {
         _lable = [[UILabel alloc] initForAutoLayout];
+        _lable.font = SWP_SYSTEM_FONT_SIZE(14);
         _lable.numberOfLines = 2;
     }
     return _lable;
@@ -107,8 +108,7 @@
     _dataModel = dataModel;
     
     _lable.text = dataModel.hairstyleInfoDescription;
-//    [self.imageHairstyleCell sd_setImageWithURL:[NSURL URLWithString:_dataModel.hairstyleHairPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-    
+
     [self.imageHairstyleCell  sd_setImageWithURL:[NSURL URLWithString:_dataModel.hairstyleHairPhotoUrl]
                            placeholderImage:[UIImage imageNamed:@"发型缺省图"]
                                   completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {

@@ -117,7 +117,6 @@
 - (UILabel *)nameLable {
     if (!_nameLable) {
         _nameLable = [[UILabel alloc] initForAutoLayout];
-        _nameLable.textColor = [UIColor redColor];
         _nameLable.textAlignment = NSTextAlignmentRight;
         _nameLable.adjustsFontSizeToFitWidth = YES;
     }
@@ -163,14 +162,33 @@
 
 - (void)setIndexPath:(NSIndexPath *)indexPath {
     _indexPath = indexPath;
-    if (indexPath.row == 0) {
-        [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, SCREEN_WIDTH - 120, 0, 0)];
-    }else {
+    
+    if ([_titleString isEqualToString:@"订单详情"]) {
+        if (indexPath.row == 0) {
+            self.nameLable.textColor = [UIColor lightGrayColor];
+            if ([self.titleStr isEqualToString:@"订单金额"]) {
+                self.nameLable.textColor = [UIColor redColor];
+            }
+            
+        }else {
+            self.nameLable.textColor = [UIColor redColor];
+        }
+        
         [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, SCREEN_WIDTH - 120, 0, 15)];
-    }
-    if (indexPath.row == 1) {
-        self.seleImage.hidden = NO;
-        self.nameLable.hidden = YES;
+    }else {
+        if (indexPath.row == 0) {
+            [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, SCREEN_WIDTH - 120, 0, 0)];
+        }else {
+            [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, SCREEN_WIDTH - 120, 0, 15)];
+        }
+        self.nameLable.textColor = [UIColor redColor];
+        if (indexPath.row == 1) {
+            self.seleImage.hidden = NO;
+            self.nameLable.hidden = YES;
+            if ([_titleStr isEqualToString:@"无可用积分"]) {
+                self.seleImage.hidden = YES;
+            }
+        }
     }
 }
 
@@ -185,5 +203,10 @@
     self.titleLable.attributedText = hintString;
 }
 
+
+- (void) setTitleString:(NSString *)titleString {
+    _titleString = titleString;
+    
+}
 
 @end

@@ -76,10 +76,7 @@
     [self.userImageView autoSetDimension:ALDimensionWidth toSize:5];
     
     [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 0, 15) excludingEdge:ALEdgeLeft];
-    [self.nameLable autoSetDimension:ALDimensionWidth toSize:110];
-    
-//    [self.titleLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 35, 0, 0) excludingEdge:ALEdgeRight];
-//    [self.titleLable autoPinEdge:ALEdgeRight toEdge:ALEdgeLeft ofView:self.nameLable withOffset:-5];
+    [self.nameLable autoSetDimension:ALDimensionWidth toSize:90];
 
 }
 
@@ -97,7 +94,7 @@
 
 - (UILabel *)titleLable {
     if (!_titleLable) {
-        _titleLable                           = [[UILabel alloc] initWithFrame:CGRectMake(35, 0, SCREEN_WIDTH - 175, 45)];
+        _titleLable                           = [[UILabel alloc] initWithFrame:CGRectMake(35, 0, SCREEN_WIDTH - 145, 45)];
         _titleLable.adjustsFontSizeToFitWidth = YES;
         _titleLable.backgroundColor           = [UIColor whiteColor];
     }
@@ -129,17 +126,20 @@
 }
 
 - (void)componentsSeparatedByString:(NSString *)str {
-    if ([[str componentsSeparatedByString:@","][0] isEqualToString:@"合计"]) {
-        self.titleLable.frame     = CGRectMake(20, 0, SCREEN_WIDTH - 175, 45);
+    if ([[str componentsSeparatedByString:@":"][0] isEqualToString:@"合计"]) {
+        self.titleLable.frame     = CGRectMake(20, 0, SCREEN_WIDTH - 125, 45);
         self.titleLable.textColor = Color(64, 64, 64, 1);
         self.nameLable.textColor  = [UIColor redColor];
+        self.titleLable.text = [str componentsSeparatedByString:@":"][0];
+        self.nameLable.text  = [NSString stringWithFormat:@"%@", [str componentsSeparatedByString:@":"][1]];
     }else {
-        self.titleLable.frame      = CGRectMake(35, 0, SCREEN_WIDTH - 175, 45);
+        self.titleLable.frame      = CGRectMake(35, 0, SCREEN_WIDTH - 125, 45);
         self.titleLable.textColor  = [UIColor lightGrayColor];
         self.nameLable.textColor   = [UIColor lightGrayColor];
+        self.titleLable.text = [str componentsSeparatedByString:@"-"][0];
+        self.nameLable.text  = [NSString stringWithFormat:@"%@", [str componentsSeparatedByString:@"-"][1]];
     }
-    self.titleLable.text = [str componentsSeparatedByString:@","][0];
-    self.nameLable.text  = [NSString stringWithFormat:@"￥%@", [str componentsSeparatedByString:@","][1]];
+    
 }
 
 
@@ -155,7 +155,7 @@
         }];
         self.headImageView.hidden = NO;
         self.userImageView.hidden = YES;
-        self.titleLable.frame     = CGRectMake(70, 0, SCREEN_WIDTH - 175, 45);
+        self.titleLable.frame     = CGRectMake(70, 0, SCREEN_WIDTH - 195, 45);
         self.titleLable.textColor = Color(64, 64, 64, 1);
         self.nameLable.textColor  = [UIColor lightGrayColor];
         self.titleLable.text      = [NSString stringWithFormat:@"%@", [_makeAppointmentDic objectForKey:@"name"]];
@@ -177,7 +177,7 @@
         }];
         self.headImageView.hidden = NO;
         self.userImageView.hidden = YES;
-        self.titleLable.frame     = CGRectMake(70, 0, SCREEN_WIDTH - 175, 45);
+        self.titleLable.frame     = CGRectMake(70, 0, SCREEN_WIDTH - 195, 45);
         self.titleLable.textColor = Color(64, 64, 64, 1);
         self.nameLable.textColor  = [UIColor lightGrayColor];
         self.titleLable.text      = [NSString stringWithFormat:@"%@", _orderViewModel.orderName];

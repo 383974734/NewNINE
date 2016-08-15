@@ -203,6 +203,12 @@
     return footer;
 }
 
+/**
+ *  设置导航控制器
+ *
+ *  @param leftBarButton NO 显示左侧返回按钮   YES 隐藏左侧返回按钮
+ *  @param title         导航显示文字
+ */
 - (void)setNavWithLeftBarButton:(BOOL)leftBarButton title:(NSString *)title{
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 22, SCREEN_WIDTH, 44)];
     view.backgroundColor = [UIColor whiteColor];

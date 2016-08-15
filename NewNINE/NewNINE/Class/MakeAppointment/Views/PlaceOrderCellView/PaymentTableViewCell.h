@@ -29,14 +29,19 @@
 
 @interface PaymentTableViewCell : UITableViewCell
 
+
+/** 导航名称*/
+@property (nonatomic, copy) NSString      *titleString;
+/** 接收分类标题  （优惠卷， 可用积分， 实付金额）*/
+@property (nonatomic, copy) NSString      *titleStr;
+/** 接收分类内容  */
+@property (nonatomic, copy) NSString      *nameStr;
+
 @property (nonatomic, strong) NSIndexPath *indexPath;
 
 @property (nonatomic, assign) id<PaymentTableViewCellDelegate> delegate;
 
-/** 接收分类标题  （优惠卷， 可用积分， 实付金额）*/
-@property (nonatomic, copy) NSString *titleStr;
-/** 接收分类内容  */
-@property (nonatomic, copy) NSString *nameStr;
+
 
 
 /**

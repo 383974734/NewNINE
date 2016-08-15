@@ -14,14 +14,16 @@
 @protocol MakeAppointmentOneTableViewCellDelegate <NSObject>
 
 @optional
+
 /**
  *  预约美发头像分区代理
  *
  *  @param makeAppointmentOneTableViewCell MakeAppointmentOneTableViewCell
  *  @param tag                             选择的第几行
- *  @param selectCategory                  选择的分类 //选中分类    （0：洗剪吹没选中         1：选中了洗剪吹         2：洗吹没选中      3：选中了洗吹）
+ *  @param selectCategory1                 选择的分类  洗剪吹
+ *  @param selectCategory2                 选择的分类  洗吹造型
  */
-- (void)makeAppointmentOneTableViewCell:(MakeAppointmentOneTableViewCell *)makeAppointmentOneTableViewCell buttonWithTag:(NSInteger)tag selectCategory:(NSString *)selectCategory;
+- (void)makeAppointmentOneTableViewCell:(MakeAppointmentOneTableViewCell *)makeAppointmentOneTableViewCell buttonWithTag:(NSInteger)tag selectCategory1:(NSString *)selectCategory1 selectCategory2:(NSString *)selectCategory2;
 
 @end
 
@@ -32,9 +34,6 @@
 @property (nonatomic, strong) NSDictionary  *dict;
 
 @property (nonatomic, copy)   NSString      *timeMake;
-
-/** 洗剪吹、洗吹   选择状态是否复原*/  //默认无选择  false
-@property (nonatomic, getter=isHiddenSelected) BOOL hiddenSelected;
 
 /**
  *  快速  初始化 一个自定义cell

@@ -149,7 +149,6 @@
  */
 - (void) settingNav {
     
-    //    [self settingNavigationBarTitle:@"模板" textColor:nil titleFontSize:NAVIGATION_TITLE_FONT_SIZE];
 }
 
 /**
@@ -176,8 +175,8 @@
     [self.navView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(22, 0, 0, 0) excludingEdge:ALEdgeBottom];
     [self.navView autoSetDimension:ALDimensionHeight toSize:42];
     
-    [self.contentView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(65, 0, 0, 0) excludingEdge:ALEdgeBottom];
-    [self.contentView autoSetDimension:ALDimensionHeight toSize:120];
+    [self.contentView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(65, 0, 100, 0)];
+//    [self.contentView autoSetDimension:ALDimensionHeight toSize:120];
     
     [self.determineButton autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:25];
     [self.determineButton autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:25];
@@ -216,7 +215,7 @@
             }
         }
         self.stylistLevlsStr = [stylistLevlsStrArray componentsJoinedByString:@","];
-        SetUserDefault(self.stylistLevlsStr, @"stylistLevlsStr");
+        SetUserDefault(self.stylistLevlsStr, @"stylistLevlsStr");//设计师职位ID
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

@@ -135,10 +135,7 @@
     _titleLable.text            = _userData.oneTitle;
     _detailedimageView.hidden   = _userData.onejudge;
     _detailedLable.hidden       = _userData.twojudge;
-    
-    
-//    [_detailedimageView sd_setImageWithURL:[NSURL URLWithString:_userData.userIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"160Wow"]];
-    
+
     [self.detailedimageView  sd_setImageWithURL:[NSURL URLWithString:_userData.userIconPhotoUrl]
                       placeholderImage:[UIImage imageNamed:@"160Wow"]
                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {

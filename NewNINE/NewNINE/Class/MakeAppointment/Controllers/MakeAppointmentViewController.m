@@ -19,8 +19,8 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 // ---------------------- controller ----------------------
 #import "DesignerViewController.h"
 #import "ChooseTimeViewController.h"
-#import "ModalViewController.h"
 #import "PlaceOrderViewController.h"
+#import "ServiceClassificationViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -29,10 +29,9 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 // ---------------------- view       ----------------------
 
 // ---------------------- model      ----------------------
-
 // ---------------------- model      ----------------------
 
-@interface MakeAppointmentViewController ()<UITableViewDelegate, UITableViewDataSource, MakeAppointmentOneTableViewCellDelegate, DesignerViewControllerDelegate, MakeAppointmentTwoTableViewCellDelegate, ModalViewControllerDelegate>
+@interface MakeAppointmentViewController ()<UITableViewDelegate, UITableViewDataSource, MakeAppointmentOneTableViewCellDelegate, DesignerViewControllerDelegate, MakeAppointmentTwoTableViewCellDelegate, ServiceClassificationViewControllerDelegate>
 
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
@@ -48,53 +47,50 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 // ---------------------- 数据模型 ----------------------
 /** 设计师预约首页数据*/
 @property (nonatomic, strong) NSDictionary   *makeAppointmentDic;
-/** 选择护理类型默认数据*/
-@property (nonatomic, strong) NSMutableArray *productTypeArray;
-/** 提交订单选择的数据(传到提交订单页面的数据) */
-@property (nonatomic, strong) NSMutableArray *placeOrderArray;
-/** 选择护理类型烫发默认数据*/
-@property (nonatomic, copy) NSString         *selectedSegmentStr1;
-/** 选择护理类型染发默认数据*/
-@property (nonatomic, copy) NSString         *selectedSegmentStr2;
 
-@property (nonatomic, copy) NSString         *didSelectProductId1;
+@property (nonatomic, strong) NSArray        *classificationMain;
 
-@property (nonatomic, copy) NSString         *didSelectProductId2;
+/** 洗剪吹  第一个section的价位集合*/
+@property (nonatomic, strong) NSMutableArray *moneyArray0;
+/** 烫发价位集合*/
+@property (nonatomic, strong) NSMutableArray *moneyArray1;
+/** 染发价位集合*/
+@property (nonatomic, strong) NSMutableArray *moneyArray2;
+/** 护理价位集合*/
+@property (nonatomic, strong) NSMutableArray *moneyArray3;
+/** 洗色价位集合*/
+@property (nonatomic, strong) NSMutableArray *moneyArray4;
+/** 养发价位集合*/
+@property (nonatomic, strong) NSMutableArray *moneyArray5;
+/** 接发价位集合*/
+@property (nonatomic, strong) NSMutableArray *moneyArray6;
 
-@property (nonatomic, copy) NSString         *didSelectProductId3;
+/** 烫发显示内容集合*/
+@property (nonatomic, strong) NSMutableArray *classificationArray1;
+/** 染发显示内容集合*/
+@property (nonatomic, strong) NSMutableArray *classificationArray2;
+/** 护理显示内容集合*/
+@property (nonatomic, strong) NSMutableArray *classificationArray3;
+/** 洗色显示内容集合*/
+@property (nonatomic, strong) NSMutableArray *classificationArray4;
+/** 养发显示内容集合*/
+@property (nonatomic, strong) NSMutableArray *classificationArray5;
+/** 接发显示内容集合*/
+@property (nonatomic, strong) NSMutableArray *classificationArray6;
 
-@property (nonatomic, copy) NSString         *didSelectProductId4;
-/** 洗剪吹、洗吹   选择状态是否复原*/  //默认无选择  false
-@property (nonatomic, getter=isHiddenSelected) BOOL hiddenSelected;
-/** 合计金额(立减)*/
-@property (nonatomic, copy) NSString         *totalString;
-/** 合计金额(原价)*/
-@property (nonatomic, copy) NSString         *priceString;
-/** 洗剪吹金额(立减)*/
-@property (nonatomic, copy) NSString         *haircut;
-/** 洗吹金额(立减)*/
-@property (nonatomic, copy) NSString         *shampoo;
-/** 烫发金额(立减)*/
-@property (nonatomic, copy) NSString         *perm;
-/** 染发金额(立减)*/
-@property (nonatomic, copy) NSString         *hairColour;
-/** 护理金额(立减)*/
-@property (nonatomic, copy) NSString         *nursing;
-/** 养护金额(立减)*/
-@property (nonatomic, copy) NSString         *curing;
+/** 染发id集合*/
+@property (nonatomic, strong) NSMutableArray *productArrayArrayId1;
+/** 染发id集合*/
+@property (nonatomic, strong) NSMutableArray *productArrayArrayId2;
+/** 护理id集合*/
+@property (nonatomic, strong) NSMutableArray *productArrayArrayId3;
+/** 洗色id集合*/
+@property (nonatomic, strong) NSMutableArray *productArrayArrayId4;
+/** 养发id集合*/
+@property (nonatomic, strong) NSMutableArray *productArrayArrayId5;
+/** 接发id集合*/
+@property (nonatomic, strong) NSMutableArray *productArrayArrayId6;
 
-/** 洗剪吹金额(原价)*/
-@property (nonatomic, copy) NSString         *haircutPrice;
-/** 洗吹金额(原价)*/
-@property (nonatomic, copy) NSString         *shampooPrice;
-/** 烫发金额(原价)*/
-@property (nonatomic, copy) NSString         *permPrice;
-/** 染发金额(原价)*/
-@property (nonatomic, copy) NSString         *hairColourPrice;
-/** 护理金额(原价)*/
-@property (nonatomic, copy) NSString         *nursingPrice;
-/** 养护金额(原价)*/
-@property (nonatomic, copy) NSString         *curingPrice;
 
 @end
 
@@ -111,7 +107,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     [self initUI];
     self.fd_interactivePopDisabled = YES;
     SetUserDefault(nil, @"makeTime");
-//    [self addObserver:self forKeyPath:@"totalString" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
 }
 
 /**
@@ -142,12 +137,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 - (void) dealloc {
     NSLog(@" selfViewController Destroy ");
 
-//    @try {
-//        [self removeObserver:self forKeyPath:@"totalString"];
-//    }
-//    @catch (NSException *exception) {
-//        NSLog(@"多次删除了");
-//    }
 }
 
 #pragma mark - Init Data Method
@@ -155,22 +144,31 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
  *  数据初始化
  */
 - (void) initData {
-    self.totalString           = @"0";
-    self.haircut               = @"0";
-    self.shampoo               = @"0";
-    self.perm                  = @"0";
-    self.hairColour            = @"0";
-    self.nursing               = @"0";
-    self.curing                = @"0";
-    self.selectedSegmentStr1   = @"长发";
-    self.selectedSegmentStr2   = @"长发";
-    self.didSelectProductId1   = @"";
-    self.didSelectProductId2   = @"";
-    self.didSelectProductId3   = @"";
-    self.didSelectProductId4   = @"";
-    self.hiddenSelected        = false;//默认无选择
-    self.productTypeArray      = [[NSMutableArray alloc] initWithObjects:@"请选择", @"请选择", @"请选择", @"请选择", nil];
-    self.placeOrderArray       = [[NSMutableArray alloc] initWithObjects:@"请选择", @"请选择", @"请选择", @"请选择", @"请选择", nil];
+    [self titleWithName];
+    
+    self.classificationArray1  = [NSMutableArray arrayWithObjects:@"烫发", nil];
+    self.classificationArray2  = [NSMutableArray arrayWithObjects:@"染发", nil];
+    self.classificationArray3  = [NSMutableArray arrayWithObjects:@"护理", nil];
+    self.classificationArray4  = [NSMutableArray arrayWithObjects:@"洗色", nil];
+    self.classificationArray5  = [NSMutableArray arrayWithObjects:@"养发", nil];
+    self.classificationArray6  = [NSMutableArray arrayWithObjects:@"接发", nil];
+    
+    self.moneyArray0 = [NSMutableArray array];
+    self.moneyArray1 = [NSMutableArray array];
+    self.moneyArray2 = [NSMutableArray array];
+    self.moneyArray3 = [NSMutableArray array];
+    self.moneyArray4 = [NSMutableArray array];
+    self.moneyArray5 = [NSMutableArray array];
+    self.moneyArray6 = [NSMutableArray array];
+    
+    self.productArrayArrayId1 = [NSMutableArray array];
+    self.productArrayArrayId2 = [NSMutableArray array];
+    self.productArrayArrayId3 = [NSMutableArray array];
+    self.productArrayArrayId4 = [NSMutableArray array];
+    self.productArrayArrayId5 = [NSMutableArray array];
+    self.productArrayArrayId6 = [NSMutableArray array];
+    
+    self.classificationMain = @[self.classificationArray1, self.classificationArray2, self.classificationArray3, self.classificationArray4, self.classificationArray5, self.classificationArray6];
 }
 
 #pragma mark - Setting UI Methods
@@ -191,7 +189,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 - (void) settingNav {
 
     [self setNavWithLeftBarButton:NO titleName:@"预约美发"];
-//    GetUserDefault(@"selectedIndex");
+//    [self setNavWithLeftBarButton:NO title:@"预约美发"];
 }
 
 - (void)setNavWithLeftBarButton:(BOOL)leftBarButton titleName:(NSString *)title{
@@ -231,7 +229,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
  *  设置控件的自动布局
  */
 - (void) settingUIAutoLayout {
-    [self.makeAppointmentTableView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(74, 0, 0, 0)];
+    [self.makeAppointmentTableView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(74, 0, 52, 0)];
     
     [self.backFooterView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 0, 0) excludingEdge:ALEdgeTop];
     [self.backFooterView autoSetDimension:ALDimensionHeight toSize:50];
@@ -240,31 +238,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     [self.nextStepButton autoSetDimension:ALDimensionWidth toSize:85];
 }
 
-// 设计师预约产品数据接口
-
-- (void) getProductInfosWithData:(NSString *)levelId productType:(NSString *)productType productClas:(NSString *)productClas {
-    
-    NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"book/getProductInfos"];
-    NSArray *array = @[
-                       [NSString stringWithFormat:@"stylistinfoId,%@", levelId],//设计师ID
-                       [NSString stringWithFormat:@"productType,%@", productType],//产品类型 1-烫发 2-染发 3－护理 4- 养发
-                       [NSString stringWithFormat:@"productClas,%@", productClas],//发型分类 11烫发（整体） 12烫发（局部） 21染发（长） 22染发（中） 23染发（短） 31、护理 41、养发
-                       ];
-    [SVProgressHUD showWithStatus:DATA_GET_DATA];
-    [MainRequestTool mainGET:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
-        [SVProgressHUD dismiss];
-        NSLog(@"%@", resultObject);
-        if (resultObject != nil) {
-            
-            
-        }else {
-            NSLog(@"book/getProductInfos%@没有数据", url);
-        }
-    } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
-        NSLog(@"book/getProductInfos数据错误%@", error);
-    }];
-}
-
+#pragma mark - 接口数据
 // 设计师预约首页数据接口
 - (void) getBookStylisByIdWithData:(NSString *)stylistinfoId{
     NSArray *array = @[
@@ -284,7 +258,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
             SetUserDefault(@"", @"makeTime");//显示预约时间
             self.makeAppointmentDic    = resultObject;
             [self initData];
-            [self titleWithName:@"0"];
+            [self titleWithName];
             [self.makeAppointmentTableView reloadData];
         }else {
             NSLog(@"book/getBookStylisById%@没有数据", url);
@@ -293,33 +267,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
         NSLog(@"book/getBookStylisById数据错误%@", error);
     }];
 }
-
-
-// 获取订单中 可以使用积分 和 抵用现金
-- (void) obtBookIntegralWithData:(NSString *)mobile stylistId:(NSString *)stylistId timeId:(NSString *)timeId comboId:(NSString *)comboId productIds:(NSString *)productIds userCouponId:(NSString *)userCouponId {
-    NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"book/obtBookIntegral"];
-    NSArray *array = @[
-                       [NSString stringWithFormat:@"mobile,%@", mobile],//手机号
-                       [NSString stringWithFormat:@"stylistId,%@", stylistId],//设计师ID
-                       [NSString stringWithFormat:@"timeId,%@", timeId],//预约时间ID
-                       [NSString stringWithFormat:@"comboId,%@", comboId],//套餐ID
-                       [NSString stringWithFormat:@"productIds,%@", productIds],//产品ID 多个,隔开
-                       [NSString stringWithFormat:@"userCouponId,%@", userCouponId],//用户优惠券ID
-                       ];
-
-    [MainRequestTool mainPOST:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
-        NSLog(@"%@", resultObject);
-        if (resultObject != nil) {
-            
-            
-        }else {
-            NSLog(@"book/obtBookIntegral%@没有数据", url);
-        }
-    } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
-        NSLog(@"book/obtBookIntegral数据错误%@", error);
-    }];
-}
-
 
 #pragma mark UITableView DataSource
 /**
@@ -330,7 +277,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
  *  @return NSInteger
  */
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return self.classificationMain.count + 1;
 }
 
 /**
@@ -339,11 +286,10 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
  *  @param tableView
  *  @param section
  *
- *  @return NSInteger
+ *  @return NSIntegerl
  */
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
-    return section == 0 ? 1 : 4;
+    return section == 0 ? 1 : [self.classificationMain[section - 1] count];
 }
 
 /**
@@ -368,7 +314,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 - (UITableViewCell *) makeAppointmentOnemTableViewCell :(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     MakeAppointmentOneTableViewCell *cell = [MakeAppointmentOneTableViewCell makeAppointmentOneCellWithTableView:tableView forCellReuseIdentifier:cellOneID];
     cell.delegate       = self;
-    cell.hiddenSelected = self.hiddenSelected;
     if (self.makeAppointmentDic != nil) {
         cell.dict       = self.makeAppointmentDic;
     }
@@ -386,15 +331,13 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
  *  @return HomeStarHotTableViewCell
  */
 - (UITableViewCell *) makeAppointmentTwomTableViewCell :(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSArray *array = @[@"烫发", @"染发", @"护理", @"养护"];
     MakeAppointmentTwoTableViewCell *cell = [MakeAppointmentTwoTableViewCell makeAppointmentTwoCellWithTableView:tableView forCellReuseIdentifier:cellTwoID];
-    cell.title       = array[indexPath.row];
-    cell.productType = self.productTypeArray[indexPath.row];
-    cell.delegate    = self;
     cell.indexPath   = indexPath;
-    if ([[self.makeAppointmentDic objectForKey:@"typeList"] count] > indexPath.row) {
-        cell.dict    = [self.makeAppointmentDic objectForKey:@"typeList"][indexPath.row];
+    cell.delegate    = self;
+    if ([[self.makeAppointmentDic objectForKey:@"typeList"] count] > indexPath.section - 1) {
+        cell.dict    = [self.makeAppointmentDic objectForKey:@"typeList"][indexPath.section - 1];
     }
+    cell.title       = self.classificationMain[indexPath.section - 1][indexPath.row];
     return cell;
 }
 
@@ -431,10 +374,17 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
  *
  *  @param makeAppointmentOneTableViewCell MakeAppointmentOneTableViewCell
  *  @param tag                             选择的第几行
- *  @param selectCategory                  选择的分类  //选中分类    （0：洗剪吹没选中         1：选中了洗剪吹         2：洗吹没选中      3：选中了洗吹））
+ *  @param selectCategory1                 选择的分类  洗剪吹
+ *  @param selectCategory2                 选择的分类  洗吹造型
  */
-- (void) makeAppointmentOneTableViewCell:(MakeAppointmentOneTableViewCell *)makeAppointmentOneTableViewCell buttonWithTag:(NSInteger)tag selectCategory:(NSString *)selectCategory{
+- (void)makeAppointmentOneTableViewCell:(MakeAppointmentOneTableViewCell *)makeAppointmentOneTableViewCell buttonWithTag:(NSInteger)tag selectCategory1:(NSString *)selectCategory1 selectCategory2:(NSString *)selectCategory2{
 
+    self.moneyArray0 = [NSMutableArray array];
+    if (selectCategory2 != nil && selectCategory1 != nil) {
+        [self.moneyArray0 addObject:selectCategory1];
+        [self.moneyArray0 addObject:selectCategory2];
+    }
+    [self titleWithName];
     if (tag == 0) {
         NSLog(@"第一行");
         DesignerViewController *viewController = [[DesignerViewController alloc] init];
@@ -442,83 +392,25 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
         viewController.delegate = self;
         [self.navigationController pushViewController:viewController animated:YES];
         return;
-    }
-    if (tag == 3) {
-        NSLog(@"第四行");
+    }else {
+        
         if (self.makeAppointmentDic != nil) {
-            ChooseTimeViewController *viewController = [[ChooseTimeViewController alloc] init];
-            viewController.stylistinfoId = [self.makeAppointmentDic objectForKey:@"id"];
-            viewController.makeTime      = GetUserDefault(@"makeTime");
-            [self.navigationController pushViewController:viewController animated:YES];
+            if (tag == 3) {
+                ChooseTimeViewController *viewController = [[ChooseTimeViewController alloc] init];
+                viewController.stylistinfoId = [self.makeAppointmentDic objectForKey:@"id"];
+                viewController.makeTime      = GetUserDefault(@"makeTime");
+                [self.navigationController pushViewController:viewController animated:YES];
+            }
         }else {
             [SVProgressHUD showInfoWithStatus:@"请先选择设计师!"];
         }
         return;
     }
-    
-    self.hiddenSelected = true;
-    if (self.makeAppointmentDic != nil) {
-
-        if (selectCategory.intValue == 0) {
-            self.haircut = @"0";
-            self.haircutPrice = @"0";
-            [self replaceObjec:@"请选择" atIndex:0];
-        }
-        if (selectCategory.intValue == 1) {
-            self.shampoo = @"0";
-            self.shampooPrice = @"0";
-            self.haircut = [NSString stringWithFormat:@"%@", [self realMoney:@"0"]];
-            self.haircutPrice = [NSString stringWithFormat:@"%@", [self priceMoney:@"0"]];
-            [self replaceObjec:[NSString stringWithFormat:@"洗剪吹,%@", self.haircut] atIndex:0];
-        }
-        if (selectCategory.intValue == 2) {
-            self.shampoo = @"0";
-            self.shampooPrice = @"0";
-            [self replaceObjec:@"请选择" atIndex:0];
-        }
-        if (selectCategory.intValue == 3) {
-            self.haircut = @"0";
-            self.haircutPrice = @"0";
-            self.shampoo = [NSString stringWithFormat:@"%@", [self realMoney:@"1"]];
-            self.shampooPrice = [NSString stringWithFormat:@"%@", [self priceMoney:@"1"]];
-            [self replaceObjec:[NSString stringWithFormat:@"洗吹,%@", self.shampoo] atIndex:0];
-        }
-    }
-    
-    self.priceString = [NSString stringWithFormat:@"%d", self.haircutPrice.intValue + self.shampooPrice.intValue + self.permPrice.intValue + self.hairColourPrice.intValue + self.nursingPrice.intValue + self.curingPrice.intValue ];//计算所选的项目合计（没有参加立减）
-    
-    self.totalString = [NSString stringWithFormat:@"%d", self.haircut.intValue + self.shampoo.intValue + self.perm.intValue + self.hairColour.intValue + self.nursing.intValue + self.curing.intValue ];//计算所选的项目合计（立减后）
-    [self titleWithName:self.totalString];
 }
 
 #pragma mark - 处理   提交订单选择的数据(传到提交订单页面的数据)
 - (void)replaceObjec:(NSString *)obj atIndex:(NSUInteger)atIndex {
-    [self.placeOrderArray replaceObjectAtIndex:atIndex withObject:obj];
-}
-
-#pragma mark - 处理   立减后的价位
-- (NSString *)realMoney:(NSString *)index {
-    
-    NSArray *array = [self.makeAppointmentDic objectForKey:@"bookProducts"];
-    if (!(array.count > index.intValue)) return @"0";
-    
-    NSString *price = [[self.makeAppointmentDic objectForKey:@"bookProducts"][index.intValue] objectForKey:@"price"];//原价
-    NSString *cutvalues = [[self.makeAppointmentDic objectForKey:@"bookProducts"][index.intValue] objectForKey:@"cutvalues"];//立减金额
-    NSString *realMoney = [NSString stringWithFormat:@"%d", price.intValue - cutvalues.intValue];//实收金额
-    
-//    return realMoney.intValue > 0 ? realMoney : 0;
-    return realMoney;
-}
-
-#pragma mark - 处理   所选项目是否有立减金额   （有立减返回0    没有立减返回原价）
-- (NSString *)priceMoney:(NSString *)index {
-    NSArray *array = [self.makeAppointmentDic objectForKey:@"bookProducts"];
-    if (!(array.count > index.intValue)) return @"0";
-    
-    NSString *price = [[self.makeAppointmentDic objectForKey:@"bookProducts"][index.intValue] objectForKey:@"price"];//原价
-    NSString *cutvalues = [[self.makeAppointmentDic objectForKey:@"bookProducts"][index.intValue] objectForKey:@"cutvalues"];//立减金额
-
-    return cutvalues.intValue > 0 ? @"0" : price;
+//    [self.placeOrderArray replaceObjectAtIndex:atIndex withObject:obj];
 }
 
 #pragma mark - DesignerViewControllerDelegate
@@ -532,7 +424,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     if (self.stylistinfoId.intValue != stylistinfoId.intValue) {
         [self getBookStylisByIdWithData:stylistinfoId];
         self.stylistinfoId = stylistinfoId;
-        self.hiddenSelected = false;
+//        self.hiddenSelected = false;
     }
 }
 
@@ -543,162 +435,164 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
         return;
     }
     
-    ModalViewController * modalView = [[ModalViewController alloc]init];
-    modalView.delegate              = self;
-    self.definesPresentationContext = YES;
-    modalView.stylistinfoId         = self.stylistinfoId;
-    modalView.productType           = [NSString stringWithFormat:@"%ld", indexPath.row + 1];//产品类型 1-烫发 2-染发 3－护理 4- 养发
-    if (indexPath.row == 0) {//发型分类 11烫发（长发） 12烫发（中发）13(短发) 21染发（长） 22染发（中） 23染发（短） 31、护理 41、养发
-        modalView.productTypeName       = self.productTypeArray[indexPath.row];
-        modalView.productId             = self.didSelectProductId1;
-        if ([self.selectedSegmentStr1 isEqualToString:@"长发"]) {
-            modalView.productClas       = @"11";
+    if (indexPath.row == 0) {
+        ServiceClassificationViewController *viewController = [[ServiceClassificationViewController alloc] init];
+        viewController.titleName      = indexPath.section == 1 ? @"烫发" :indexPath.section == 2 ? @"染发" : indexPath.section == 3 ? @"护理" : indexPath.section         == 4 ? @"洗色"    : indexPath.section == 5 ? @"养发" : @"接发";
+        viewController.productClas           = indexPath.section == 1 ? @"11"     : indexPath.section == 2 ? @"22" : indexPath.section == 3 ? @"31" : indexPath.section == 4 ? @"52"     : indexPath.section == 5 ? @"41"   : @"61";//@"11";
+        viewController.productType           = indexPath.section == 1 ? @"1"      :indexPath.section == 2  ? @"2"  : indexPath.section == 3 ? @"3" : indexPath.section  == 4 ? @"7"      : indexPath.section == 5 ? @"4"    : @"8";//1-烫发 2-染发 3－护理 4- 养发 5- 洗剪吹 6- 洗吹  7- 洗色 8 -接发
+        viewController.delegate              = self;
+        viewController.stylistinfoId         = self.stylistinfoId;
+        [self.navigationController pushViewController:viewController animated:YES];
+        NSLog(@"跳页了");
+        //发型分类 11烫发（长发） 12烫发（中发）13烫发 (短发) 21染发（长） 22染发（中） 23染发（短） 31护理{（烫发） 31护理（染发）  31护理（养发）-----  不要了}  41、养发  51洗色（长发） 52洗色（中发） 53洗色 (短发)  61（接发）
+        
+    }else {
+        NSLog(@"******* ---删除数据--- ******");
+        
+        switch (indexPath.section) {
+            case 1:
+                NSLog(@"%@", self.classificationArray1);
+                NSLog(@"%@", self.moneyArray1);
+                
+                [self.classificationArray1 removeObjectAtIndex:indexPath.row];
+                [self.productArrayArrayId1 removeObjectAtIndex:indexPath.row - 1];
+                [self.moneyArray1          removeObjectAtIndex:indexPath.row - 1];
+                break;
+            case 2:
+                [self.classificationArray2 removeObjectAtIndex:indexPath.row];
+                [self.productArrayArrayId2 removeObjectAtIndex:indexPath.row - 1];
+                [self.moneyArray2          removeObjectAtIndex:indexPath.row - 1];
+                break;
+            case 3:
+                [self.classificationArray3 removeObjectAtIndex:indexPath.row];
+                [self.productArrayArrayId3 removeObjectAtIndex:indexPath.row - 1];
+                [self.moneyArray3          removeObjectAtIndex:indexPath.row - 1];
+                break;
+            case 4:
+                [self.classificationArray4 removeObjectAtIndex:indexPath.row];
+                [self.productArrayArrayId4 removeObjectAtIndex:indexPath.row - 1];
+                [self.moneyArray4          removeObjectAtIndex:indexPath.row - 1];
+                break;
+            case 5:
+                [self.classificationArray5 removeObjectAtIndex:indexPath.row];
+                [self.productArrayArrayId5 removeObjectAtIndex:indexPath.row - 1];
+                [self.moneyArray5          removeObjectAtIndex:indexPath.row - 1];
+                break;
+            case 6:
+                [self.classificationArray6 removeObjectAtIndex:indexPath.row];
+                [self.productArrayArrayId6 removeObjectAtIndex:indexPath.row - 1];
+                [self.moneyArray6          removeObjectAtIndex:indexPath.row - 1];
+                break;
+                
+            default:
+                break;
         }
-        if ([self.selectedSegmentStr1 isEqualToString:@"中发"]) {
-            modalView.productClas       = @"12";
-        }
-        if ([self.selectedSegmentStr1 isEqualToString:@"短发"]) {
-            modalView.productClas       = @"13";
-        }
-        modalView.productClasBtn        = YES;
+        [self titleWithName];
+        [self.makeAppointmentTableView reloadData];
     }
-    if (indexPath.row == 1) {
-        modalView.productId             = self.didSelectProductId2;
-        modalView.productTypeName       = self.productTypeArray[indexPath.row];
-        if ([self.selectedSegmentStr2 isEqualToString:@"长发"]) {
-            modalView.productClas       = @"21";
-        }
-        if ([self.selectedSegmentStr2 isEqualToString:@"中发"]) {
-            modalView.productClas       = @"22";
-        }
-        if ([self.selectedSegmentStr2 isEqualToString:@"短发"]) {
-            modalView.productClas       = @"23";
-        }
-        modalView.productClasBtn        = YES;
-    }
-    if (indexPath.row == 2) {
-        modalView.productId             = self.didSelectProductId3;
-        modalView.productTypeName       = self.productTypeArray[indexPath.row];
-        modalView.productClas           = @"31";
-        modalView.productClasBtn        = NO;
-    }
-    if (indexPath.row == 3) {
-        modalView.productId             = self.didSelectProductId4;
-        modalView.productTypeName       = self.productTypeArray[indexPath.row];
-        modalView.productClas           = @"41";
-        modalView.productClasBtn        = NO;
-    }
-    modalView.modalTransitionStyle  = UIModalTransitionStyleCrossDissolve;
-    modalView.view.backgroundColor  = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-    modalView.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    
-    // [self presentModalViewController:modalView animated:YES];  ios 6 弃用了该方法
-    [self presentViewController:modalView animated:YES completion:nil];
 }
+
 
 /**
- *  ModalViewControllerDelegate   模态视图发型选择分类代理
+ *  ServiceClassificationViewController        发型选择分类代理
  *
- *  @param modalViewController ModalViewController
- *  @param didSelectStr        选择的发型分类内容
- *  @param productType         产品类型
- *  @param selectedSegmentStr  发型分类
- *  @param productId           产品id
- *  @param productName         选择产品名称产品
+ *  @param serviceClassificationViewController ServiceClassificationViewController
+ *  @param productSelectArray                  记录所有被选择的发型分类名称-长短-价钱
+ *  @param productType                         产品类型 1-烫发 2-染发 3－护理 4- 养发 7-洗色 8- 接发
+ *  @param selectedSegmentStr                  记录发型长中短分类
+ *  @param productArrayArrayId                 产品ID数组
+ *  @param productName                         选择产品名称产品
+ *  @param productArrayMoney                   产品价钱数组
  */
-- (void)modalViewController:(ModalViewController *)modalViewController didSelectStr:(NSString *)didSelectStr productType:(NSString *)productType selectedSegmentStr:(NSString *)selectedSegmentStr productId:(NSString *)productId productName:(NSString *)productName{
-    NSUInteger index = productType.integerValue;
-
-    NSString *str;
-    if (didSelectStr.length > 0) {
-        str = [didSelectStr componentsSeparatedByString:@"￥"][1];
+- (void)serviceClassificationViewController:(ServiceClassificationViewController *)serviceClassificationViewController productSelectArray:(NSMutableArray *)productSelectArray productType:(NSString *)productType selectedSegmentStr:(NSString *)selectedSegmentStr productArrayArrayId:(NSArray *)productArrayArrayId productName:(NSString *)productName productArrayMoney:(NSMutableArray *)productArrayMoney {
+    //产品类型 1-烫发 2-染发 3－护理 4- 养发 7-洗色  8 - 接发
+    switch (productType.intValue) {
+        case 1:
+        {
+            for (int i = 0; i < productSelectArray.count; i++) {
+                if (![productSelectArray[i] isEqualToString:@"1"]) {
+                    [self.classificationArray1 addObject:productSelectArray[i]];
+                }
+            }
+            for (int i = 0; i < productArrayMoney.count; i ++) {
+                [self.moneyArray1 addObject:productArrayMoney[i]];
+                [self.productArrayArrayId1 addObject:productArrayArrayId[i]];
+            }
+            
+        }
+            break;
+        case 2:
+        {
+            for (int i = 0; i < productSelectArray.count; i++) {
+                if (![productSelectArray[i] isEqualToString:@"1"]) {
+                    [self.classificationArray2 addObject:productSelectArray[i]];
+                }
+            }
+            for (int i = 0; i < productArrayMoney.count; i ++) {
+                [self.moneyArray2 addObject:productArrayMoney[i]];
+                [self.productArrayArrayId2 addObject:productArrayArrayId[i]];
+            }
+        }
+            break;
+        case 3:
+        {
+            for (int i = 0; i < productSelectArray.count; i++) {
+                if (![productSelectArray[i] isEqualToString:@"1"]) {
+                    [self.classificationArray3 addObject:productSelectArray[i]];
+                }
+            }
+            for (int i = 0; i < productArrayMoney.count; i ++) {
+                [self.moneyArray3 addObject:productArrayMoney[i]];
+                [self.productArrayArrayId3 addObject:productArrayArrayId[i]];
+            }
+        }
+            break;
+        case 7:
+        {
+            for (int i = 0; i < productSelectArray.count; i++) {
+                if (![productSelectArray[i] isEqualToString:@"1"]) {
+                    [self.classificationArray4 addObject:productSelectArray[i]];//   ******这里要注意******
+                }
+            }
+            for (int i = 0; i < productArrayMoney.count; i ++) {
+                [self.moneyArray4 addObject:productArrayMoney[i]];
+                [self.productArrayArrayId4 addObject:productArrayArrayId[i]];
+            }
+        }
+            break;
+        case 4:
+        {
+            for (int i = 0; i < productSelectArray.count; i++) {
+                if (![productSelectArray[i] isEqualToString:@"1"]) {
+                    [self.classificationArray5 addObject:productSelectArray[i]];//   ******这里要注意******
+                }
+            }
+            for (int i = 0; i < productArrayMoney.count; i ++) {
+                [self.moneyArray5 addObject:productArrayMoney[i]];
+                [self.productArrayArrayId5 addObject:productArrayArrayId[i]];
+            }
+        }
+            break;
+        case 8:
+        {
+            for (int i = 0; i < productSelectArray.count; i++) {
+                if (![productSelectArray[i] isEqualToString:@"1"]) {
+                    [self.classificationArray6 addObject:productSelectArray[i]];
+                }
+            }
+            for (int i = 0; i < productArrayMoney.count; i ++) {
+                [self.moneyArray6 addObject:productArrayMoney[i]];
+                [self.productArrayArrayId6 addObject:productArrayArrayId[i]];
+            }
+        }
+            break;
+            
+        default:
+            break;
     }
     
-    if (!([[self.makeAppointmentDic objectForKey:@"typeList"] count] > index - 1)) return;
-    
-    if (index == 1) {
-        NSLog(@"%@", [[self.makeAppointmentDic objectForKey:@"typeList"][0] objectForKey:@"cutvalues"]);
-        if (str.intValue > 0) {
-            self.perm = [NSString stringWithFormat:@"%d", str.intValue - [[[self.makeAppointmentDic objectForKey:@"typeList"][0] objectForKey:@"cutvalues"] intValue]];
-            
-            self.permPrice = [[[self.makeAppointmentDic objectForKey:@"typeList"][0] objectForKey:@"cutvalues"] intValue] > 0 ? @"0" : str;
-            
-            [self replaceObjec:[NSString stringWithFormat:@"%@,%@", productName, self.perm] atIndex:1];
-        }else {
-            self.perm = @"0";
-            self.permPrice = @"0";
-            [self replaceObjec:@"请选择" atIndex:1];
-        }
-        self.selectedSegmentStr1 = selectedSegmentStr;
-        self.didSelectProductId1 = productId;
-        [self didSelectStrWithLength:index didSelectStr:didSelectStr selectedSegmentStr:self.selectedSegmentStr1];
-    }
-    if (index == 2) {
-        if (str.intValue > 0) {
-            self.hairColour = [NSString stringWithFormat:@"%d", str.intValue - [[[self.makeAppointmentDic objectForKey:@"typeList"][1] objectForKey:@"cutvalues"] intValue]];
-            
-            self.hairColourPrice = [[[self.makeAppointmentDic objectForKey:@"typeList"][1] objectForKey:@"cutvalues"] intValue] > 0 ? @"0" : str;
-            
-            [self replaceObjec:[NSString stringWithFormat:@"%@,%@", productName, self.hairColour] atIndex:2];
-        }else {
-            self.hairColour = @"0";
-            self.hairColourPrice = @"0";
-            [self replaceObjec:@"请选择" atIndex:2];
-        }
-        self.selectedSegmentStr2 = selectedSegmentStr;
-        self.didSelectProductId2 = productId;
-        [self didSelectStrWithLength:index didSelectStr:didSelectStr selectedSegmentStr:self.selectedSegmentStr2];
-    }
-    if (index == 3) {
-        if (str.intValue > 0) {
-            self.nursing = [NSString stringWithFormat:@"%d", str.intValue - [[[self.makeAppointmentDic objectForKey:@"typeList"][2] objectForKey:@"cutvalues"] intValue]];
-            
-            self.nursingPrice = [[[self.makeAppointmentDic objectForKey:@"typeList"][2] objectForKey:@"cutvalues"] intValue] > 0 ? @"0" : str;
-            
-            [self replaceObjec:[NSString stringWithFormat:@"%@,%@", productName, self.nursing] atIndex:3];
-        }else {
-            self.nursing = @"0";
-            self.nursingPrice = @"0";
-            [self replaceObjec:@"请选择" atIndex:3];
-        }
-        self.didSelectProductId3 = productId;
-        [self didSelectStrWithLength:index didSelectStr:didSelectStr selectedSegmentStr:nil];
-    }
-    if (index == 4) {
-        if (str.intValue > 0) {
-            self.curing = [NSString stringWithFormat:@"%d", str.intValue - [[[self.makeAppointmentDic objectForKey:@"typeList"][3] objectForKey:@"cutvalues"] intValue]];
-            
-            self.curingPrice = [[[self.makeAppointmentDic objectForKey:@"typeList"][3] objectForKey:@"cutvalues"] intValue] > 0 ? @"0" : str;
-            
-            [self replaceObjec:[NSString stringWithFormat:@"%@,%@", productName, self.curing] atIndex:4];
-        }else {
-            self.curing = @"0";
-            self.curingPrice = @"0";
-            [self replaceObjec:@"请选择" atIndex:4];
-        }
-        self.didSelectProductId4 = productId;
-        [self didSelectStrWithLength:index didSelectStr:didSelectStr selectedSegmentStr:nil];
-    }
-    self.priceString = [NSString stringWithFormat:@"%d", self.haircutPrice.intValue + self.shampooPrice.intValue + self.permPrice.intValue + self.hairColourPrice.intValue + self.nursingPrice.intValue + self.curingPrice.intValue ];//计算所选的项目合计（没有参加立减）
-    
-    self.totalString = [NSString stringWithFormat:@"%d", self.haircut.intValue + self.shampoo.intValue + self.perm.intValue + self.hairColour.intValue + self.nursing.intValue + self.curing.intValue ];//计算所选的项目合计（立减后）
-    
-    [self titleWithName:self.totalString];
+    [self titleWithName];
     [self.makeAppointmentTableView reloadData];
-}
-
-- (void)didSelectStrWithLength:(NSUInteger)index didSelectStr:(NSString *)didSelectStr selectedSegmentStr:(NSString *)selectedSegmentStrNumber{
-    if (didSelectStr.length > 1) {
-        [self.productTypeArray replaceObjectAtIndex:index - 1 withObject:didSelectStr];
-    }else {
-        [self.productTypeArray replaceObjectAtIndex:index - 1 withObject:@"请选择"];
-        if (index == 1) {
-            self.selectedSegmentStr1 = @"长发";
-        }
-        if (index == 2) {
-            self.selectedSegmentStr2 = @"长发";
-        }
-    }
 }
 
 #pragma mark   -  所有控件懒加载
@@ -742,16 +636,41 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 - (UILabel *) totalLable {
     if (!_totalLable) {
         _totalLable = [[UILabel alloc] initWithFrame:CGRectMake(15, 13, SCREEN_WIDTH - 150, 22)];
-        [self titleWithName:@"0"];
     }
     return _totalLable;
 }
 
 
+#pragma mark - 计算合计金额
 //文字颜色
-- (void) titleWithName:(NSString *)str {
+- (void) titleWithName{
+
+    long  monty = 0;
+    for (int i = 0; i < self.moneyArray0.count; i ++) {
+        monty += [self.moneyArray0[i] longLongValue];
+    }
     
-    if (str.intValue > 0) {
+    for (int i = 0; i < self.moneyArray1.count; i ++) {
+        monty += [self.moneyArray1[i] longLongValue] - [[[self.makeAppointmentDic objectForKey:@"typeList"][0] objectForKey:@"cutvalues"] longLongValue];
+    }
+    for (int i = 0; i < self.moneyArray2.count; i ++) {
+        monty += [self.moneyArray2[i] longLongValue] - [[[self.makeAppointmentDic objectForKey:@"typeList"][1] objectForKey:@"cutvalues"] longLongValue];
+    }
+    for (int i = 0; i < self.moneyArray3.count; i ++) {
+        monty += [self.moneyArray3[i] longLongValue] - [[[self.makeAppointmentDic objectForKey:@"typeList"][2] objectForKey:@"cutvalues"] longLongValue];
+    }
+    for (int i = 0; i < self.moneyArray4.count; i ++) {
+        monty += [self.moneyArray4[i] longLongValue] - [[[self.makeAppointmentDic objectForKey:@"typeList"][3] objectForKey:@"cutvalues"] longLongValue];
+    }
+    for (int i = 0; i < self.moneyArray5.count; i ++) {
+        monty += [self.moneyArray5[i] longLongValue] - [[[self.makeAppointmentDic objectForKey:@"typeList"][4] objectForKey:@"cutvalues"] longLongValue];
+    }
+    for (int i = 0; i < self.moneyArray6.count; i ++) {
+        monty += [self.moneyArray6[i] longLongValue] - [[[self.makeAppointmentDic objectForKey:@"typeList"][5] objectForKey:@"cutvalues"] longLongValue];
+    }
+    
+    
+    if ([NSString stringWithFormat:@"%ld", monty].intValue > 0) {
         self.nextStepButton.layer.borderColor = [UIColor redColor].CGColor;
         [self.nextStepButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         self.nextStepButton.userInteractionEnabled = YES;
@@ -761,10 +680,14 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
         self.nextStepButton.userInteractionEnabled = NO;
     }
     
-    NSString *string = [NSString stringWithFormat:@"合计:￥%@", str];
+    
+    NSLog(@"******* --- 合计金额 --- %ld",monty);
+    
+    
+    NSString *string = [NSString stringWithFormat:@"合计:￥%@", [NSString stringWithFormat:@"%ld", monty]];
     NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:string];
     [hintString addAttribute:NSForegroundColorAttributeName value:Color(64, 64, 64, 1) range:NSMakeRange(0, 3)];
-    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(3, str.length + 1)];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(3, [NSString stringWithFormat:@"%ld", monty].length + 1)];
     _totalLable.attributedText = hintString;
 }
 
@@ -774,51 +697,52 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     [self getBookStylisByIdWithData:_stylistinfoId];
 }
 
-//#pragma 预约时间的KVO 监听
-//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
-//    if (self.totalString.intValue > 0) {
-//        self.nextStepButton.layer.borderColor = [UIColor redColor].CGColor;
-//        [self.nextStepButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-//        self.nextStepButton.userInteractionEnabled = YES;
-//    }else {
-//        self.nextStepButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-//        [self.nextStepButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-//        self.nextStepButton.userInteractionEnabled = NO;
-//    }
-//}
-
-
-#pragma mark - 下一步点击事件
+#pragma mark - 下一页点击事件
 - (void)didButton:(UIButton *)btn {
-    NSLog(@"点击了");
-    
-    NSLog(@"%@", self.productTypeArray);
-    NSLog(@"%@", self.makeAppointmentDic);
-    NSLog(@"%@", self.placeOrderArray);
-    NSLog(@"%@", self.priceString);
 
-    NSString *str = GetUserDefault(@"makeTime");
+    NSString *string = @"";//提取所选项目ID
     
+    NSString *str = GetUserDefault(@"makeTime");
+
     if (!(str.length > 0)) {
         [SVProgressHUD showInfoWithStatus:@"请先选择预约时间!"];
         return;
     }
+
+    NSMutableArray *array = [NSMutableArray array];//提取所选项目内容
     
+    if ([self.moneyArray0[0] longLongValue] > 0) {
+        [array addObject:[NSString stringWithFormat:@"剪发-￥%@", self.moneyArray0[0]]];
+        string = [NSString stringWithFormat:@"%@,", [[self.makeAppointmentDic objectForKey:@"bookProducts"][0] objectForKey:@"productId"]];
+    }
+    if ([self.moneyArray0[1] longLongValue] > 0) {
+        [array addObject:[NSString stringWithFormat:@"洗吹造型-￥%@", self.moneyArray0[1]]];
+        string = [NSString stringWithFormat:@"%@%@,", string, [[self.makeAppointmentDic objectForKey:@"bookProducts"][1] objectForKey:@"productId"]];
+    }
     
-    NSMutableArray *array = [NSMutableArray array];
-    for (int i = 0; i < self.placeOrderArray.count; i ++) {
-        if (![self.placeOrderArray[i] isEqualToString:@"请选择"]) {
-            [array addObject:self.placeOrderArray[i]];
+    for (int i = 0; i < self.classificationMain.count; i ++) {
+        for (int a = 0 ; a < [self.classificationMain[i] count]; a ++) {
+            if (a != 0) {
+                [array addObject:self.classificationMain[i][a]];
+            }
         }
     }
     
+    NSArray *arrayProductID = @[self.productArrayArrayId1, self.productArrayArrayId2, self.productArrayArrayId3, self.productArrayArrayId4, self.productArrayArrayId5, self.productArrayArrayId6];
+    
+    for (int i = 0; i < arrayProductID.count; i ++) {
+        for (int a = 0; a < [arrayProductID[i] count]; a ++) {
+            string = [NSString stringWithFormat:@"%@%@,", string, arrayProductID[i][a]];
+        }
+    }
+
     PlaceOrderViewController *viewController = [[PlaceOrderViewController alloc] init];
-    viewController.titleString           = @"提交订单";
-    viewController.totalString           = self.totalString;
-    viewController.deductibleTotalString = self.totalString;
-    viewController.priceString           = self.priceString;
-    viewController.makeAppointmentDic    = self.makeAppointmentDic;
-    viewController.placeOrderArray       = array;
+    viewController.titleString               = @"提交订单";
+    viewController.totalString               = [NSString stringWithFormat:@"%@", self.totalLable.text];
+    viewController.deductibleTotalString     = [self.totalLable.text componentsSeparatedByString:@"￥"][1];
+    viewController.productIDString           = [string substringToIndex:string.length - 1];
+    viewController.makeAppointmentDic        = self.makeAppointmentDic;
+    viewController.placeOrderArray           = array;
     
     [self.navigationController pushViewController:viewController animated:YES];
 }

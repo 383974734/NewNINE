@@ -259,7 +259,7 @@ static NSString *cellID = @"orderTableViewCellID";
  *  @return NSInteger
  */
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return self.orderArray.count;
 }
 
 /**
@@ -272,7 +272,7 @@ static NSString *cellID = @"orderTableViewCellID";
  */
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return self.orderArray.count;
+    return 1;
 }
 
 /**
@@ -284,7 +284,7 @@ static NSString *cellID = @"orderTableViewCellID";
  *  @return OrderTableViewCell
  */
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    OrderViewModel *model = self.orderArray[indexPath.row];
+    OrderViewModel *model = self.orderArray[indexPath.section];
     OrderTableViewCell *cell = [OrderTableViewCell orderCellWithTableView:tableView forCellReuseIdentifier:cellID];
     cell.delegate = self;
     cell.index = indexPath;
@@ -300,7 +300,7 @@ static NSString *cellID = @"orderTableViewCellID";
  */
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    OrderViewModel *model = self.orderArray[indexPath.row];
+    OrderViewModel *model = self.orderArray[indexPath.section];
     
     PlaceOrderViewController *viewController = [[PlaceOrderViewController alloc] init];
     viewController.titleString               = @"订单详情";
@@ -317,14 +317,17 @@ static NSString *cellID = @"orderTableViewCellID";
  *  @return CGFloat
  */
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    OrderViewModel *model = self.orderArray[indexPath.row];
+    OrderViewModel *model = self.orderArray[indexPath.section];
     
     if (model.orderStatus.intValue == 7) {
-       return 170 ;
+       return 190 ;
     }else {
-        return 170 + model.OrderBookProducts.count * 30 ;
+        return 190 + model.OrderBookProducts.count * 30 ;
     }
-//    return 147;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return section == 0 ? 0 : 10;
 }
 
 
@@ -339,7 +342,7 @@ static NSString *cellID = @"orderTableViewCellID";
     self.alerViewView = [AlertViewView popupView];
     self.alerViewView.index = indexPath;
     self.alerViewView.delegate = self;
-    OrderViewModel *model = self.orderArray[indexPath.row];
+    OrderViewModel *model = self.orderArray[indexPath.section];
     if ([title isEqualToString:@"查看评价"]) {
         NSLog(@"跳页");
         MyEvaluationViewController *viewController = [[MyEvaluationViewController alloc] init];
@@ -368,7 +371,7 @@ static NSString *cellID = @"orderTableViewCellID";
 
 #pragma mark - AlertViewViewDelegate
 - (void)alertViewView:(AlertViewView *)alertViewView buttonWithTag:(NSInteger)buttonWithTag textViewStr:(NSString *)textViewStr indexPath:(NSIndexPath *)indexPath{
-    OrderViewModel *model = self.orderArray[indexPath.row];
+    OrderViewModel *model = self.orderArray[indexPath.section];
     if (buttonWithTag == 0) {
         NSLog(@"走接口");
         if (textViewStr.length > 0) {
@@ -475,7 +478,7 @@ static NSString *cellID = @"orderTableViewCellID";
         _orderTableView                  = [[UITableView alloc] initForAutoLayout];
         _orderTableView.delegate         = self;
         _orderTableView.dataSource       = self;
-//        _orderTableView.separatorStyle   = NO;//cell线隐藏
+        _orderTableView.separatorStyle   = NO;//cell线隐藏
         [_orderTableView registerClass:[OrderTableViewCell class] forCellReuseIdentifier:cellID];
         [self settingTableViewRefreshing:_orderTableView target:self headerAction:@selector(headerRereshingData) footerAction:@selector(footerRereshingData)];
         [_orderTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];//隐藏多余的cell

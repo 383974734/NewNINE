@@ -165,7 +165,6 @@ static NSString *cellID = @"PublicDesignerCollectionViewCell";
 - (UIImageView *) imageViewHead {
     if (!_imageViewHead) {
         _imageViewHead = [[UIImageView alloc] initForAutoLayout];
-//        _imageViewHead.backgroundColor = [UIColor redColor];
     }
     return _imageViewHead;
 }
@@ -173,7 +172,6 @@ static NSString *cellID = @"PublicDesignerCollectionViewCell";
 - (UIImageView *) imageViewFooter {
     if (!_imageViewFooter) {
         _imageViewFooter = [[UIImageView alloc] initForAutoLayout];
-//        _imageViewFooter.backgroundColor = [UIColor orangeColor];
     }
     return _imageViewFooter;
 }

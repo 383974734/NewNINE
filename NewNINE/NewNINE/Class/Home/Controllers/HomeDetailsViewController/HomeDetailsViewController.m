@@ -207,7 +207,7 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
     [SVProgressHUD showWithStatus:DATA_GET_DATA];
     [MainRequestTool mainGET:strUrl parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
         NSLog(@"%@", resultObject);
-        [SVProgressHUD dismiss];
+//        [SVProgressHUD dismiss];
         if (resultObject != nil) {
             self.detailsDict = resultObject;
             self.navTitleLable.text = [self.detailsDict objectForKey:@"infoDescription"];
@@ -215,11 +215,13 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
             self.collectionNumberLable.text = [NSString stringWithFormat:@"%@", [self.detailsDict objectForKey:@"collectCount"]];
             self.isSuccess = [NSString stringWithFormat:@"%@", [_detailsDict objectForKey:@"isCollect"]];
             if ([[_detailsDict objectForKey:@"isCollect"] intValue] == 1) {
-                NSLog(@"收藏过");
+
+                [SVProgressHUD showSuccessWithStatus:@"收藏成功"];
                 [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"已收藏"] forState:UIControlStateNormal];
             }
             if ([[_detailsDict objectForKey:@"isCollect"] intValue] == 2) {
-                NSLog(@"没收藏过");
+                
+                [SVProgressHUD showSuccessWithStatus:@"取消收藏成功"];
                 [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"未收藏"] forState:UIControlStateNormal];
             }
             
@@ -244,8 +246,11 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
         [SVProgressHUD dismiss];
         
         if (resultObject != nil) {
-            [self getDetailsWithData:_dataModel.homeID];
-
+            if (self.dataModel.homeID != nil) {
+                [self getDetailsWithData:self.dataModel.homeID];
+            }else {
+                [self getDetailsWithData:self.hairstyleModel.hairstyleID];
+            }
         }else {
             
         }
@@ -459,6 +464,9 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
  */
 - (void) publicDesignerTableViewCell:(PublicDesignerTableViewCell *)publicDesignerTableViewCell didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"点击公共发型预约按钮触发事件");
+    MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
+    viewController.stylistinfoId = [[self.detailsDict objectForKey:@"stylistInfos"][indexPath.row] objectForKey:@"id"];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void) collectBtnClick:(UIButton *)btn {
@@ -500,7 +508,6 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
 - (void) setDataModel:(HomeBannerModels *)dataModel {
     _dataModel = dataModel;
     [self getDetailsWithData:_dataModel.homeID];
-//    SetUserDefault(_dataModel.homeStylistId, @"StylistId");//预约id
 }
 
 - (void) setHairstyleModel:(HairstyleViewControllerModel *)hairstyleModel {

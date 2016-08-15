@@ -505,7 +505,7 @@
     
     [tempdic setObject:str forKey:@"sign"];
     
-    NSLog(@"------sign-------%@",tempdic);
+    NSLog(@"******------sign-------******%@",tempdic);
     
     return tempdic;
 }

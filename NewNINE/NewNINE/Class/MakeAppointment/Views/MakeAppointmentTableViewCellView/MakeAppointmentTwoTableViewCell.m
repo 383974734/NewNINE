@@ -21,9 +21,8 @@
 @property (nonatomic, strong) UIButton      * minusButton;
 /** 点击箭头*/
 @property (nonatomic, strong) UIImageView   * arrowImageView;
-
-/** cell背景*/
-@property (nonatomic, strong) UIButton      * backBttton;
+/** cell点击*/
+@property (nonatomic, strong) UIButton      * seleBttton;
 
 #pragma mark - Data Propertys
 // ---------------------- 数据模型 ----------------------
@@ -67,11 +66,11 @@
  *  添加cell上的控件
  */
 - (void) addUI {
-    [self.contentView addSubview:self.backBttton];
-    [self.backBttton addSubview:self.titleLable];
-    [self.backBttton addSubview:self.nameLable];
-    [self.backBttton addSubview:self.minusButton];
-    [self.backBttton addSubview:self.arrowImageView];
+    [self.contentView addSubview:self.titleLable];
+    [self.contentView addSubview:self.nameLable];
+    [self.contentView addSubview:self.minusButton];
+    [self.contentView addSubview:self.arrowImageView];
+    [self.contentView addSubview:self.seleBttton];
 }
 
 /**
@@ -80,38 +79,27 @@
 - (void) layoutSubviews {
     [super layoutSubviews];
     
-    [self.backBttton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
-    
-    [self.titleLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(12, 15, 12, 0) excludingEdge:ALEdgeRight];
-    [self.titleLable autoSetDimension:ALDimensionWidth toSize:35];
-    
-    [self.arrowImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(15, 0, 15, 15) excludingEdge:ALEdgeLeft];
-    [self.arrowImageView autoSetDimension:ALDimensionWidth toSize:15];
-    
-    [self.minusButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(12, 60, 12, 0) excludingEdge:ALEdgeRight];
+    [self.minusButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(12, 70, 12, 0) excludingEdge:ALEdgeRight];
     [self.minusButton autoSetDimension:ALDimensionWidth toSize:110];
-    
-    [self.nameLable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(12, 0, 12, 30) excludingEdge:ALEdgeLeft];
-    [self.nameLable autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.minusButton withOffset:5];
+
 }
 
 
 - (UILabel *) titleLable {
     if (!_titleLable) {
-        _titleLable = [[UILabel alloc] initForAutoLayout];
+        _titleLable = [[UILabel alloc] initWithFrame:CGRectMake(20, 12, 40, 21)];
         _titleLable.font      = SWP_SYSTEM_FONT_SIZE(16);
         _titleLable.textColor = Color(64, 64, 64, 1);
+        _titleLable.adjustsFontSizeToFitWidth = YES;
     }
     return _titleLable;
 }
 
 - (UILabel *) nameLable {
     if (!_nameLable) {
-        _nameLable = [[UILabel alloc] initForAutoLayout];
-        _nameLable.font             = SWP_SYSTEM_FONT_SIZE(15);
-        _nameLable.text             = @"请选择";
-        _nameLable.textAlignment    = NSTextAlignmentRight;
-        _nameLable.textColor        = Color(154, 154, 154, 1);
+        _nameLable = [[UILabel alloc] initWithFrame:CGRectMake(65, 10, 1, 25)];
+        _nameLable.backgroundColor  = [UIColor lightGrayColor];
+        _nameLable.alpha            = 0.5;
         _nameLable.adjustsFontSizeToFitWidth = YES;//UIlable自动 改变字体(字体收缩)
     }
     return _nameLable;
@@ -125,7 +113,6 @@
         _minusButton.titleLabel.font = SWP_SYSTEM_FONT_SIZE(13);
         [_minusButton setTitleColor:Color(154, 154, 154, 1) forState:UIControlStateNormal];
         _minusButton.imageEdgeInsets = UIEdgeInsetsMake(0, -_minusButton.titleLabel.frame.size.width - _minusButton.frame.size.width + _minusButton.imageView.frame.size.width, 0, 0);
-        [_minusButton addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
         
         _minusButton.hidden = YES;
     }
@@ -134,20 +121,19 @@
 
 - (UIImageView *) arrowImageView {
     if (!_arrowImageView) {
-        _arrowImageView = [[UIImageView alloc] initForAutoLayout];
-        _arrowImageView.image = [UIImage imageNamed:@"进入箭头"];
+        _arrowImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 50, 12, 21, 21)];
+        _arrowImageView.image = [UIImage imageNamed:@"加号"];
     }
     return _arrowImageView;
 }
 
-- (UIButton *)backBttton {
-    if (!_backBttton) {
-        _backBttton = [[UIButton alloc] initForAutoLayout];
-        [_backBttton addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)seleBttton {
+    if (!_seleBttton) {
+        _seleBttton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 45)];
+        [_seleBttton addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _backBttton;
+    return _seleBttton;
 }
-
 
 - (void)didView:(UIButton *)btn {
     if ([self.delegate respondsToSelector:@selector(MakeAppointmentTwoTableViewCell:didSelectRowAtIndexPath:)]) {
@@ -158,22 +144,45 @@
 - (void) setTitle:(NSString *)title {
     _title = title;
     self.titleLable.text = _title;
+    if (_title.length > 3) {
+        self.nameLable.hidden     = YES;
+        self.arrowImageView.image = [UIImage imageNamed:@"取消"];
+        self.seleBttton.frame     = CGRectMake(SCREEN_WIDTH - 70, 0, 21, 45);
+        self.titleLable.frame     = CGRectMake(60, 12, SCREEN_WIDTH - 140, 21);
+        self.arrowImageView.frame = CGRectMake(SCREEN_WIDTH - 70, 12, 21, 21);
+        [self titleWithName:_title];
+    }else {
+        self.nameLable.hidden     = NO;
+        self.arrowImageView.image = [UIImage imageNamed:@"加号"];
+        self.seleBttton.frame     = CGRectMake(0, 0, SCREEN_WIDTH, 45);
+        self.titleLable.frame     = CGRectMake(20, 12, SCREEN_WIDTH - 100, 21);
+        self.arrowImageView.frame = CGRectMake(SCREEN_WIDTH - 50, 12, 21, 21);
+    }
 }
-
-- (void)setProductType:(NSString *)productType {
-    _productType = productType;
-    self.nameLable.text = _productType;
-}
-
 
 - (void) setDict:(NSDictionary *)dict {
     _dict = dict;
     if ([[dict objectForKey:@"cutvalues"] intValue] > 0) {
-        self.minusButton.hidden = NO;
+        
+        if (self.indexPath.row > 0) {
+            self.minusButton.hidden = YES;
+        }else {
+            self.minusButton.hidden = NO;
+        }
         [self.minusButton setTitle:[NSString stringWithFormat:@"立减%@元", [dict objectForKey:@"cutvalues"]] forState:UIControlStateNormal];
     }else {
         self.minusButton.hidden = YES;
     }
+}
+
+//文字颜色
+- (void) titleWithName:(NSString *)str {
+    NSString *str1 = [str componentsSeparatedByString:@"-"][0];
+    NSString *str2 = [str componentsSeparatedByString:@"-"][1];
+    NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:str];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, str1.length)];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(str1.length, str2.length + 1)];
+    self.titleLable.attributedText = hintString;
 }
 
 @end

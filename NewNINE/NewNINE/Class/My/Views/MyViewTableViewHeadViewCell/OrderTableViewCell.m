@@ -29,8 +29,8 @@
 @property (nonatomic, strong) UILabel *status;
 /** 订单金额文字*/
 @property (nonatomic, strong) UILabel *orderMoneyTitle;
-/** 订单金额*/
-@property (nonatomic, strong) UILabel *orderMoney;
+///** 订单金额上面的线*/
+@property (nonatomic, strong) UILabel *xianView;
 /** 状态按钮*/
 @property (nonatomic, strong) UIButton *statusButton;
 
@@ -89,7 +89,7 @@
     [self.backView addSubview:self.orderView];
     
     [self.footerView addSubview:self.orderMoneyTitle];
-    [self.footerView addSubview:self.orderMoney];
+    [self.footerView addSubview:self.xianView];
     [self.footerView addSubview:self.statusButton];
 }
 
@@ -101,8 +101,12 @@
     
     [self.backView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
     
-    [self.footerView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 0, 0) excludingEdge:ALEdgeTop];
-    [self.footerView autoSetDimension:ALDimensionHeight toSize:50];
+    [self.footerView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, -2, 0, -2) excludingEdge:ALEdgeTop];
+    [self.footerView autoSetDimension:ALDimensionHeight toSize:70];
+    
+    [self.xianView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(8, 15, 0, 0) excludingEdge:ALEdgeBottom];
+    [self.xianView autoSetDimension:ALDimensionHeight toSize:0.5];
+    
     
     [self.userImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:8];
     [self.userImageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:15];
@@ -112,15 +116,15 @@
     [self.status autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:11];
     [self.status autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:15];
     [self.status autoSetDimension:ALDimensionHeight toSize:18];
-    [self.status autoSetDimension:ALDimensionWidth toSize:60];
+    [self.status autoSetDimension:ALDimensionWidth toSize:65];
 
-    [self.orderMoneyTitle autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:15];
-    [self.orderMoneyTitle autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:15];
-    [self.orderMoneyTitle autoSetDimension:ALDimensionHeight toSize:24];
-    [self.orderMoneyTitle autoSetDimension:ALDimensionWidth toSize:70];
+    [self.orderMoneyTitle autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(10, 15, 0, 15) excludingEdge:ALEdgeBottom];
+    [self.orderMoneyTitle autoSetDimension:ALDimensionHeight toSize:20];
     
-    [self.statusButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(12, 0, 12, 15) excludingEdge:ALEdgeLeft];
-    [self.statusButton autoSetDimension:ALDimensionWidth toSize:84];
+    [self.statusButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
+    [self.statusButton autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:15];
+    [self.statusButton autoSetDimension:ALDimensionHeight toSize:30];
+    [self.statusButton autoSetDimension:ALDimensionWidth toSize:65];
     
 }
 
@@ -180,17 +184,18 @@
     if (!_orderMoneyTitle) {
         _orderMoneyTitle = [[UILabel alloc] initForAutoLayout];
         _orderMoneyTitle.text = @"订单金额";
-        _orderMoneyTitle.font = SWP_SYSTEM_FONT_SIZE(17);
+        _orderMoneyTitle.font = SWP_SYSTEM_FONT_SIZE(15);
     }
     return _orderMoneyTitle;
 }
 
-- (UILabel *) orderMoney {
-    if (!_orderMoney) {
-        _orderMoney = [[UILabel alloc] initWithFrame:CGRectMake(90, 11, 70, 24)];
-        _orderMoney.textColor = [UIColor redColor];
+- (UILabel *) xianView {
+    if (!_xianView) {
+        _xianView = [[UILabel alloc] initForAutoLayout];
+        _xianView.backgroundColor = [UIColor lightGrayColor];
+        _xianView.alpha = 0.5;
     }
-    return _orderMoney;
+    return _xianView;
 }
 - (UIButton *) statusButton {
     if (!_statusButton) {
@@ -229,8 +234,6 @@
 //status  = 7  ？  退款  ： 非退款
 - (void) setDataModel:(OrderViewModel *)dataModel {
     _dataModel = dataModel;
-    
-//    [self.userImageView sd_setImageWithURL:[NSURL URLWithString:_dataModel.orderIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
     [self.userImageView  sd_setImageWithURL:[NSURL URLWithString:_dataModel.orderIconPhotoUrl]
                             placeholderImage:[UIImage imageNamed:@"发型缺省图"]
                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
@@ -244,9 +247,7 @@
     CGSize stylistIdSize = [self uiWithConstrained:self.stylistId.text];
     self.stylistId.frame = CGRectMake(userNameSize.width + 75, 17, stylistIdSize.width, 18);
     
-    self.orderMoney.text = [NSString stringWithFormat:@"￥%@",_dataModel.orderPayMoney];
-    CGSize orderMoneySize = [self uiWithConstrained:self.orderMoney.text];
-    self.orderMoney.frame = CGRectMake(90, 11, orderMoneySize.width + 10, 24);
+    self.orderMoneyTitle.text = [NSString stringWithFormat:@"订单金额￥%@",_dataModel.orderPayMoney];
     
     [self uiWithUIButtonTitle:_dataModel.orderStatus.intValue isComment:[NSString stringWithFormat:@"%@", _dataModel.orderIsComment] OrderViewModel:dataModel];
     

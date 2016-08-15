@@ -19,6 +19,8 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 #import "CityViewController.h"
 #import "ScreenViewController.h"
 #import "MakeAppointmentViewController.h"
+#import "ModalViewController.h"
+#import "DesignerModalViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -40,7 +42,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
 @property (nonatomic, strong) RMMapLocation         *map;
-
+/** 设计师控制器 导航*/
 @property (nonatomic, strong) DesignerHeadView      *designerHeadView;
 
 @property (nonatomic, strong) UITableView           *designerTableView;
@@ -64,6 +66,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 @property (nonatomic, copy) NSString *values;
 @property (nonatomic, copy) NSString *bought;
 @property (nonatomic, copy) NSString *starLevel;
+/** 设计师职位ID*/
 @property (nonatomic, copy) NSString *levlId;
 @property (nonatomic, copy) NSString *stylistName;
 @property (nonatomic, copy) NSString *cityName;
@@ -116,7 +119,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
     _geocoder=[[CLGeocoder alloc]init];
     
     if (GetUserDefault(@"stylistLevlsStr") != nil) {
-        self.levlId = GetUserDefault(@"stylistLevlsStr");
+        self.levlId = GetUserDefault(@"stylistLevlsStr");//设计师职位ID
         [self getStylistinfosWithData];
     }
     
@@ -435,6 +438,8 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
     return SCREEN_WIDTH / 3 + 85 ;
 }
 
+
+#pragma mark - 设计师控制器 导航点击不同的按钮 响应不同的事件
 /**
  *  设计师控制器 导航点击不同的按钮 响应不同的事件
  *
@@ -447,6 +452,15 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
     }
     if (btn.tag == 0) {
         NSLog(@"区域");
+        DesignerModalViewController * modalView = [[DesignerModalViewController alloc]init];
+//        self.definesPresentationContext = YES; //self is presenting view controller
+        modalView.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.4];
+        modalView.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        [self presentViewController:modalView animated:YES completion:nil];
+
+        
+//        ModalViewController * modalView = [[ModalViewController alloc]init];
+//        [self presentViewController:modalView animated:YES completion:nil];
     }
     if (btn.tag == 1) {
         NSLog(@"排序");

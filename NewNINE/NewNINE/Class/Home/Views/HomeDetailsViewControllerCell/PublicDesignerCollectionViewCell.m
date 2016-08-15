@@ -114,7 +114,8 @@
         _appointmentButton = [[UIButton alloc] initForAutoLayout];
         _appointmentButton.backgroundColor = [UIColor whiteColor];
         [_appointmentButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [_appointmentButton setTitle:@"预约" forState:UIControlStateNormal];
+        [_appointmentButton setImage:[UIImage imageNamed:@"立即预约"] forState:UIControlStateNormal];
+        [_appointmentButton setTitle:@"立即预约" forState:UIControlStateNormal];
         [_appointmentButton addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
         
     }
@@ -180,9 +181,7 @@
 
 - (void) setDictData:(NSDictionary *)dictData {
     _dictData = dictData;
-    
-//    [self.imageViewPD sd_setImageWithURL:[NSURL URLWithString:[_dictData objectForKey:@"iconPhotoUrl"]] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-    
+
     [self.imageViewPD  sd_setImageWithURL:[NSURL URLWithString:[_dictData objectForKey:@"iconPhotoUrl"]]
                            placeholderImage:[UIImage imageNamed:@"发型缺省图"]
                                   completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
@@ -190,28 +189,23 @@
     
     
     self.nameLable.text = [_dictData objectForKey:@"name"];
-//    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
-//    CGSize size = CGSizeMake(320,20);
-    CGSize nameSize = [self uiWithConstrained:self.nameLable.text];//[self.nameLable.text sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
+
+    CGSize nameSize = [self uiWithConstrained:self.nameLable.text];
     self.nameLable.frame = CGRectMake(5, 5, nameSize.width + 10, 20);
     
     self.levelLable.text = [_dictData objectForKey:@"leveName"];
-//    UIFont *levelFnt = [UIFont fontWithName:[_dictData objectForKey:@"leveName"] size:10];
-    CGSize levelSize = [self uiWithConstrained:self.levelLable.text];//[self.levelLable.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:levelFnt, NSFontAttributeName, nil]];
+    CGSize levelSize = [self uiWithConstrained:self.levelLable.text];
     self.levelLable.frame = CGRectMake(7 + nameSize.width, 7, levelSize.width, 16);
 
-//    UIFont *tempFnt = [UIFont fontWithName:@"Arial" size:13];
-//    CGSize tempSize = CGSizeMake(320,14);
-
     self.singleLable.text = [NSString stringWithFormat:@"%@美单", [_dictData objectForKey:@"bought"]];
-    CGSize atempSize = [self uiWithConstrained:self.singleLable.text];//[self.singleLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+    CGSize atempSize = [self uiWithConstrained:self.singleLable.text];
     self.singleLable.frame = CGRectMake(5, 26, atempSize.width + 5, 14);
 
     
     self.titleLable.frame = CGRectMake(self.singleLable.frame.origin.x + atempSize.width + 5, 26, 40, 14);
     
     self.priceLable.text = [NSString stringWithFormat:@"￥%@", [_dictData objectForKey:@"priceMast"]];
-    atempSize = [self uiWithConstrained:self.priceLable.text];//[self.priceLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
+    atempSize = [self uiWithConstrained:self.priceLable.text];
     self.priceLable.frame = CGRectMake(self.titleLable.frame.origin.x + 32, 26, atempSize.width + 5, 14);
    
     
@@ -220,8 +214,7 @@
 - (CGSize)uiWithConstrained:(NSString *)title {
     UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
     CGSize size = CGSizeMake(320,20);
-//    CGSize nameSize = [title sizeWithFont:nameFnt constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
-    
+
     NSDictionary *dict = @{NSFontAttributeName : nameFnt};
     
     CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;

@@ -55,8 +55,8 @@
 //#define developmentURL @"http://share.mlmsalon.com/Home/"
 //      生产环境  ---  1.2版本
 //#define developmentURL @"http://share.mlmsalon.com/Home/"
-
-//http://192.168.0.106:1080/
+//      本地环境
+//#define developmentURL @"http://192.168.0.106:1080/"
 //---------------------------------------------------------
 
 

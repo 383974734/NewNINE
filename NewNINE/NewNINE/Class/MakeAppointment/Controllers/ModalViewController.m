@@ -253,6 +253,8 @@ static NSString *cellID = @"ModalTableViewCellID";
 }
 
 #pragma mark - 实现oneSegmentedControl的监听事件
+// 产品类型 1-烫发 2-染发 3－护理 4- 养发 7-洗色
+/** 发型分类 11烫发（长发） 12烫发（中发）13烫发 (短发) 21染发（长） 22染发（中） 23染发（短） 31护理（烫发） 32护理（染发）  33护理（养发）  41、养发  51洗色（长发） 52洗色（中发） 53洗色 (短发)*/
 - (void)segmentedControlAction:(UISegmentedControl *) sender {
     // 获取当前的选中项的索引值
     NSUInteger index = sender.selectedSegmentIndex;

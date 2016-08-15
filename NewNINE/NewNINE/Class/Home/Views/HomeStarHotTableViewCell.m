@@ -218,27 +218,11 @@
 
         _starScrollerView.contentSize   = CGSizeMake((SCREEN_WIDTH -30) *starHotArray.count, 150);
         _starScrollerView.pagingEnabled = YES;
-
-        
-//        UIView *view = [[UIView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH * 0.84) * i, 0, SCREEN_WIDTH * 0.84, self.frame.size.height - 98)];
-//        view.backgroundColor = [UIColor whiteColor];
-//        [_starScrollerView addSubview:view];
-//        
-//        self.starScrollerImageView                   = [[UIImageView alloc] init];
-//        self.starScrollerImageView.frame             = CGRectMake(0, 0, (SCREEN_WIDTH * 0.84 - 10), self.frame.size.height - 98);
-//        self.starScrollerImageView.layer.borderWidth = 1;
-//        [view addSubview:self.starScrollerImageView];
-//        
-//        _starScrollerView.contentSize   = CGSizeMake((SCREEN_WIDTH * 0.84) * starHotArray.count, self.frame.size.height - 98);
-//        _starScrollerView.pagingEnabled = YES;
-        
-        
         
         if (array.count == i + 1) {
             self.starScrollerImageView.backgroundColor = [UIColor redColor];
         }else {
-//            [self.starScrollerImageView sd_setImageWithURL:[NSURL URLWithString:array[i]] placeholderImage:[UIImage imageNamed:@"banner缺省图"]];
-            
+
             [self.starScrollerImageView  sd_setImageWithURL:[NSURL URLWithString:array[i]]
                                         placeholderImage:[UIImage imageNamed:@"发型缺省图"]
                                                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {

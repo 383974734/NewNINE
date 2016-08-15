@@ -349,6 +349,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
     ChooseTimeModel *model = self.arrayAppointsTimes[indexPath.row];
     self.timeOldStr = [NSString stringWithFormat:@"预约时间:\n%@  %@", self.timeStr, model.chooseAppointTimes];
     self.makeTime = [NSString stringWithFormat:@"%@ %@", self.timeStr, model.chooseAppointTimes];
+    SetUserDefault(model.chooseStylistTimesId, @"chooseStylistTimesId");//所选择时间ID
     [self titleWithName:self.timeOldStr lable:self.lableAppointment len:5 index:6];
 }
 

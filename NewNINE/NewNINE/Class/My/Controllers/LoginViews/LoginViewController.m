@@ -200,6 +200,8 @@
                 SetUserDefault(mobile, UserMobile);
                 SetUserDefault(passwd, UserPasswd);
                 [self.navigationController popViewControllerAnimated:YES];
+            }else {
+                [SVProgressHUD showInfoWithStatus:[resultObject objectForKey:@"errors"][0]];
             }
         }else {
             
