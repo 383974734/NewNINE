@@ -399,7 +399,7 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
 - (void) setButton {
     self.followButton = [self setButtonWithUI:CGRectMake(0 , 0, SCREEN_WIDTH / 3, 36) name:@"关注" image:@"arrow_default" tag:0 titleColor:Color(154, 154, 154, 1)];
     self.timeButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3  , 0, SCREEN_WIDTH / 3, 36) name:@"时间" image:@"arrow_default" tag:1 titleColor:Color(154, 154, 154, 1)];
-    self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 0, SCREEN_WIDTH / 3, 36) name:@"发型分类" image:@"tri_default" tag:2 titleColor:Color(154, 154, 154, 1)];
+    self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 0, SCREEN_WIDTH / 3, 36) name:@"发型分类" image:@"Slice123" tag:2 titleColor:Color(154, 154, 154, 1)];
     
     [self.classificationView addSubview:self.followButton];
     [self.classificationView addSubview:self.timeButton];
@@ -462,18 +462,18 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
         name = @"发型分类";
         if (tag == 2) {
             if (![name isEqualToString:@"时间"] || ![name isEqualToString:@"关注"]) {
-                image = @"tri_default";
+                image = @"Slice123";
             }
         }
     }else {
         if (tag == 2) {
             if ([name isEqualToString:@"发型分类"]) {
-                image = @"tri_default";
+                image = @"Slice123";
             }else {
                 image = @"Slice";
             }
         }
-    }//tri_default
+    }
     
     nameLable.textColor = color;
     nameLable.text = name;

@@ -167,7 +167,7 @@
 - (void) setClassificationStr:(NSString *)classificationStr {
     _classificationStr = classificationStr;
     if (_classificationStr.length > 0 ) {
-        self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 67, SCREEN_WIDTH / 3, 36)  name:@"筛选" image:@"筛选-select" tag:2 titleColor:[UIColor redColor]];
+        self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 67, SCREEN_WIDTH / 3, 36)  name:@"筛选" image:@"ShapeSelect" tag:2 titleColor:[UIColor redColor]];
     }else {
         self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 67, SCREEN_WIDTH / 3, 36)  name:@"筛选" image:@"Shape" tag:2 titleColor:Color(154, 154, 154, 1)];
     }
