@@ -87,6 +87,9 @@
 - (instancetype) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self addUI];
+        
+        self.userImage.image = self.imageUser == nil ? [UIImage imageNamed:@"160Wow"] : self.imageUser;
+        
     }
     return self;
 }
@@ -98,6 +101,7 @@
 - (void) addUI {
     [self.contentView addSubview:self.backgroundImageView];
     [self.contentView addSubview:self.backgroundVeiw];
+    [self.backgroundImageView addSubview:self.userImage];
     [self.backgroundImageView addSubview:self.userImageView];
     [self.backgroundImageView addSubview:self.userName];
     [self.backgroundImageView addSubview:self.nuCollectionView];
@@ -109,7 +113,7 @@
     [self.backgroundVeiw addSubview:self.nextImageView];
     [self.backgroundVeiw addSubview:self.seeLable];
     
-    [self.userImageView addSubview:self.userImage];
+    
     
     [self.contentView addSubview:self.noPaymenView];
     [self.contentView addSubview:self.appointmentSuccessView];
@@ -122,7 +126,7 @@
  */
 - (void) layoutSubviews {
     [super layoutSubviews];
-    [self.userImage autoPinEdgesToSuperviewEdges];
+//    [self.userImage autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 110, 0)];
     
     [self.backgroundImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, 0, 110, 0)];
     [self.backgroundVeiw      autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(-1, -1, 65, -1) excludingEdge:ALEdgeTop];
@@ -147,7 +151,6 @@
         _userImageView.layer.masksToBounds = YES;
         _userImageView.layer.cornerRadius = 36;
         _userImageView.tag = 0;
-        [_userImageView setImage:[UIImage imageNamed:@"160Wow"] forState:UIControlStateNormal];
         [_userImageView addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _userImageView;
@@ -155,10 +158,9 @@
 
 - (UIImageView *)userImage {
     if (!_userImage) {
-        _userImage = [[UIImageView alloc] initForAutoLayout];
+        _userImage = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2 - 36, 42, 72, 72)];
         _userImage.layer.cornerRadius       = 36;
         _userImage.layer.masksToBounds      = YES;
-        _userImage.image                    = [UIImage imageNamed:@"160Wow"];
         _userImage.userInteractionEnabled   = YES;
     }
     return _userImage;
@@ -295,21 +297,31 @@
 - (void) setUserDict:(NSDictionary *)userDict {
     _userDict = userDict;
     if (!([GetUserDefault(userUid) length] > 0)) {
-        [_userImageView setImage:[UIImage imageNamed:@"160Wow"] forState:UIControlStateNormal];
+        self.userName.frame = CGRectMake(SCREEN_WIDTH / 2 - 36, 115, 72, 30);
+        _userImage.image = [UIImage imageNamed:@"160Wow"];
         [_userName setTitle:@"未登录" forState:UIControlStateNormal];
         [_nuCollectionView setWithNumber:@"0"];
         [_nuIntegraView setWithNumber:@"0"];
         [_nuDiscountdView setWithNumber:@"0"];
+        [_noPaymenView setimageView:@"未付款" lableText:@"未付款" buttonWithTag:0];
     }else {
         if ([[_userDict objectForKey:@"iconPhotoUrl"]length] > 0) {
             
-            [self.userImage  sd_setImageWithURL:[NSURL URLWithString:[_userDict objectForKey:@"iconPhotoUrl"]]
-                                       placeholderImage:[UIImage imageNamed:@"160Wow"]
-                                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                              }];
-            
-            
-//            [self.userImageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[_userDict objectForKey:@"iconPhotoUrl"]]]] forState:UIControlStateNormal];
+            if (self.imageUser != nil) {
+                self.userImage.image = self.imageUser;
+            }else {
+                
+                [self.userImage  sd_setImageWithURL:[NSURL URLWithString:[_userDict objectForKey:@"iconPhotoUrl"]]
+                                   placeholderImage:[UIImage imageNamed:@"160Wow"]
+                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                          }];
+            }
+        }
+        
+        if ([[_userDict objectForKey:@"orders"] intValue] > 0 ) {
+            [self.noPaymenView setimageView:@"未付款unread" lableText:@"未付款" buttonWithTag:0];
+        }else {
+            [self.noPaymenView setimageView:@"未付款" lableText:@"未付款" buttonWithTag:0];
         }
         
         [self.userName setTitle:[NSString stringWithFormat:@"%@", [_userDict objectForKey:@"userName"]] forState:UIControlStateNormal];
@@ -340,6 +352,9 @@
         [self.delegate myHeadTableViewCell:self buttonWithTag:tag name:@"2"];
     }
 }
+
+
+
 
 //self.nameLable.text = [_dictData objectForKey:@"name"];
 //UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];

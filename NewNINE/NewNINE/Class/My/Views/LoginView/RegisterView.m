@@ -252,6 +252,7 @@
         _password.placeholder     = @"请输入6-16位数字和字母组合密码";
         _password.backgroundColor = [UIColor whiteColor];
         _password.clearButtonMode = UITextFieldViewModeWhileEditing;
+        _password.secureTextEntry = YES;
     }
     return _password;
 }

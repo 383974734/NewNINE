@@ -215,7 +215,12 @@
             }
         }
         self.stylistLevlsStr = [stylistLevlsStrArray componentsJoinedByString:@","];
-        SetUserDefault(self.stylistLevlsStr, @"stylistLevlsStr");//设计师职位ID
+        
+        if (self.screenViewID) {
+            self.screenViewID(self.stylistLevlsStr);
+        }
+        
+//        SetUserDefault(self.stylistLevlsStr, @"stylistLevlsStr");//设计师职位ID
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -346,7 +351,8 @@
             image.tag           = 88;
             [levButton addSubview:image];
             
-            NSArray *_arr = [GetUserDefault(@"stylistLevlsStr") componentsSeparatedByString:NSLocalizedString(@",", nil)];
+//            NSArray *_arr = [GetUserDefault(@"stylistLevlsStr") componentsSeparatedByString:NSLocalizedString(@",", nil)];
+            NSArray *_arr = [self.stylistLevlsStrID componentsSeparatedByString:NSLocalizedString(@",", nil)];
             for (NSString * idStr in _arr) {
                 if ([idStr intValue]== (int)levButton.tag) {
                     levButton.selected = YES;

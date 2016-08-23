@@ -10,27 +10,27 @@
 #define PalmHeCheng_SWPToolMacro_h
 
 
-#define everLaunch  @"firstEnter"           /*!< 判断是否第一次进入应用: yes-不是第一次，no-是第一次 */
-#define isLogined     @"islogined"              /*!< 判断用户登录状态: yes-已登录，no-未登录 */
-#define userInfomation    @"userInfo"       /*!< NSUserDefault中，保存用户信息的key */
-#define loginInfomation @"loginInfo"        /*!< NSUserDefault中，保存用户登录信息的key */
-#define loginChange     @"loginChange"
-#define extraReload     @"extraReload"     //购买商品更新列表信息
-#define mediaChange     @"mediaChange"     //上传图片或者下载图片修改用户信息
-#define exhangeChange   @"exchangeChange"  //交换名片更改信息
+#define everLaunch          @"firstEnter"           /*!< 判断是否第一次进入应用: yes-不是第一次，no-是第一次 */
+#define isLogined           @"islogined"              /*!< 判断用户登录状态: yes-已登录，no-未登录 */
+#define userInfomation      @"userInfo"       /*!< NSUserDefault中，保存用户信息的key */
+#define loginInfomation     @"loginInfo"        /*!< NSUserDefault中，保存用户登录信息的key */
+#define loginChange         @"loginChange"
+#define extraReload         @"extraReload"     //购买商品更新列表信息
+#define mediaChange         @"mediaChange"     //上传图片或者下载图片修改用户信息
+#define exhangeChange       @"exchangeChange"  //交换名片更改信息
 
 //存储发送的消息
-#define messageText    @"messageText"
-#define emailText      @"emailText"
-#define askEmailText   @"askEmailText"
+#define messageText         @"messageText"
+#define emailText           @"emailText"
+#define askEmailText        @"askEmailText"
 
 //存储用户基本信息
-#define userCompan         @"company"
-#define userInvitation_num @"invitation_num"
+#define userCompan          @"company"
+#define userInvitation_num  @"invitation_num"
 //#define userNickname       @"nickname"
-#define userUid            @"UserID"
-#define UserMobile         @"UserMobile"
-#define UserPasswd         @"UserMobile"
+#define userUid             @"UserID"
+#define UserMobile          @"UserMobile"
+#define UserPasswd          @"UserMobile"
 
 
 
@@ -118,23 +118,23 @@ alpha:1.0]
 
 //------------------
 /*! 友盟分享    !*/
-#define UMENG_NAME          @""
-#define UMENG_IMAGE_NAME    @"logo"
+#define UMENG_NAME           @""
+#define UMENG_IMAGE_NAME     @"logo"
 
 /** 友盟三方key */
-#define UMENG_APP_KEY       @"56af1b8967e58ec528001e19"
+#define UMENG_APP_KEY        @"56af1b8967e58ec528001e19"
 
 
 /** QQ and QQ空间 ID and Key  tencent1104558561 */
-#define UMENG_QQ_ID         @"1104826127"
-#define UMENG_QQ_KEY        @"5cL4Fx96VxnIw8Oa"
+#define UMENG_QQ_ID          @"1104826127"
+#define UMENG_QQ_KEY         @"5cL4Fx96VxnIw8Oa"
 
 /** 微信 ID and Key */
-#define UMENG_WX_ID         @"wxe94f6ebf0daa4bda"
-#define UMENG_WX_KEY        @"e2f4f10444b6399f18e151737a0b653e"
+#define UMENG_WX_ID          @"wxe94f6ebf0daa4bda"
+#define UMENG_WX_KEY         @"e2f4f10444b6399f18e151737a0b653e"
 
 /** QQ 和 微信的URL 两个用的一个 */
-#define UMENG_TX_URL        @"http://www.umeng.com/social"
+#define UMENG_TX_URL         @"http://www.umeng.com/social"
 
 /** 新浪微博打开 SSO */
 #define UMENG_SSO_ID         @"3272947599"

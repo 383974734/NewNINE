@@ -303,7 +303,6 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
     [self.navigationController pushViewController:detailsViewController animated:YES];
 }
 
-
 /**
  *  点击发型分类出点的下拉列表点击代理
  *
@@ -315,13 +314,13 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
     [self.classificationButton removeFromSuperview];
     self.classification.hidden = !self.classification.hidden;
     if ([classification isEqualToString:@"全部"]) {
-        self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 0, SCREEN_WIDTH / 3, 36) name:classification image:@"arrow_up" tag:2 titleColor:[UIColor redColor]];
+        self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 0, SCREEN_WIDTH / 3, 36) name:classification image:@"Slice" tag:2 titleColor:[UIColor redColor]];
         [self getOpusinfosWithData:[NSString stringWithFormat:@"%d", index] collect:self.fucosDataStr created:self.timeDataStr clasId:@""];
     }else {
         self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 0, SCREEN_WIDTH / 3, 36) name:classification image:@"arrow_down" tag:2 titleColor:[UIColor redColor]];
         [self getOpusinfosWithData:[NSString stringWithFormat:@"%d", index] collect:self.fucosDataStr created:self.timeDataStr clasId:classificationID];
     }
-    
+    [self.rdv_tabBarController setTabBarHidden:NO animated:YES];
     [self.classificationView addSubview:self.classificationButton];
 }
 
@@ -400,7 +399,7 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
 - (void) setButton {
     self.followButton = [self setButtonWithUI:CGRectMake(0 , 0, SCREEN_WIDTH / 3, 36) name:@"关注" image:@"arrow_default" tag:0 titleColor:Color(154, 154, 154, 1)];
     self.timeButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3  , 0, SCREEN_WIDTH / 3, 36) name:@"时间" image:@"arrow_default" tag:1 titleColor:Color(154, 154, 154, 1)];
-    self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 0, SCREEN_WIDTH / 3, 36) name:@"发型分类" image:@"arrow_default" tag:2 titleColor:Color(154, 154, 154, 1)];
+    self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 0, SCREEN_WIDTH / 3, 36) name:@"发型分类" image:@"tri_default" tag:2 titleColor:Color(154, 154, 154, 1)];
     
     [self.classificationView addSubview:self.followButton];
     [self.classificationView addSubview:self.timeButton];
@@ -438,7 +437,14 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
         [self getOpusinfosWithData:[NSString stringWithFormat:@"%@", @"0"] collect:self.fucosDataStr created:self.timeDataStr clasId:@""];
     }
     if (btn.tag == 2) {
-        self.classification.hidden = !self.classification.hidden;
+        self.classification.hidden = NO;//!self.classification.hidden;
+        
+        __weak typeof(self) selfViewController = self;
+        self.classification.buttonTouchUpInside = ^(){
+            selfViewController.classification.hidden = YES;
+            [selfViewController.rdv_tabBarController setTabBarHidden:!selfViewController.classification.hidden animated:YES];
+        };
+        [self.rdv_tabBarController setTabBarHidden:!self.classification.hidden animated:YES];
     }
     
     [self.classificationView addSubview:self.followButton];
@@ -450,6 +456,25 @@ static NSString *cellID = @"HairstyleCollectionViewCell";
     buttonView.tag = tag;
     [buttonView addTarget:self action:@selector(didView:) forControlEvents:UIControlEventTouchUpInside];
     UILabel *nameLable = [[UILabel alloc] init];
+    
+    if ([name isEqualToString:@"全部"]) {
+        color = [UIColor lightGrayColor];
+        name = @"发型分类";
+        if (tag == 2) {
+            if (![name isEqualToString:@"时间"] || ![name isEqualToString:@"关注"]) {
+                image = @"tri_default";
+            }
+        }
+    }else {
+        if (tag == 2) {
+            if ([name isEqualToString:@"发型分类"]) {
+                image = @"tri_default";
+            }else {
+                image = @"Slice";
+            }
+        }
+    }//tri_default
+    
     nameLable.textColor = color;
     nameLable.text = name;
     CGSize size = [nameLable sizeThatFits:CGSizeMake(nameLable.frame.size.width, MAXFLOAT)];

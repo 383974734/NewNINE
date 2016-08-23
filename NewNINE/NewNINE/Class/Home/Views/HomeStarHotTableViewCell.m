@@ -31,7 +31,7 @@
 /** 热门 文字*/
 @property (nonatomic, strong) UILabel       *hotLabel;
 /** 明星 轮播*/
-@property (nonatomic, strong) UIScrollView  *starScrollerView;
+@property (nonatomic, strong) UIScrollView  *starScrollerView;//http://www.mamicode.com/info-detail-872795.html
 /** 明星 轮播图片*/
 @property (nonatomic, strong) UIImageView   *starScrollerImageView;
 

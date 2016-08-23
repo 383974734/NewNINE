@@ -26,13 +26,26 @@
 @end
 
 
+
+
+
 @interface ClassificationView : UIView
 
-@property (nonatomic, copy) NSString *designerStr;
+/** 传递所选门店ID---------*/
+typedef void (^ClassificationID) (NSString *strID, NSString *strName);
+@property (nonatomic, strong)ClassificationID classificationID;
+/** 传递所选门店ID---------*/
+/** 点击隐藏区域选择控件---------*/
+@property (nonatomic, copy) void (^buttonTouchUpInside)();
+/** 点击隐藏区域选择控件---------*/
 
+@property (nonatomic, copy) NSString *designerStr;
+/** 发型控制器 发型分类 数据*/
 @property (nonatomic, strong) NSArray *dataArray;
-/** 设计师*/
+/** 设计师控制器 智能排序 数据*/
 @property (nonatomic, strong) NSArray *designerArray;
+/** 设计师控制器 全部区域 数据*/
+@property (nonatomic, strong) NSArray *wholeRegionAray;
 
 @property (nonatomic, assign) id<ClassificationViewDelegate> delegate;
 

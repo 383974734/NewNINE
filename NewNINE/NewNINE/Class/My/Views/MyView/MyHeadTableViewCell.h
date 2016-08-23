@@ -26,13 +26,15 @@
 @end
 
 
-@interface MyHeadTableViewCell : UITableViewCell
+@interface MyHeadTableViewCell : UITableViewCell 
 
 @property (nonatomic, assign)id<MyHeadTableViewCellDelegate> delegate;
 
 
 /** 个人信息数据*/
 @property (nonatomic, strong) NSDictionary *userDict;
+
+@property (nonatomic, strong) UIImage *imageUser;
 
 /**
  *  快速  初始化 一个自定义cell

@@ -27,6 +27,7 @@ static NSString *cellContentCellID = @"cellContentCellID";
 #import "MyEvaluationViewController.h"
 #import "StoreAddressViewController.h"
 #import "MakeAppointmentViewController.h"
+#import "IntegralPurchaseViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -38,7 +39,9 @@ static NSString *cellContentCellID = @"cellContentCellID";
 #import "UserModel.h"
 // ---------------------- model      ----------------------
 
-@interface MyViewController ()<UITableViewDelegate, UITableViewDataSource, MyHeadTableViewCellDelegate>
+@interface MyViewController ()<UITableViewDelegate, UITableViewDataSource, MyHeadTableViewCellDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>{
+    UIImage *imageUser;
+}
 
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
@@ -127,8 +130,10 @@ static NSString *cellContentCellID = @"cellContentCellID";
  *  数据初始化
  */
 - (void) initData {
-    self.arrayImage = @[@[],@[@"限时抢购", @"积分购买",@"签到有奖"], @[@"我的推广", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
-    self.arrayLable = @[@[],@[@"限时抢购", @"积分购买", @"签到有奖"], @[@"合伙人", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
+//    self.arrayImage = @[@[],@[@"限时抢购", @"积分购买",@"签到有奖"], @[@"我的推广", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
+//    self.arrayLable = @[@[],@[@"限时抢购", @"积分购买", @"签到有奖"], @[@"合伙人", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
+    self.arrayImage = @[@[],@[@"签到有奖"], @[@"我的推广", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
+    self.arrayLable = @[@[],@[@"签到有奖"], @[@"合伙人", @"我的评价", @"账号设置"], @[@"门店地址", @"关于我们"]];
 }
 
 #pragma mark - Setting UI Methods
@@ -184,10 +189,8 @@ static NSString *cellContentCellID = @"cellContentCellID";
 //        [SVProgressHUD dismiss];
         NSLog(@"%@", resultObject);
         if (resultObject != nil) {
-            
             SetUserDefault(resultObject, @"getUserinfo");
             [self userDataDispose:resultObject];
-
             [self.myTableView reloadData];
         }else {
             
@@ -197,6 +200,31 @@ static NSString *cellContentCellID = @"cellContentCellID";
     }];
 }
 
+
+//修改头像接口
+- (void) getUploadAvatarWithData:(NSString *)avatar{
+    if (!([GetUserDefault(userUid) length] > 0)) {
+        [self.myTableView reloadData];
+        return;
+    }
+    NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"userinfo/uploadAvatar"];
+    NSArray *array = @[
+                       [NSString stringWithFormat:@"mobile,%@", GetUserDefault(userUid)],//账号
+                       [NSString stringWithFormat:@"avatar,%@", avatar],//头像
+                       ];
+    [SVProgressHUD showWithStatus:DATA_COMMITE];
+    [MainRequestTool mainPOST:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
+        [SVProgressHUD dismiss];
+        NSLog(@"%@", resultObject);
+        if (resultObject != nil) {
+            [self.myTableView reloadData];
+        }else {
+            
+        }
+    } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
+        NSLog(@"userinfo/uploadAvatar数据错误%@", error);
+    }];
+}
 /**
  *  个人信息 保存数据
  *
@@ -229,18 +257,6 @@ static NSString *cellContentCellID = @"cellContentCellID";
  *  @return NSInteger
  */
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    if (section == 2) {
-//        return 3;
-//    }
-//    if (section == 3) {
-//        return 2;
-//    }
-//    if (section == 1) {
-//        return 3;
-//    }else {
-//        return 1;
-//    }
-    
     if (section == 0) {
         return 1;
     }
@@ -259,8 +275,12 @@ static NSString *cellContentCellID = @"cellContentCellID";
     if (indexPath.section == 0) {
         
         MyHeadTableViewCell *cell = [MyHeadTableViewCell myHeadCellWithTableView:tableView forCellReuseIdentifier:cellHeadCellID];
-        cell.userDict = GetUserDefault(@"getUserinfo");
-        cell.delegate = self;
+        cell.userDict  = GetUserDefault(@"getUserinfo");
+        cell.delegate  = self;
+        if (imageUser != nil) {
+            cell.imageUser = imageUser;
+        }
+        
         return cell;
     }else {
     
@@ -285,17 +305,19 @@ static NSString *cellContentCellID = @"cellContentCellID";
         DetailsWebViewController *webView = [[DetailsWebViewController alloc] init];
         if (indexPath.section == 1) {
             switch (indexPath.row) {
-                case 0:
-                {
-                    
-                }
-                    break;
-                case 1:
-                {
-                    
-                }
-                    break;
-                case 2:
+//                case 0:
+//                {
+//                    NSLog(@"限时抢购");
+//                }
+//                    break;
+//                case 1:
+//                {
+//                    NSLog(@"积分购买");
+//                    IntegralPurchaseViewController *viewController = [[IntegralPurchaseViewController alloc] init];
+//                    [self.navigationController pushViewController:viewController animated:YES];
+//                }
+//                    break;
+                 case 0://case 2:
                 {
                     webView.titleStr = @"签到";
                     webView.strUrl    = [NSString stringWithFormat:@"%@Activity/sign/mobile/%@/sign/%@",developmentURL,GetUserDefault(userUid),sign] ;
@@ -370,6 +392,7 @@ static NSString *cellContentCellID = @"cellContentCellID";
     if (name.integerValue == 0) {
         if (!([GetUserDefault(userUid) length] > 0)){
             [self goToLogin];
+            return;
         }else {
             if (tag == 0) {
                 NSLog(@"点击头像");
@@ -388,6 +411,7 @@ static NSString *cellContentCellID = @"cellContentCellID";
     if (name.integerValue == 1) {
         if (!([GetUserDefault(userUid) length] > 0)){
             [self goToLogin];
+            return;
         }else {
             if (tag == 0) {
                 NSLog(@"收藏");
@@ -411,6 +435,7 @@ static NSString *cellContentCellID = @"cellContentCellID";
     if (name.integerValue == 2) {
         if (!([GetUserDefault(userUid) length] > 0)){
             [self goToLogin];
+            return;
         }else {
             if (tag == 0) {
                 NSLog(@"未付款");
@@ -437,7 +462,7 @@ static NSString *cellContentCellID = @"cellContentCellID";
 - (void)goToLogin {
     LoginViewController *loginView = [[LoginViewController alloc] init];
     [self.navigationController pushViewController:loginView animated:YES];
-    return;
+    
 }
 
 //我的美单 --- 查看全部订单
@@ -448,8 +473,72 @@ static NSString *cellContentCellID = @"cellContentCellID";
 }
 
 - (void)showOkayCancelAlert {
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: nil message: nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+    //添加Button
+    [alertController addAction: [UIAlertAction actionWithTitle: @"拍照" style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        //处理点击拍照
+        UIImagePickerController* pickPhoto = [[UIImagePickerController alloc]init];
+        pickPhoto.delegate = self;
+        BOOL support = NO;
+        for(NSNumber* num in [UIImagePickerController availableCaptureModesForCameraDevice:UIImagePickerControllerCameraDeviceRear]){
+            if([num intValue] == UIImagePickerControllerCameraCaptureModePhoto){
+                support = YES;
+                pickPhoto.sourceType = UIImagePickerControllerSourceTypeCamera;
+                pickPhoto.allowsEditing = YES ;
+            }
+        }
+        if(support){
+            [self presentViewController:pickPhoto animated:YES completion:nil];
+        }
+        else{
+            UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"提示" message:@"该设备不支持照相功能" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            [alert show];
+        }
+        
+    }]];
+    [alertController addAction: [UIAlertAction actionWithTitle: @"从相册选取" style: UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        //处理点击从相册选取
+        UIImagePickerController *pick = [[UIImagePickerController alloc]init];
+        pick.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        pick.delegate = self;
+        pick.allowsEditing = YES;
+        //pick.mediaTypes = [NSArray arrayWithObject:(NSString*)kUTTypeImage];
+        [self presentViewController:pick animated:YES completion:nil];
+    }]];
+    [alertController addAction: [UIAlertAction actionWithTitle: @"取消" style: UIAlertActionStyleCancel handler:nil]];
     
+    [self presentViewController: alertController animated: YES completion: nil];
 }
+
+- (void) imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo: (NSDictionary *) info {
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    UIImage *originalImage, *editedImage, *imageToSave;
+
+    if ([mediaType isEqualToString:@"public.image"]){
+        
+        editedImage = (UIImage *) [info objectForKey:
+                                   UIImagePickerControllerEditedImage];
+        originalImage = (UIImage *) [info objectForKey:
+                                     UIImagePickerControllerOriginalImage];
+        if (editedImage) {
+            imageToSave = editedImage;
+        } else {
+            imageToSave = originalImage;
+        }
+        
+        imageUser = imageToSave;
+        
+        NSData *data = UIImageJPEGRepresentation(imageToSave, 1);
+        NSString *dataStr = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        //上传照片
+        [self getUploadAvatarWithData:dataStr];
+
+    }
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 #pragma mark   -  所有控件懒加载
 

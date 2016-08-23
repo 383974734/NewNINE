@@ -280,6 +280,7 @@
         _password.placeholder     = @"请输入6-16位新登录密码";
         _password.backgroundColor = [UIColor whiteColor];
         _password.clearButtonMode = UITextFieldViewModeWhileEditing;
+        _password.secureTextEntry = YES;
     }
     return _password;
 }

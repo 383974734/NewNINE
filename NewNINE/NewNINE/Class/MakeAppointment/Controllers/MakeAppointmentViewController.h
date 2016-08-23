@@ -15,4 +15,7 @@
 @property (nonatomic, copy) NSString *stylistinfoId;
 
 
+/** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
+@property (nonatomic, copy) NSString *noChoice;
+
 @end

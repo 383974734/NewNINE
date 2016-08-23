@@ -17,9 +17,9 @@
 @property (nonatomic, strong) UIImageView *headImageView;
 /** 点view*/
 @property (nonatomic, strong) UIImageView *userImageView;
-
+/** 设计师昵称*/
 @property (nonatomic, strong) UILabel *titleLable;
-
+/** 设计师职称*/
 @property (nonatomic, strong) UILabel *nameLable;
 
 @end
@@ -36,7 +36,7 @@
  */
 + (instancetype) classificationCellWithTableView:(UITableView *)tableView forCellReuseIdentifier:(NSString *)cellID {
     ClassificationTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-//    cell.selectionStyle     = UITableViewCellEditingStyleNone;
+    cell.selectionStyle     = UITableViewCellEditingStyleNone;
     return cell;
 }
 
@@ -145,6 +145,7 @@
 
 - (void) setIndexPath:(NSIndexPath *)indexPath {
     _indexPath = indexPath;
+
 }
 
 -(void) setMakeAppointmentDic:(NSDictionary *)makeAppointmentDic {

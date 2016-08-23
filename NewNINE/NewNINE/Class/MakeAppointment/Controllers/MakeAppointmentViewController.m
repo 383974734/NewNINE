@@ -45,6 +45,11 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 
 #pragma mark - Data Propertys
 // ---------------------- 数据模型 ----------------------
+/** 优惠卷ID*/
+@property (nonatomic, copy)   NSString       *userCouponId;
+/** 订单ID*/
+@property (nonatomic, copy)   NSString       *orderId;
+
 /** 设计师预约首页数据*/
 @property (nonatomic, strong) NSDictionary   *makeAppointmentDic;
 
@@ -145,7 +150,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
  */
 - (void) initData {
     [self titleWithName];
-    
     self.classificationArray1  = [NSMutableArray arrayWithObjects:@"烫发", nil];
     self.classificationArray2  = [NSMutableArray arrayWithObjects:@"染发", nil];
     self.classificationArray3  = [NSMutableArray arrayWithObjects:@"护理", nil];
@@ -189,7 +193,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 - (void) settingNav {
 
     [self setNavWithLeftBarButton:NO titleName:@"预约美发"];
-//    [self setNavWithLeftBarButton:NO title:@"预约美发"];
 }
 
 - (void)setNavWithLeftBarButton:(BOOL)leftBarButton titleName:(NSString *)title{
@@ -241,17 +244,19 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 #pragma mark - 接口数据
 // 设计师预约首页数据接口
 - (void) getBookStylisByIdWithData:(NSString *)stylistinfoId{
-    NSArray *array = @[
-                       [NSString stringWithFormat:@"stylistinfoId,%@", stylistinfoId],//设计师ID
-                       ];
-//    NSArray *array = @[
-//                       [NSString stringWithFormat:@"stylistinfoId,%@", stylistinfoId],//设计师ID
-//                       [NSString stringWithFormat:@"userCouponId,%@", userCouponId],//用户优惠券ID
-//                       ];
+    
+    NSMutableArray *muArray = [NSMutableArray array];
+    [muArray addObject:[NSString stringWithFormat:@"stylistinfoId,%@",     stylistinfoId]];//设计师ID
+    if (self.userCouponId != nil) {//用户优惠券ID
+        [muArray addObject:[NSString stringWithFormat:@"userCouponId,%@",  self.userCouponId]];
+    }
+    if (self.orderId != nil) {//订单ID
+        [muArray addObject:[NSString stringWithFormat:@"orderId,%@",       self.orderId]];
+    }
     NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"book/getBookStylisById"];
     
     [SVProgressHUD showWithStatus:DATA_GET_DATA];
-    [MainRequestTool mainGET:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
+    [MainRequestTool mainGET:url parameters:muArray isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
         [SVProgressHUD dismiss];
         NSLog(@"%@", resultObject);
         if (resultObject != nil) {
@@ -317,8 +322,12 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     if (self.makeAppointmentDic != nil) {
         cell.dict       = self.makeAppointmentDic;
     }
-    if (GetUserDefault(@"makeTime") != nil) {
-        cell.timeMake   = GetUserDefault(@"makeTime");
+    if (self.noChoice.intValue == 2) {//追加订单预约时间
+        cell.timeMake   = [self.makeAppointmentDic objectForKey:@"appointTimes"] == nil ? @"已经超过追加订单时间" : [self.makeAppointmentDic objectForKey:@"appointTimes"];
+    }else {
+        if (GetUserDefault(@"makeTime") != nil) {
+            cell.timeMake   = GetUserDefault(@"makeTime");//appointTimes
+        }
     }
     return cell;
 }
@@ -387,6 +396,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     [self titleWithName];
     if (tag == 0) {
         NSLog(@"第一行");
+        if (self.noChoice.intValue == 2) return;//追加订单  不可以修改设计师
         DesignerViewController *viewController = [[DesignerViewController alloc] init];
         viewController.stateStr = @"1";
         viewController.delegate = self;
@@ -396,6 +406,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
         
         if (self.makeAppointmentDic != nil) {
             if (tag == 3) {
+                if (self.noChoice.intValue == 2) return;//追加订单  不可以修改预约时间
                 ChooseTimeViewController *viewController = [[ChooseTimeViewController alloc] init];
                 viewController.stylistinfoId = [self.makeAppointmentDic objectForKey:@"id"];
                 viewController.makeTime      = GetUserDefault(@"makeTime");
@@ -424,7 +435,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     if (self.stylistinfoId.intValue != stylistinfoId.intValue) {
         [self getBookStylisByIdWithData:stylistinfoId];
         self.stylistinfoId = stylistinfoId;
-//        self.hiddenSelected = false;
     }
 }
 
@@ -669,7 +679,6 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
         monty += [self.moneyArray6[i] longLongValue] - [[[self.makeAppointmentDic objectForKey:@"typeList"][5] objectForKey:@"cutvalues"] longLongValue];
     }
     
-    
     if ([NSString stringWithFormat:@"%ld", monty].intValue > 0) {
         self.nextStepButton.layer.borderColor = [UIColor redColor].CGColor;
         [self.nextStepButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
@@ -679,10 +688,8 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
         [self.nextStepButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         self.nextStepButton.userInteractionEnabled = NO;
     }
-    
-    
+
     NSLog(@"******* --- 合计金额 --- %ld",monty);
-    
     
     NSString *string = [NSString stringWithFormat:@"合计:￥%@", [NSString stringWithFormat:@"%ld", monty]];
     NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:string];
@@ -694,6 +701,8 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
 
 - (void) setStylistinfoId:(NSString *)stylistinfoId {
     _stylistinfoId = stylistinfoId;
+    if (_stylistinfoId == nil) return;
+    
     [self getBookStylisByIdWithData:_stylistinfoId];
 }
 
@@ -743,6 +752,7 @@ static NSString *cellTwoID = @"MakeAppointmentTwoTableViewCell";
     viewController.productIDString           = [string substringToIndex:string.length - 1];
     viewController.makeAppointmentDic        = self.makeAppointmentDic;
     viewController.placeOrderArray           = array;
+    viewController.noChoice                  = @"2";///** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
     
     [self.navigationController pushViewController:viewController animated:YES];
 }

@@ -81,37 +81,37 @@
     [super layoutSubviews];
     
     [self.photoUrl autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(7, 0, 7, 15) excludingEdge:ALEdgeLeft];
-    [self.photoUrl autoSetDimension:ALDimensionWidth toSize:60];
+    [self.photoUrl autoSetDimension:ALDimensionWidth toSize:70];
     
     [self.names autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(8, 15, 0, 80) excludingEdge:ALEdgeBottom];
     [self.names autoSetDimension:ALDimensionWidth toSize:17];
     
     [self.phoneImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.names withOffset:5];
     [self.phoneImageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:15];
-    [self.phoneImageView autoSetDimension:ALDimensionWidth toSize:10];
-    [self.phoneImageView autoSetDimension:ALDimensionHeight toSize:10];
+    [self.phoneImageView autoSetDimension:ALDimensionWidth toSize:15];
+    [self.phoneImageView autoSetDimension:ALDimensionHeight toSize:15];
     
-    [self.addrImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.phoneImageView withOffset:5];
+    [self.addrImageView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.phoneImageView withOffset:10];
     [self.addrImageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:15];
-    [self.addrImageView autoSetDimension:ALDimensionWidth toSize:10];
-    [self.addrImageView autoSetDimension:ALDimensionHeight toSize:10];
+    [self.addrImageView autoSetDimension:ALDimensionWidth toSize:15];
+    [self.addrImageView autoSetDimension:ALDimensionHeight toSize:15];
     
     [self.phone autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.phoneImageView withOffset:5];
     [self.phone autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.names withOffset:5];
     [self.phone autoSetDimension:ALDimensionWidth toSize:200];
-    [self.phone autoSetDimension:ALDimensionHeight toSize:14];
+    [self.phone autoSetDimension:ALDimensionHeight toSize:20];
 
     [self.addr autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.addrImageView withOffset:5];
     [self.addr autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.phone withOffset:0];
     [self.addr autoPinEdge:ALEdgeRight toEdge:ALEdgeLeft ofView:self.photoUrl withOffset:5];
-    [self.addr autoSetDimension:ALDimensionHeight toSize:17];
+    [self.addr autoSetDimension:ALDimensionHeight toSize:24];
 }
 
 
 - (UILabel *) addr {
     if (!_addr) {
         _addr = [[UILabel alloc] initForAutoLayout];
-        _addr.font = SWP_SYSTEM_FONT_SIZE(12);
+        _addr.font = SWP_SYSTEM_FONT_SIZE(14);
         _addr.textColor = Color(154, 154, 154, 1);
     }
     return _addr;
@@ -120,7 +120,7 @@
 - (UILabel *) names {
     if (!_names) {
         _names = [[UILabel alloc] initForAutoLayout];
-        _names.font = SWP_SYSTEM_FONT_SIZE(14);
+        _names.font = SWP_SYSTEM_FONT_SIZE(16);
         _names.textColor = Color(64, 64, 64, 1);
         _names.text= @"sdfasdfasdfasd";
     }
@@ -155,7 +155,7 @@
 - (UILabel *) phone {
     if (!_phone) {
         _phone = [[UILabel alloc] initForAutoLayout];
-        _phone.font = SWP_SYSTEM_FONT_SIZE(12);
+        _phone.font = SWP_SYSTEM_FONT_SIZE(14);
         _phone.textColor = Color(154, 154, 154, 1);
     }
     return _phone;
@@ -166,8 +166,7 @@
     self.phone.text = _dataModel.storeAddressPhone;
     self.names.text = _dataModel.storeAddressNames;
     self.addr.text  = _dataModel.storeAddressShopDistrict;
-//    [self.photoUrl sd_setImageWithURL:[NSURL URLWithString:_dataModel.storeAddressPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-    
+
     [self.photoUrl  sd_setImageWithURL:[NSURL URLWithString:_dataModel.storeAddressPhotoUrl]
                        placeholderImage:[UIImage imageNamed:@"发型缺省图"]
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {

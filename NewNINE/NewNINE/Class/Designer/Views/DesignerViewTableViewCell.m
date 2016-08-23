@@ -137,6 +137,7 @@
 
 - (void)didBtton:(UIButton *)btn {
     NSLog(@"预约按钮");
+    
     if ([self.delegate respondsToSelector:@selector(designerViewTableViewCell:stylistinfoId:)]) {
         [self.delegate designerViewTableViewCell:self stylistinfoId:self.dataModel.designerId];
     }
@@ -291,12 +292,6 @@
 
 - (void) setDataModel:(DesignerViewModel *)dataModel {
     _dataModel = dataModel;
-//    
-//    
-//    [self.oneImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoOne] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-//    [self.twoImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoTwo] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-//    [self.threeImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoThr] placeholderImage:[UIImage imageNamed:@"发型缺省图"]];
-//    [self.headImageVIew sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerIconPhotoUrl] placeholderImage:[UIImage imageNamed:@"发型缺省图" ]];
     
     [self.oneImageVIew  sd_setImageWithURL:[NSURL URLWithString:_dataModel.designerPhotoOne]
                             placeholderImage:[UIImage imageNamed:@"发型缺省图"]
@@ -345,7 +340,7 @@
     
     self.titleLable.frame = CGRectMake(self.singleLable.frame.origin.x + self.singleLable.frame.size.width + 10, 53, 40, 14);
     
-    NSString *strPrice = [NSString stringWithFormat:@"￥%@",_dataModel.designerPriceMast];
+    NSString *strPrice = [NSString stringWithFormat:@"￥%@",[_dataModel.designerPriceMast intValue] > 0 ? _dataModel.designerPriceMast : @"0"];
     self.priceLable.text = strPrice;
     atempSize = [self uiWithConstrained:self.priceLable.text];//[self.priceLable.text sizeWithFont:tempFnt constrainedToSize:tempSize lineBreakMode:UILineBreakModeWordWrap];
     self.priceLable.frame = CGRectMake(self.titleLable.frame.origin.x + 40, 53, atempSize.width + 5, 14);
@@ -354,7 +349,7 @@
 
 
 - (CGSize)uiWithConstrained:(NSString *)title {
-    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
+    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:14];
     CGSize size = CGSizeMake(320,20);
 
     NSDictionary *dict = @{NSFontAttributeName : nameFnt};

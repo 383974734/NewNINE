@@ -450,6 +450,7 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
         
     MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
     viewController.stylistinfoId = [[self.detailsDict objectForKey:@"stylistInfos"][0] objectForKey:@"id"];
+    viewController.noChoice      = @"1";///** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -465,6 +466,7 @@ static NSString *cellIDPublicDesigner = @"HomeDetailsViewCellPublicDesigner";
 - (void) publicDesignerTableViewCell:(PublicDesignerTableViewCell *)publicDesignerTableViewCell didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"点击公共发型预约按钮触发事件");
     MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
+    //    viewController.noChoice///** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
     viewController.stylistinfoId = [[self.detailsDict objectForKey:@"stylistInfos"][indexPath.row] objectForKey:@"id"];
     [self.navigationController pushViewController:viewController animated:YES];
 }

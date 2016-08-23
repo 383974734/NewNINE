@@ -31,6 +31,8 @@
 
 /** 合计金额*/
 @property (nonatomic, copy) NSString *totalString;
+/** 是否有预付定金金额*///   2.付过预付定金   1.没有付订金
+@property (nonatomic, copy) NSString *orderIsDepfund;
 
 /**
  *  快速  初始化 一个自定义cell

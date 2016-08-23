@@ -7,11 +7,11 @@
 //
 
 #import "AlertViewView.h"
-#import "UIViewController+LewPopupViewController.h"     // 弹出视图框架
-#import "LewPopupViewAnimationFade.h"                   // 弹出视图框架
-#import "LewPopupViewAnimationSlide.h"                  // 弹出视图框架
-#import "LewPopupViewAnimationSpring.h"                 // 弹出视图框架
-#import "LewPopupViewAnimationDrop.h"                   // 弹出视图框架
+//#import "UIViewController+LewPopupViewController.h"     // 弹出视图框架
+//#import "LewPopupViewAnimationFade.h"                   // 弹出视图框架
+//#import "LewPopupViewAnimationSlide.h"                  // 弹出视图框架
+//#import "LewPopupViewAnimationSpring.h"                 // 弹出视图框架
+//#import "LewPopupViewAnimationDrop.h"                   // 弹出视图框架
 
 
 @interface AlertViewView ()<UITextViewDelegate>
@@ -55,7 +55,6 @@
 }
 
 - (void)settingAutoLayout {
-
 }
 
 - (void)settingData {

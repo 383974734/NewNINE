@@ -62,7 +62,7 @@
     self.cityButton = [self setButtonWithUI:CGRectMake(0, 25, SCREEN_WIDTH / 3, 40) name:@"哈尔滨" image:@"screen－arrow－down" tag:3 titleColor:Color(154, 154, 154, 1)];
     self.followButton = [self setButtonWithUI:CGRectMake(0 , 67, SCREEN_WIDTH / 3, 36) name:@"全部区域" image:@"screen－arrow－down" tag:0 titleColor:Color(154, 154, 154, 1)];
     self.timeButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3  , 67, SCREEN_WIDTH / 3, 36) name:@"智能排序" image:@"screen－arrow－down" tag:1 titleColor:Color(154, 154, 154, 1)];
-    self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 67, SCREEN_WIDTH / 3, 36) name:@"筛选" image:@"筛选-default" tag:2 titleColor:Color(154, 154, 154, 1)];
+    self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 67, SCREEN_WIDTH / 3, 36) name:@"筛选" image:@"Shape" tag:2 titleColor:Color(154, 154, 154, 1)];
     
     [self addSubview:self.cityButton];
     [self addSubview:self.followButton];
@@ -142,6 +142,37 @@
         self.cityButton = [self setButtonWithUI:CGRectMake(0, 25, SCREEN_WIDTH / 3, 40) name:_strCity image:@"screen－arrow－down" tag:3 titleColor:Color(154, 154, 154, 1)];
         [self addSubview:self.cityButton];
     }
+}
+
+- (void) setFollowStr:(NSString *)followStr {
+    _followStr = followStr;
+    if ([_followStr isEqualToString:@"全部区域"]) {
+        self.followButton = [self setButtonWithUI:CGRectMake(0 , 67, SCREEN_WIDTH / 3, 36) name:_followStr image:@"screen－arrow－down" tag:0 titleColor:Color(154, 154, 154, 1)];
+    }else {
+        self.followButton = [self setButtonWithUI:CGRectMake(0 , 67, SCREEN_WIDTH / 3, 36) name:_followStr image:@"screen－arrow－up" tag:0 titleColor:[UIColor redColor]];
+    }
+    [self addSubview:self.followButton];
+}
+
+- (void) setTimeStr:(NSString *)timeStr {
+    _timeStr = timeStr;
+    if ([_timeStr isEqualToString:@"智能排序"]) {
+        self.timeButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3  , 67, SCREEN_WIDTH / 3, 36) name:_timeStr image:@"screen－arrow－down" tag:1 titleColor:Color(154, 154, 154, 1)];
+    }else {
+        self.timeButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3  , 67, SCREEN_WIDTH / 3, 36) name:_timeStr image:@"screen－arrow－up" tag:1 titleColor:[UIColor redColor]];
+    }
+    [self addSubview:self.timeButton];
+}
+
+- (void) setClassificationStr:(NSString *)classificationStr {
+    _classificationStr = classificationStr;
+    if (_classificationStr.length > 0 ) {
+        self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 67, SCREEN_WIDTH / 3, 36)  name:@"筛选" image:@"筛选-select" tag:2 titleColor:[UIColor redColor]];
+    }else {
+        self.classificationButton = [self setButtonWithUI:CGRectMake(SCREEN_WIDTH / 3 * 2 , 67, SCREEN_WIDTH / 3, 36)  name:@"筛选" image:@"Shape" tag:2 titleColor:Color(154, 154, 154, 1)];
+    }
+    
+    [self addSubview:self.classificationButton];
 }
 
 @end

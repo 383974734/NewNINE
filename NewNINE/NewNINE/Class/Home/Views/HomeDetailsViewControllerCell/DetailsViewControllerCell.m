@@ -470,7 +470,7 @@
 }
 
 - (CGSize)uiWithConstrained:(NSString *)title {
-    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:15];
+    UIFont *nameFnt = [UIFont fontWithName:@"Arial" size:14];
     CGSize size = CGSizeMake(320,20);
 
     NSDictionary *dict = @{NSFontAttributeName : nameFnt};

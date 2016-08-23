@@ -120,6 +120,14 @@
     [self titleWithName:@"50" str2:_totalString];
 }
 
+- (void) setOrderIsDepfund:(NSString *)orderIsDepfund {
+    _orderIsDepfund = orderIsDepfund;
+    if (_orderIsDepfund.intValue == 2) {
+        [self.seleImage setImage:[UIImage imageNamed:@"选中"] forState:UIControlStateNormal];
+        self.seleButton.userInteractionEnabled = NO;
+    }
+}
+
 //文字颜色
 - (void) titleWithName:(NSString *)str1 str2:(NSString *)str2{
     NSString *string1 = [NSString stringWithFormat:@"(服务完成后需付尾款￥%@)", str2];

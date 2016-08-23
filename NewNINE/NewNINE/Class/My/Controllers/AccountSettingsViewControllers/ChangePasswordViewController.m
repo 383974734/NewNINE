@@ -259,6 +259,7 @@
         _newPassword.placeholder     = @"请输入新密码";
         _newPassword.backgroundColor = [UIColor whiteColor];
         _newPassword.clearButtonMode = UITextFieldViewModeWhileEditing;
+        _newPassword.secureTextEntry = YES;
     }
     return _newPassword;
 }

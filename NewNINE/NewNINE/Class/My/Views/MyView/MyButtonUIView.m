@@ -55,7 +55,7 @@
 
 - (UIImageView *) buttonImageView {
     if (!_buttonImageView) {
-        _buttonImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 8 - 12, 8, 24, 24)];
+        _buttonImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 8 - 15, 8, 30, 30)];
     }
     return _buttonImageView;
 }

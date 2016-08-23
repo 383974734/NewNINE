@@ -99,7 +99,7 @@
     popupView.layer.masksToBounds = NO;
     popupView.layer.shadowOffset = CGSizeMake(0, 0);
     popupView.layer.shadowRadius = 5;
-    popupView.layer.shadowOpacity = 0.5;
+    popupView.layer.shadowOpacity = 0.2;
     popupView.layer.shouldRasterize = YES;
     popupView.layer.rasterizationScale = [[UIScreen mainScreen] scale];
     

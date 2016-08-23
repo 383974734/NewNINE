@@ -51,6 +51,7 @@
         cell = [[UserMessageOneableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     cell.accessoryType     = UITableViewCellAccessoryDisclosureIndicator;
+    cell.selectionStyle    = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
@@ -136,10 +137,14 @@
     _detailedimageView.hidden   = _userData.onejudge;
     _detailedLable.hidden       = _userData.twojudge;
 
-    [self.detailedimageView  sd_setImageWithURL:[NSURL URLWithString:_userData.userIconPhotoUrl]
-                      placeholderImage:[UIImage imageNamed:@"160Wow"]
-                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                             }];
+    if (self.imageUser != nil) {
+        self.detailedimageView.image = self.imageUser;
+    }else {
+        [self.detailedimageView  sd_setImageWithURL:[NSURL URLWithString:_userData.userIconPhotoUrl]
+                                   placeholderImage:[UIImage imageNamed:@"160Wow"]
+                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                          }];
+    }
     
     _detailedLable.text         = _userData.userName;
     

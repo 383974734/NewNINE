@@ -363,7 +363,7 @@
         _timeLable = [[UILabel alloc] initWithFrame:CGRectMake(70, 0, SCREEN_WIDTH - 110, 49)];
         _timeLable.textAlignment = NSTextAlignmentRight;
         _timeLable.textColor = Color(154, 154, 154, 1);
-        _timeLable.text = @"请选择";
+//        _timeLable.text = @"请选择";
     }
     return _timeLable;
 }
@@ -417,11 +417,13 @@
             }
             
             if (btn.tag == 2) {
-                [self.blowArrowImageView setImage:[UIImage imageNamed:@"选中"] forState:UIControlStateNormal];
-                self.blowTitleLable.textColor  = [UIColor redColor];
-                self.blowMoneyLable.textColor  = [UIColor redColor];
-                
-                self.blowMoneyStr = [NSString stringWithFormat:@"%d", [[[self.dict objectForKey:@"bookProducts"][1] objectForKey:@"price"] intValue] - [[[self.dict objectForKey:@"bookProducts"][1] objectForKey:@"cutvalues"] intValue]];
+                if ([[self.dict objectForKey:@"bookProducts"] count] > 1) {
+                    [self.blowArrowImageView setImage:[UIImage imageNamed:@"选中"] forState:UIControlStateNormal];
+                    self.blowTitleLable.textColor  = [UIColor redColor];
+                    self.blowMoneyLable.textColor  = [UIColor redColor];
+                    
+                    self.blowMoneyStr = [NSString stringWithFormat:@"%d", [[[self.dict objectForKey:@"bookProducts"][1] objectForKey:@"price"] intValue] - [[[self.dict objectForKey:@"bookProducts"][1] objectForKey:@"cutvalues"] intValue]];
+                }
             }
         }
         else
@@ -456,14 +458,50 @@
     
     self.arrowTitleLable.text = [[[_dict objectForKey:@"bookProducts"][0] objectForKey:@"productName"] length] > 0 ? [NSString stringWithFormat:@"%@", [[_dict objectForKey:@"bookProducts"][0] objectForKey:@"productName"]] : @"剪发";
     
-    self.blowTitleLable.text = [[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"productName"] length] > 0 ? [NSString stringWithFormat:@"%@", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"productName"]]: @"洗吹造型";
-
+    self.arrowOriginalPriceLable.attributedText = [self uiWithAttribute:[NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][0] objectForKey:@"originalPrice"]]];
+    
+    if ([[[_dict objectForKey:@"bookProducts"][0] objectForKey:@"price"] intValue] < [[[_dict objectForKey:@"bookProducts"][0] objectForKey:@"originalPrice"] intValue]) {
+        self.arrowOriginalPriceLable.hidden = NO;
+    }
+    
+    self.arrowMoneyLable.text = [NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][0] objectForKey:@"price"]];
+    
+    if ([[[_dict objectForKey:@"bookProducts"][0] objectForKey:@"cutvalues"] intValue] > 0) {
+        
+        self.arrowCutvalues.hidden = NO;
+        self.arrowCutvalues.text = [NSString stringWithFormat:@" 立减%@元", [[_dict objectForKey:@"bookProducts"][0] objectForKey:@"cutvalues"]];
+        CGSize nameSize = [self uiWithConstrained:self.arrowCutvalues.text];
+        self.arrowCutvalues.frame = CGRectMake(122, 15, nameSize.width, 20);
+    }else {
+        self.arrowCutvalues.hidden = YES;
+    }
+    
+    if ([[_dict objectForKey:@"bookProducts"] count] > 1) {
+        self.blowTitleLable.text = [[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"productName"] length] > 0 ? [NSString stringWithFormat:@"%@", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"productName"]]: @"洗吹造型";
+        
+        self.blowOriginalPriceLable.attributedText  = [self uiWithAttribute:[NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"originalPrice"]]];
+        
+        if ([[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"price"] intValue] < [[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"originalPrice"] intValue]) {
+            self.blowOriginalPriceLable.hidden = NO;
+        }
+        
+        if ([[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"cutvalues"] intValue] > 0) {
+            
+            self.blowCutvalues.hidden  = NO;
+            self.blowCutvalues.text  = [NSString stringWithFormat:@" 立减%@元", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"cutvalues"]];
+            CGSize nameSize = [self uiWithConstrained:self.blowCutvalues.text];
+            self.blowCutvalues.frame = CGRectMake(122, 15, nameSize.width, 20);
+        }else {
+            self.blowCutvalues.hidden  = YES;
+        }
+        
+        self.blowMoneyLable.text = [NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"price"]];
+    }
     
     [self.headImageView  sd_setImageWithURL:[NSURL URLWithString:[_dict objectForKey:@"iconPhotoUrl"]]
                                  placeholderImage:[UIImage imageNamed:@"logo144"]
                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                                         }];
-    
     
     if (![self.nameLable.text isEqualToString:[_dict objectForKey:@"name"]]) {
         self.arrowMoneyStr = @"0";
@@ -477,49 +515,12 @@
         self.blowMoneyLable.textColor  = [UIColor blackColor];
     }
     
-    self.nameLable.text = [_dict objectForKey:@"name"];
-    self.headLable.text = [_dict objectForKey:@"leveName"];
-    
-    NSArray *array = [_dict objectForKey:@"bookProducts"];
-    if (!(array.count > 1)) return;
-
-    self.arrowMoneyLable.text = [NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][0] objectForKey:@"price"]];
-    self.blowMoneyLable.text = [NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"price"]];
-    
+    self.nameLable.text  = [_dict objectForKey:@"name"];
+    self.headLable.text  = [_dict objectForKey:@"leveName"];
     self.storeLable.text = [[_dict objectForKey:@"studio"] objectForKey:@"names"];
-    
-    self.arrowOriginalPriceLable.attributedText = [self uiWithAttribute:[NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][0] objectForKey:@"originalPrice"]]];
-    self.blowOriginalPriceLable.attributedText  = [self uiWithAttribute:[NSString stringWithFormat:@"￥%@", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"originalPrice"]]];
-    
     
     self.arrowOriginalPriceLable.hidden = YES;
     self.blowOriginalPriceLable.hidden  = YES;
-    if ([[[_dict objectForKey:@"bookProducts"][0] objectForKey:@"price"] intValue] < [[[_dict objectForKey:@"bookProducts"][0] objectForKey:@"originalPrice"] intValue]) {
-        self.arrowOriginalPriceLable.hidden = NO;
-    }
-    if ([[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"price"] intValue] < [[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"originalPrice"] intValue]) {
-        self.blowOriginalPriceLable.hidden = NO;
-    }
-    
-    if ([[[_dict objectForKey:@"bookProducts"][0] objectForKey:@"cutvalues"] intValue] > 0) {
-        
-        self.arrowCutvalues.hidden = NO;
-        self.arrowCutvalues.text = [NSString stringWithFormat:@" 立减%@元", [[_dict objectForKey:@"bookProducts"][0] objectForKey:@"cutvalues"]];
-        CGSize nameSize = [self uiWithConstrained:self.arrowCutvalues.text];
-        self.arrowCutvalues.frame = CGRectMake(122, 15, nameSize.width, 20);
-    }else {
-        self.arrowCutvalues.hidden = YES;
-    }
-    
-    if ([[[_dict objectForKey:@"bookProducts"][1] objectForKey:@"cutvalues"] intValue] > 0) {
-
-        self.blowCutvalues.hidden  = NO;
-        self.blowCutvalues.text  = [NSString stringWithFormat:@" 立减%@元", [[_dict objectForKey:@"bookProducts"][1] objectForKey:@"cutvalues"]];
-        CGSize nameSize = [self uiWithConstrained:self.blowCutvalues.text];
-        self.blowCutvalues.frame = CGRectMake(122, 15, nameSize.width, 20);
-    }else {
-        self.blowCutvalues.hidden  = YES;
-    }
     
 }
 

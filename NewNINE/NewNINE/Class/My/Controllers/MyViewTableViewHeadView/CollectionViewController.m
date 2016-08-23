@@ -407,6 +407,7 @@ static NSString *cellControllerView = @"CollectionViewHairstyleViewCell";
     DesignerViewModel *model = self.designerArray[indexPath.row];
     MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
     viewController.stylistinfoId = model.designerId;
+//    viewController.noChoice///** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

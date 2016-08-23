@@ -538,7 +538,7 @@ static NSString *cellID = @"collectionViewChooseTimeCell";
         _determine.layer.borderColor      = [UIColor lightGrayColor].CGColor;
         _determine.layer.borderWidth      = 1;
         _determine.userInteractionEnabled = NO;
-        [_determine.layer setCornerRadius:3];
+        [_determine.layer setCornerRadius:2];
         [_determine setTitle:@"确定" forState:UIControlStateNormal];
         [_determine setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [_determine addTarget:self action:@selector(didButton:) forControlEvents:UIControlEventTouchUpInside];

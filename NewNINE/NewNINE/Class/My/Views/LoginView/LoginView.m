@@ -139,6 +139,7 @@
         _password.placeholder     = @"请输入登录密码";
         _password.backgroundColor = [UIColor whiteColor];
         _password.clearButtonMode = UITextFieldViewModeWhileEditing;
+        _password.secureTextEntry = YES;
     }
     return _password;
 }

@@ -241,7 +241,7 @@ static NSString *cellID = @"StoreAddressViewControllerCell";
  *  @return CGFloat
  */
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 65 ;
+    return 80 ;
 }
 
 

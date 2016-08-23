@@ -59,22 +59,22 @@
     [self.orderNameTitle autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.orderName withOffset:5];
     [self.orderNameTitle autoSetDimension:ALDimensionHeight toSize:21];
 
-    [self.dateName autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.orderName withOffset:0];
+    [self.dateName autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.orderName withOffset:5];
     [self.dateName autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:15];
     [self.dateName autoSetDimension:ALDimensionWidth toSize:80];
     [self.dateName autoSetDimension:ALDimensionHeight toSize:21];
     
-    [self.dateNameTitle autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.orderNameTitle withOffset:0];
+    [self.dateNameTitle autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.orderNameTitle withOffset:5];
     [self.dateNameTitle autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:15];
     [self.dateNameTitle autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.dateName withOffset:5];
     [self.dateNameTitle autoSetDimension:ALDimensionHeight toSize:21];
     
-    [self.moneyName autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.dateName withOffset:0];
+    [self.moneyName autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.dateName withOffset:5];
     [self.moneyName autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:15];
     [self.moneyName autoSetDimension:ALDimensionWidth toSize:80];
     [self.moneyName autoSetDimension:ALDimensionHeight toSize:21];
     
-    [self.moneyNameTitle autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.dateNameTitle withOffset:0];
+    [self.moneyNameTitle autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.dateNameTitle withOffset:5];
     [self.moneyNameTitle autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:15];
     [self.moneyNameTitle autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.dateName withOffset:5];
     [self.moneyNameTitle autoSetDimension:ALDimensionHeight toSize:21];
@@ -89,7 +89,7 @@
     if (!_orderName) {
         _orderName = [[UILabel alloc] initForAutoLayout];
         _orderName.textColor = Color(154, 154, 154, 1);
-        _orderName.font = SWP_SYSTEM_FONT_SIZE(15);
+        _orderName.font = SWP_SYSTEM_FONT_SIZE(16);
         _orderName.text = @"订单编号:";
     }
     return _orderName;
@@ -98,7 +98,7 @@
     if (!_dateName) {
         _dateName = [[UILabel alloc] initForAutoLayout];
         _dateName.textColor = Color(154, 154, 154, 1);
-        _dateName.font = SWP_SYSTEM_FONT_SIZE(15);
+        _dateName.font = SWP_SYSTEM_FONT_SIZE(16);
         _dateName.text = @"申请日期";
     }
     return _dateName;
@@ -107,7 +107,7 @@
     if (!_moneyName) {
         _moneyName = [[UILabel alloc] initForAutoLayout];
         _moneyName.textColor = Color(154, 154, 154, 1);
-        _moneyName.font = SWP_SYSTEM_FONT_SIZE(15);
+        _moneyName.font = SWP_SYSTEM_FONT_SIZE(16);
         _moneyName.text = @"退款金额";
     }
     return _moneyName;
@@ -117,7 +117,7 @@
         _orderNameTitle = [[UILabel alloc] initForAutoLayout];
         _orderNameTitle.textAlignment = NSTextAlignmentRight;
         _orderNameTitle.textColor = Color(154, 154, 154, 1);
-        _orderNameTitle.font = SWP_SYSTEM_FONT_SIZE(15);
+        _orderNameTitle.font = SWP_SYSTEM_FONT_SIZE(16);
     }
     return _orderNameTitle;
 }
@@ -126,7 +126,7 @@
         _dateNameTitle = [[UILabel alloc] initForAutoLayout];
         _dateNameTitle.textAlignment = NSTextAlignmentRight;
         _dateNameTitle.textColor = Color(154, 154, 154, 1);
-        _dateNameTitle.font = SWP_SYSTEM_FONT_SIZE(15);
+        _dateNameTitle.font = SWP_SYSTEM_FONT_SIZE(16);
     }
     return _dateNameTitle;
 }
@@ -135,7 +135,7 @@
         _moneyNameTitle = [[UILabel alloc] initForAutoLayout];
         _moneyNameTitle.textAlignment = NSTextAlignmentRight;
         _moneyNameTitle.textColor = Color(154, 154, 154, 1);
-        _moneyNameTitle.font = SWP_SYSTEM_FONT_SIZE(15);
+        _moneyNameTitle.font = SWP_SYSTEM_FONT_SIZE(16);
     }
     return _moneyNameTitle;
 }
@@ -172,16 +172,16 @@
         if (_dataModel.OrderBookProducts.count > 0) {
             
             for (int i = 0; _dataModel.OrderBookProducts.count > i; i++) {
-                UILabel *name  = [[UILabel alloc] initWithFrame:CGRectMake(15, (i * 30) + 71, SCREEN_WIDTH - 120, 30)];
+                UILabel *name  = [[UILabel alloc] initWithFrame:CGRectMake(15, (i * 30) + 81, SCREEN_WIDTH - 120, 30)];
                 name.textColor = Color(154, 154, 154, 1);
                 name.tag       = 10010 + i;
-                name.font      = SWP_SYSTEM_FONT_SIZE(15);
+                name.font      = SWP_SYSTEM_FONT_SIZE(16);
                 name.text      = [_dataModel.OrderBookProducts[i] objectForKey:@"productName"];
                 
-                UILabel *nameTitle  = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 120, (i * 30) + 71, 105, 30)];
+                UILabel *nameTitle  = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 120, (i * 30) + 81, 105, 30)];
                 nameTitle.textColor = Color(154, 154, 154, 1);
                 nameTitle.tag       = 10020 + i;
-                nameTitle.font      = SWP_SYSTEM_FONT_SIZE(15);
+                nameTitle.font      = SWP_SYSTEM_FONT_SIZE(16);
                 nameTitle.text      = [NSString stringWithFormat:@"￥%@", [_dataModel.OrderBookProducts[i] objectForKey:@"price"]];
                 nameTitle.textAlignment = NSTextAlignmentRight;
                 [self addSubview:name];

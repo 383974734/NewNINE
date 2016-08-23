@@ -33,6 +33,8 @@
 @property (nonatomic, strong) UILabel *xianView;
 /** 状态按钮*/
 @property (nonatomic, strong) UIButton *statusButton;
+/** 追加订单按钮*/
+@property (nonatomic, strong) UIButton *additionalOrderButton;
 
 /** 显示订单分类*/
 @property (nonatomic, strong) OrderView *orderView;
@@ -91,6 +93,7 @@
     [self.footerView addSubview:self.orderMoneyTitle];
     [self.footerView addSubview:self.xianView];
     [self.footerView addSubview:self.statusButton];
+    [self.footerView addSubview:self.additionalOrderButton];
 }
 
 /**
@@ -104,7 +107,7 @@
     [self.footerView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, -2, 0, -2) excludingEdge:ALEdgeTop];
     [self.footerView autoSetDimension:ALDimensionHeight toSize:70];
     
-    [self.xianView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(8, 15, 0, 0) excludingEdge:ALEdgeBottom];
+    [self.xianView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(2, 15, 0, 0) excludingEdge:ALEdgeBottom];
     [self.xianView autoSetDimension:ALDimensionHeight toSize:0.5];
     
     
@@ -125,6 +128,12 @@
     [self.statusButton autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:15];
     [self.statusButton autoSetDimension:ALDimensionHeight toSize:30];
     [self.statusButton autoSetDimension:ALDimensionWidth toSize:65];
+    
+    
+    [self.additionalOrderButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:10];
+    [self.additionalOrderButton autoPinEdge:ALEdgeRight toEdge:ALEdgeLeft ofView:self.statusButton withOffset:-10];
+    [self.additionalOrderButton autoSetDimension:ALDimensionWidth toSize:65];
+    [self.additionalOrderButton autoSetDimension:ALDimensionHeight toSize:30];
     
 }
 
@@ -201,13 +210,32 @@
     if (!_statusButton) {
         _statusButton = [[UIButton alloc] initForAutoLayout];
         _statusButton.layer.borderWidth = 1;
+        _statusButton.tag               = 0;
         _statusButton.layer.borderColor = [UIColor redColor].CGColor;
         _statusButton.titleLabel.font   = SWP_SYSTEM_FONT_SIZE(14);
-        [_statusButton.layer setCornerRadius:4];
+        _statusButton.hidden            = NO;
+        [_statusButton.layer setCornerRadius:2];
         [_statusButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         [_statusButton addTarget:self action:@selector(didButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _statusButton;
+}
+
+
+- (UIButton *) additionalOrderButton {
+    if (!_additionalOrderButton) {
+        _additionalOrderButton = [[UIButton alloc] initForAutoLayout];
+        _additionalOrderButton.layer.borderWidth = 1;
+        _additionalOrderButton.tag               = 1;
+        _additionalOrderButton.layer.borderColor = [UIColor redColor].CGColor;
+        _additionalOrderButton.titleLabel.font   = SWP_SYSTEM_FONT_SIZE(14);
+        _additionalOrderButton.hidden            = YES;
+        [_additionalOrderButton.layer setCornerRadius:2];
+        [_additionalOrderButton setTitle:@"追加订单" forState:UIControlStateNormal];
+        [_additionalOrderButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [_additionalOrderButton addTarget:self action:@selector(didButton:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _additionalOrderButton;
 }
 
 #pragma mark - 所有控件的点击事件
@@ -217,8 +245,16 @@
  *  @param button UIButton
  */
 - (void) didButton:(UIButton *)button {
-    if ([self.delegate respondsToSelector:@selector(orderTableViewCell:buttonWithTitle:indexPath:)]) {
-        [self.delegate orderTableViewCell:self buttonWithTitle:self.statusButton.titleLabel.text indexPath:self.index];
+    if (button.tag == 0) {//tag == 0 (状态按钮：退款，查看评价 -->最右面的按钮)  tag == 1  （追加订单按钮）
+        if ([self.delegate respondsToSelector:@selector(orderTableViewCell:buttonWithTitle:indexPath:)]) {
+            [self.delegate orderTableViewCell:self buttonWithTitle:self.statusButton.titleLabel.text indexPath:self.index];
+        }
+    }else {
+        NSLog(@"追加订单按钮点击事件");
+        
+        if (self.IsAdditionalOrderButton) {
+            self.IsAdditionalOrderButton(self.index);
+        }
     }
 }
 
@@ -229,7 +265,6 @@
     }
     return _orderView;
 }
-
 
 //status  = 7  ？  退款  ： 非退款
 - (void) setDataModel:(OrderViewModel *)dataModel {
@@ -247,7 +282,12 @@
     CGSize stylistIdSize = [self uiWithConstrained:self.stylistId.text];
     self.stylistId.frame = CGRectMake(userNameSize.width + 75, 17, stylistIdSize.width, 18);
     
-    self.orderMoneyTitle.text = [NSString stringWithFormat:@"订单金额￥%@",_dataModel.orderPayMoney];
+    self.orderMoneyTitle.text = [NSString stringWithFormat:@"订单金额￥%@",_dataModel.orderRealMoney];
+    [self titleWithName:self.orderMoneyTitle.text];
+    if (_dataModel.orderIsDepfund.intValue == 2) {
+        self.orderMoneyTitle.text = [NSString stringWithFormat:@"订单金额￥%@(已付订金￥50)",_dataModel.orderRealMoney];
+        [self titleWithNameStatusDetails:self.orderMoneyTitle.text];
+    }
     
     [self uiWithUIButtonTitle:_dataModel.orderStatus.intValue isComment:[NSString stringWithFormat:@"%@", _dataModel.orderIsComment] OrderViewModel:dataModel];
     
@@ -258,35 +298,43 @@
     }else {
         self.orderView.frame = CGRectMake(0, 50, SCREEN_WIDTH, _dataModel.OrderBookProducts.count * 22 + 80);
     }
-
 }
 //状态  1未支付、2支付处理中、 3支付成功、 4预约成功、 5已消费、 6订单完成、 7退款过程中、 8？
 - (void) uiWithUIButtonTitle:(NSInteger)title isComment:(NSString *)isComment OrderViewModel:(OrderViewModel *)OrderViewModel {
     switch (title) {
         case 1:
-            self.status.text = @"未支付";
+            self.status.text                  = @"未支付";
+            self.additionalOrderButton.hidden = YES;
+            self.statusButton.hidden          = NO;
             [self.statusButton setTitle:@"去支付" forState:UIControlStateNormal];
             break;
         case 2:
 
             break;
         case 3:
-            self.status.text = @"已支付";
+            self.status.text                  = @"已支付";
+            self.additionalOrderButton.hidden = NO;
+            self.statusButton.hidden          = NO;
             [self.statusButton setTitle:@"退款" forState:UIControlStateNormal];
-
             break;
         case 4:
-            self.status.text = @"预约成功";
+            self.status.text                  = @"预约成功";
+            self.additionalOrderButton.hidden = NO;
+            self.statusButton.hidden          = NO;
             [self.statusButton setTitle:@"退款" forState:UIControlStateNormal];
 
             break;
         case 5:
-            self.status.text = @"已消费";
+            self.status.text                  = @"已消费";
+            self.additionalOrderButton.hidden = NO;
+            self.statusButton.hidden          = NO;
             [self.statusButton setTitle:@"确认完成" forState:UIControlStateNormal];
 
             break;
         case 6:
             self.status.text = @"订单完成";
+            self.statusButton.hidden          = NO;
+            self.additionalOrderButton.hidden = YES;
             if (isComment.intValue == 0) {
                 [self.statusButton setTitle:@"去评价" forState:UIControlStateNormal];
             }else {
@@ -295,17 +343,27 @@
             break;
         case 7:
             if (_dataModel.orderPayRefundStatus.intValue == 1) {
-                self.status.text = @"退款审核";
+                self.status.text                  = @"退款审核";
+                self.statusButton.hidden          = NO;
+                self.additionalOrderButton.hidden = YES;
             }
             if (_dataModel.orderPayRefundStatus.intValue == 2) {
-                self.status.text = @"退款成功";
+                self.status.text                  = @"退款成功";
+                self.statusButton.hidden          = YES;
+                self.additionalOrderButton.hidden = YES;
             }
             if (_dataModel.orderPayRefundStatus.intValue == 3 || _dataModel.orderPayRefundStatus.intValue == 4) {
-                self.status.text = @"退款执行";
+                self.status.text                  = @"退款执行";
+                self.additionalOrderButton.hidden = YES;
+                self.statusButton.hidden          = YES;
             }
             [self.statusButton setTitle:@"取消退款" forState:UIControlStateNormal];
             break;
         case 8:
+            self.status.text                  = @"订单关闭";
+            self.additionalOrderButton.hidden = YES;
+            self.statusButton.hidden          = NO;
+            [self.statusButton setTitle:@"重新预约" forState:UIControlStateNormal];
             break;
             
         default:
@@ -321,6 +379,25 @@
     
     CGSize nameSize = [title boundingRectWithSize:size options:NSStringDrawingTruncatesLastVisibleLine attributes:dict context:nil].size;
     return nameSize;
+}
+//支付价格 -（订单状态）  //订单金额￥%@(已付订金￥50)
+- (void) titleWithNameStatusDetails:(NSString *)str{
+    
+    NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:str];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor]     range:NSMakeRange(0, 4)];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor]       range:NSMakeRange(4, str.length - 13)];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(str.length - 9, 9)];
+    self.orderMoneyTitle.attributedText = hintString;
+}
+
+//文字颜色
+- (void) titleWithName:(NSString *)str {
+    NSString *str1 = [str componentsSeparatedByString:@"￥"][0];
+    NSString *str2 = [str componentsSeparatedByString:@"￥"][1];
+    NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:str];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, str1.length)];
+    [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(str1.length, str2.length + 1)];
+    self.orderMoneyTitle.attributedText = hintString;
 }
 
 @end

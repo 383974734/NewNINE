@@ -132,7 +132,7 @@
         // 未选中
         [item setUnselectedTitleAttributes: @{
                                               NSFontAttributeName: [UIFont systemFontOfSize:10],
-                                              NSForegroundColorAttributeName:SWPUIColorFromRGB(0xafafaf),
+                                              NSForegroundColorAttributeName:[UIColor blackColor],
                                               }];
         // 选中
         [item setSelectedTitleAttributes: @{

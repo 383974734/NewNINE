@@ -27,7 +27,9 @@
 #import "UserModel.h"  
 // ---------------------- model      ----------------------
 
-@interface AccountSettingViewController ()<UITableViewDataSource, UITableViewDelegate>
+@interface AccountSettingViewController ()<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate>{
+    UIImage *imageUser;
+}
 
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
@@ -175,6 +177,28 @@
     [self.exitButton autoSetDimension:ALDimensionHeight toSize:45];
 }
 
+//修改头像接口
+- (void) getUploadAvatarWithData:(NSString *)avatar{
+
+    NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"userinfo/uploadAvatar"];
+    NSArray *array = @[
+                       [NSString stringWithFormat:@"mobile,%@", GetUserDefault(userUid)],//账号
+                       [NSString stringWithFormat:@"avatar,%@", avatar],//头像
+                       ];
+    [SVProgressHUD showWithStatus:DATA_COMMITE];
+    [MainRequestTool mainPOST:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
+        [SVProgressHUD dismiss];
+        NSLog(@"%@", resultObject);
+        if (resultObject != nil) {
+            [self.userMessageTableView reloadData];
+        }else {
+            
+        }
+    } swpResultError:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error, NSString * _Nonnull errorMessage) {
+        NSLog(@"userinfo/uploadAvatar数据错误%@", error);
+    }];
+}
+
 
 #pragma mark UITableView delegete
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
@@ -192,11 +216,14 @@
         UserMessageOneableViewCell *cell = [UserMessageOneableViewCell userMessageOneCellWithTableView:tableView];
         cell.textLabel.font              = [UIFont systemFontOfSize:14];
         cell.userData                    = array[indexPath.row];
+        if (imageUser != nil) {
+            cell.imageUser = imageUser;
+        }
         return cell;
     }
     UserMessageTwoTableViewCell *cell = [UserMessageTwoTableViewCell userMessageTwoCellWithTableView:tableView];
     cell.twoUserData                  = array[indexPath.row];
-    cell.textLabel.font              = [UIFont systemFontOfSize:14];
+    cell.textLabel.font               = [UIFont systemFontOfSize:14];
     return cell;
     
 }
@@ -219,7 +246,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            
+            [self showOkayCancelAlert];
         }
         if (indexPath.row == 1) {
             [self.navigationController pushViewController:[ModifyNameViewController alloc] animated:YES];
@@ -237,6 +264,74 @@
     }
     
 }
+
+- (void)showOkayCancelAlert {
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: nil message: nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    //添加Button
+    [alertController addAction: [UIAlertAction actionWithTitle: @"拍照" style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        //处理点击拍照
+        UIImagePickerController* pickPhoto = [[UIImagePickerController alloc]init];
+        pickPhoto.delegate = self;
+        BOOL support = NO;
+        for(NSNumber* num in [UIImagePickerController availableCaptureModesForCameraDevice:UIImagePickerControllerCameraDeviceRear]){
+            if([num intValue] == UIImagePickerControllerCameraCaptureModePhoto){
+                support = YES;
+                pickPhoto.sourceType = UIImagePickerControllerSourceTypeCamera;
+                pickPhoto.allowsEditing = YES ;
+            }
+        }
+        if(support){
+            [self presentViewController:pickPhoto animated:YES completion:nil];
+        }
+        else{
+            UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"提示" message:@"该设备不支持照相功能" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            [alert show];
+        }
+        
+    }]];
+    [alertController addAction: [UIAlertAction actionWithTitle: @"从相册选取" style: UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        //处理点击从相册选取
+        UIImagePickerController *pick = [[UIImagePickerController alloc]init];
+        pick.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        pick.delegate = self;
+        pick.allowsEditing = YES;
+        //pick.mediaTypes = [NSArray arrayWithObject:(NSString*)kUTTypeImage];
+        [self presentViewController:pick animated:YES completion:nil];
+    }]];
+    [alertController addAction: [UIAlertAction actionWithTitle: @"取消" style: UIAlertActionStyleCancel handler:nil]];
+    
+    [self presentViewController: alertController animated: YES completion: nil];
+}
+
+- (void) imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo: (NSDictionary *) info {
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    UIImage *originalImage, *editedImage, *imageToSave;
+    
+    if ([mediaType isEqualToString:@"public.image"]){
+        
+        editedImage = (UIImage *) [info objectForKey:
+                                   UIImagePickerControllerEditedImage];
+        originalImage = (UIImage *) [info objectForKey:
+                                     UIImagePickerControllerOriginalImage];
+        if (editedImage) {
+            imageToSave = editedImage;
+        } else {
+            imageToSave = originalImage;
+        }
+        
+        imageUser = imageToSave;
+        
+        NSData *data = UIImageJPEGRepresentation(imageToSave, 1);
+        NSString *dataStr = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        //上传照片
+        [self getUploadAvatarWithData:dataStr];
+        
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 #pragma mark 点击事件
 - (void) didButton:(UIButton *)btn {

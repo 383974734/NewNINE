@@ -5,7 +5,7 @@
 //  Created by yinduo-zdy on 16/6/15.
 //  Copyright © 2016年 yinduo-zdy. All rights reserved.
 //
-//  -----------> 我的控制器 --订单
+//  -----------> 我的控制器 --全部订单
 
 #import "OrderViewController.h"
 
@@ -22,6 +22,8 @@
 // ---------------------- controller ----------------------
 #import "MyEvaluationViewController.h"
 #import "PlaceOrderViewController.h"
+#import "MakeAppointmentViewController.h"
+#import "EvaluateViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -289,6 +291,15 @@ static NSString *cellID = @"orderTableViewCellID";
     cell.delegate = self;
     cell.index = indexPath;
     cell.dataModel = model;
+    
+    __weak typeof(self) selfViewController = self;
+    cell.IsAdditionalOrderButton = ^(NSIndexPath *index){
+        OrderViewModel *model = selfViewController.orderArray[index.section];
+        MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
+        viewController.stylistinfoId = model.orderStylistId;
+        viewController.noChoice      = @"2";///** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
+        [self.navigationController pushViewController:viewController animated:YES];
+    };
     return cell;
 }
 
@@ -305,6 +316,7 @@ static NSString *cellID = @"orderTableViewCellID";
     PlaceOrderViewController *viewController = [[PlaceOrderViewController alloc] init];
     viewController.titleString               = @"订单详情";
     viewController.orderViewModel            = model;
+    viewController.deductibleTotalString     = [NSString stringWithFormat:@"%@", model.orderPayMoney];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -320,9 +332,9 @@ static NSString *cellID = @"orderTableViewCellID";
     OrderViewModel *model = self.orderArray[indexPath.section];
     
     if (model.orderStatus.intValue == 7) {
-       return 190 ;
+       return 200 ;
     }else {
-        return 190 + model.OrderBookProducts.count * 30 ;
+        return 200 + model.OrderBookProducts.count * 30 ;
     }
 }
 
@@ -344,18 +356,24 @@ static NSString *cellID = @"orderTableViewCellID";
     self.alerViewView.delegate = self;
     OrderViewModel *model = self.orderArray[indexPath.section];
     if ([title isEqualToString:@"查看评价"]) {
-        NSLog(@"跳页");
+        NSLog(@"跳页 --- 查看评价");
         MyEvaluationViewController *viewController = [[MyEvaluationViewController alloc] init];
         viewController.orderId = [NSString stringWithFormat:@"%@", model.orderOrderId];
         [self.navigationController pushViewController:viewController animated:YES];
         return;
     }
     if ([title isEqualToString:@"去支付"]) {
-        NSLog(@"跳页");
+        NSLog(@"跳页 --- 去支付");
         return;
     }
     if ([title isEqualToString:@"去评价"]) {
-        NSLog(@"跳页");
+        NSLog(@"去评价 ---- 跳页");
+        EvaluateViewController *viewController = [[EvaluateViewController alloc] init];
+        viewController.orderOrderId            = model.orderOrderId;
+        viewController.orderStylistId          = model.orderStylistId;
+        viewController.iconPhotoUrl            = model.orderIconPhotoUrl;
+        viewController.nameStr                 = model.orderName;
+        [self.navigationController pushViewController:viewController animated:YES];
         return;
     }
     if ([title isEqualToString:@"取消退款"]) {
@@ -479,6 +497,7 @@ static NSString *cellID = @"orderTableViewCellID";
         _orderTableView.delegate         = self;
         _orderTableView.dataSource       = self;
         _orderTableView.separatorStyle   = NO;//cell线隐藏
+        _orderTableView.backgroundColor  = SWPColor(248, 248, 248, 1);
         [_orderTableView registerClass:[OrderTableViewCell class] forCellReuseIdentifier:cellID];
         [self settingTableViewRefreshing:_orderTableView target:self headerAction:@selector(headerRereshingData) footerAction:@selector(footerRereshingData)];
         [_orderTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];//隐藏多余的cell
@@ -498,8 +517,8 @@ static NSString *cellID = @"orderTableViewCellID";
         _hTHorizontalSelectionList.delegate   = self;
         _hTHorizontalSelectionList.dataSource = self;
         _hTHorizontalSelectionList.centerAlignButtons = YES;
-        [_hTHorizontalSelectionList setTitleFont:SWP_SYSTEM_FONT_SIZE(18) forState:UIControlStateNormal];
-        [_hTHorizontalSelectionList setTitleFont:SWP_SYSTEM_FONT_SIZE(16) forState:UIControlStateSelected];
+        [_hTHorizontalSelectionList setTitleFont:SWP_SYSTEM_FONT_SIZE(20) forState:UIControlStateNormal];
+        [_hTHorizontalSelectionList setTitleFont:SWP_SYSTEM_FONT_SIZE(18) forState:UIControlStateSelected];
         _hTHorizontalSelectionList.selectionIndicatorColor = [UIColor redColor];
         [_hTHorizontalSelectionList setTitleFont:[UIFont systemFontOfSize:14] forState:UIControlStateNormal];
     }

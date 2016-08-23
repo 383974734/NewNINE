@@ -29,4 +29,7 @@
 /** 选择护理类型默认数据*/
 @property (nonatomic, strong) NSMutableArray *placeOrderArray;
 
+/** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
+@property (nonatomic, copy) NSString *noChoice;
+
 @end

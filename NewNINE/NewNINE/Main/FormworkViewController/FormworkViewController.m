@@ -280,7 +280,7 @@
 //}
 
 
-
+//                http://www.open-open.com/lib/view/open1435284827732.html    //手势
 //                [SVProgressHUD showWithStatus:@"请选择设计师"];// 加载圈
 //                [SVProgressHUD showSuccessWithStatus:@"请选择设计师"];// 对号
 //                [SVProgressHUD setStatus:@"请选择设计师"];// 不显示

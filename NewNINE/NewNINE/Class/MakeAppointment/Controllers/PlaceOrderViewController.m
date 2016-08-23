@@ -45,6 +45,8 @@ static NSString *cellDepositID          = @"cellDepositID";
 @property (nonatomic, strong) UIButton      *nextStepButton;
 /** 合计控件*/
 @property (nonatomic, strong) UILabel       *totalLable;
+/** 追加订单按钮*/
+@property (nonatomic, strong) UIButton      *noChoiceButton;
 
 #pragma mark - Data Propertys
 // ---------------------- 数据模型 ----------------------
@@ -132,11 +134,23 @@ static NSString *cellDepositID          = @"cellDepositID";
  */
 - (void) initData {
     if ([self.titleString isEqualToString:@"订单详情"]) {
-       [self titleWithName:[NSString stringWithFormat:@"%@", self.orderViewModel.orderPayMoney]];
+        if (self.orderViewModel.orderIsDepfund.intValue == 2) {
+            NSString *str = [NSString stringWithFormat:@"%@", self.orderViewModel.orderPayMoney];
+            NSString *string = [NSString stringWithFormat:@"实付金额: 订 ￥%@(已支付)", str];
+            NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:string];
+            [hintString addAttribute:NSForegroundColorAttributeName value:Color(64, 64, 64, 1) range:NSMakeRange(0, 5)];
+            [hintString addAttribute:NSBackgroundColorAttributeName value:[UIColor redColor]   range:NSMakeRange(6, 1)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(5, 3)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor]   range:NSMakeRange(8, string.length - 13)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(string.length - 5, 5)];
+            _totalLable.attributedText = hintString;
+        }else {
+            [self titleWithName:[NSString stringWithFormat:@"%@", self.orderViewModel.orderPayMoney]];
+        }
     }
     
     self.selectedBool = false;
-    [self obtBookIntegralWithData:@"" stylistId:@"" timeId:@"" comboId:@"" productIds:self.productIDString userCouponId:@""];
+    [self obtBookIntegralWithData:@""   stylistId:@"" timeId:@"" comboId:@"" productIds:self.productIDString userCouponId:@""];
     [self bookCalculateActivityFund:@"" userCouponId:@""];
 }
 
@@ -166,6 +180,7 @@ static NSString *cellDepositID          = @"cellDepositID";
     [self.view addSubview:self.placeOrderTableView];
     [self.view addSubview:self.backFooterView];
     [self.backFooterView addSubview:self.nextStepButton];
+    [self.backFooterView addSubview:self.noChoiceButton];
     [self.backFooterView addSubview:self.totalLable];
 }
 
@@ -181,6 +196,9 @@ static NSString *cellDepositID          = @"cellDepositID";
     
     [self.nextStepButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(32, 0, 9, 14) excludingEdge:ALEdgeLeft];
     [self.nextStepButton autoSetDimension:ALDimensionWidth toSize:85];
+    
+    [self.noChoiceButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(32, 0, 9, 110) excludingEdge:ALEdgeLeft];
+    [self.noChoiceButton autoSetDimension:ALDimensionWidth toSize:85];
 }
 
 #pragma mark - 所有控件的点击事件
@@ -190,7 +208,12 @@ static NSString *cellDepositID          = @"cellDepositID";
  *  @param button UIButton
  */
 - (void) didButton:(UIButton *)button {
-    NSLog(@"提交订单");
+    if (button.tag == 0) {//tag == 0提交订单    tag == 1追加订单
+        NSLog(@"提交订单");
+    }else {
+        NSLog(@"追加订单");
+    }
+    
 }
 
 #pragma mark - 接口数据
@@ -198,13 +221,13 @@ static NSString *cellDepositID          = @"cellDepositID";
 - (void) obtBookIntegralWithData:(NSString *)mobile stylistId:(NSString *)stylistId timeId:(NSString *)timeId comboId:(NSString *)comboId productIds:(NSString *)productIds userCouponId:(NSString *)userCouponId {
     NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"book/obtBookIntegral"];
     NSArray *array = @[
-                       [NSString stringWithFormat:@"mobile,%@"   , GetUserDefault(userUid)],//手机号
-                       [NSString stringWithFormat:@"stylistId,%@", [self.makeAppointmentDic objectForKey:@"id"]],//设计师ID
-                       [NSString stringWithFormat:@"timeId,%@"   , GetUserDefault(@"chooseStylistTimesId")],//预约时间ID
-                       [NSString stringWithFormat:@"comboId,%@"   , comboId],//套餐ID
-                       [NSString stringWithFormat:@"productIds,%@", self.productIDString],//产品ID 多个,隔开
+                       [NSString stringWithFormat:@"mobile,%@"      , GetUserDefault(userUid)],//手机号
+                       [NSString stringWithFormat:@"stylistId,%@"   , [self.makeAppointmentDic objectForKey:@"id"] == nil ? @"" :[self.makeAppointmentDic objectForKey:@"id"]],//设计师ID
+                       [NSString stringWithFormat:@"timeId,%@"      , GetUserDefault(@"chooseStylistTimesId")],//预约时间ID
+                       [NSString stringWithFormat:@"comboId,%@"     , comboId],//套餐ID
+                       [NSString stringWithFormat:@"productIds,%@"  , self.productIDString == nil ? @"" : self.productIDString],//产品ID 多个,隔开
                        [NSString stringWithFormat:@"userCouponId,%@", userCouponId],//用户优惠券ID
-                       [NSString stringWithFormat:@"isAddOrder,%@", @"1"],
+                       [NSString stringWithFormat:@"isAddOrder,%@"  , @"1"],
                        ];
     
     [MainRequestTool mainPOST:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
@@ -226,12 +249,12 @@ static NSString *cellDepositID          = @"cellDepositID";
     NSString *url  = [NSString stringWithFormat:@"%@%@", BaseURL, @"book/calculateActivityFund"];
     NSArray *array = @[
                        [NSString stringWithFormat:@"mobile,%@"      , GetUserDefault(userUid)],//手机号
-                       [NSString stringWithFormat:@"stylistId,%@"   , [self.makeAppointmentDic objectForKey:@"id"]],//设计师ID
+                       [NSString stringWithFormat:@"stylistId,%@"   , [self.makeAppointmentDic objectForKey:@"id"] == nil ? @"" : [self.makeAppointmentDic objectForKey:@"id"]],//设计师ID
                        [NSString stringWithFormat:@"timeId,%@"      , GetUserDefault(@"chooseStylistTimesId")],//预约时间ID
                        [NSString stringWithFormat:@"comboId,%@"     , comboId],//套餐ID
-                       [NSString stringWithFormat:@"productIds,%@"  , self.productIDString],//产品ID 多个,隔开
+                       [NSString stringWithFormat:@"productIds,%@"  , self.productIDString == nil ? @"" : self.productIDString],//产品ID 多个,隔开
                        [NSString stringWithFormat:@"userCouponId,%@", userCouponId],//用户优惠券ID
-                       [NSString stringWithFormat:@"fund,%@"        , self.deductibleTotalString],//金额
+                       [NSString stringWithFormat:@"fund,%@"        , self.deductibleTotalString == nil ? @"0" : self.deductibleTotalString],//金额
                        ];
     
     [MainRequestTool mainPOST:url parameters:array isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
@@ -240,7 +263,7 @@ static NSString *cellDepositID          = @"cellDepositID";
             BOOL isSuccess = [[resultObject objectForKey:@"isSuccess"] boolValue];
             if (isSuccess == TRUE) {
                 self.deductibleTotalString = [resultObject objectForKey:@"errors"][0];
-                [self titleWithName:self.deductibleTotalString];
+                [self titleWithNameStatusDetails:self.deductibleTotalString];
                 [self.placeOrderTableView reloadData];
             }
         }else {
@@ -274,7 +297,7 @@ static NSString *cellDepositID          = @"cellDepositID";
  */
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ([self.titleString isEqualToString:@"订单详情"]) {
-        return section == 0 ? self.orderViewModel.OrderBookProducts.count + 2 : section == 3 ? 1 : section == 2 ? self.orderViewModel.orderPayMoney.intValue > 0 ? 1 : 2 : 3;
+        return section == 0 ? self.orderViewModel.OrderBookProducts.count + 2 : section == 3 ? self.orderViewModel.orderIsDepfund.intValue == 2 ? 1 : 0 : section == 2 ? self.orderViewModel.orderPayMoney.intValue > 0 ? 1 : 2 : 3;
     }
     return section == 0 ? self.placeOrderArray.count + 2 : section == 3 ? 1 : 3;
 }
@@ -334,7 +357,7 @@ static NSString *cellDepositID          = @"cellDepositID";
     cell.indexPath = indexPath;
     cell.titleStr = array1[indexPath.row];
     if ([self.titleString isEqualToString:@"订单详情"])  {
-        array2 = @[self.orderViewModel.orderName, self.orderViewModel.orderAppointTimes, [self.orderViewModel.Orderstudio objectForKey:@"names"]];
+        array2 = @[[GetUserDefault(@"getUserinfo") objectForKey:@"userName"], self.orderViewModel.orderAppointTimes, [self.orderViewModel.Orderstudio objectForKey:@"names"]];
     }
     cell.nameStr  = array2[indexPath.row];
     return cell;
@@ -373,7 +396,7 @@ static NSString *cellDepositID          = @"cellDepositID";
     
     if ([self.titleString isEqualToString:@"订单详情"]){
         arrayTitleStr          = self.orderViewModel.orderPayMoney.intValue > 0 ?  @[@"订单金额"] : @[@"积分抵扣", @"订单金额"];
-        arrayNameStr           = self.orderViewModel.orderPayMoney.intValue > 0 ? @[[NSString stringWithFormat:@"￥%@", self.orderViewModel.orderPayMoney]]: @[[NSString stringWithFormat:@"-￥%@", self.orderViewModel.orderIntegralMoney], [NSString stringWithFormat:@"￥%@", self.orderViewModel.orderPayMoney]];
+        arrayNameStr           = self.orderViewModel.orderPayMoney.intValue > 0 ? @[[NSString stringWithFormat:@"￥%@", self.orderViewModel.orderRealMoney]]: @[[NSString stringWithFormat:@"-￥%@", self.orderViewModel.orderIntegralMoney], [NSString stringWithFormat:@"￥%@", self.orderViewModel.orderPayMoney]];
     }else {
         if (indexPath.row      == 0) {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;//箭头
@@ -410,6 +433,12 @@ static NSString *cellDepositID          = @"cellDepositID";
     DepositTableViewCell *cell = [DepositTableViewCell depositCellWithTableView:tableView forCellReuseIdentifier:cellDepositID];
     cell.totalString           = [NSString stringWithFormat:@"%d", self.deductibleTotalString.intValue - 50];
     cell.delegate              = self;
+    if ([self.titleString isEqualToString:@"订单详情"]) {
+        if (self.orderViewModel.orderIsDepfund.intValue == 2) {
+            cell.totalString = [NSString stringWithFormat:@"%ld", self.orderViewModel.orderRealMoney.integerValue - 50];
+            cell.orderIsDepfund = @"2";//2.付过预付定金   2.没有付订金
+        }
+    }
     return cell;
 }
 
@@ -436,6 +465,11 @@ static NSString *cellDepositID          = @"cellDepositID";
     if (indexPath.section == 3) {
         if (!(self.deductibleTotalString.intValue > 0)) {
             return 0;
+        }
+    }
+    if (indexPath.section == 0) {
+        if (indexPath.row != 0) {
+            return 35;
         }
     }
     return 45;
@@ -493,7 +527,9 @@ static NSString *cellDepositID          = @"cellDepositID";
         _placeOrderTableView                 = [[UITableView alloc] initForAutoLayout];
         _placeOrderTableView.delegate        = self;
         _placeOrderTableView.dataSource      = self;
+        _placeOrderTableView.backgroundColor = [UIColor clearColor];//SWPColor(248, 248, 248, 1);
         //        _makeAppointmentTableView.scrollEnabled  = NO; //设置tableview 不能滚动
+        _placeOrderTableView.separatorStyle  = NO;//cell线隐藏
         [_placeOrderTableView registerClass:[ClassificationTableViewCell class] forCellReuseIdentifier:cellClassificationID];
         [_placeOrderTableView registerClass:[InformationTableViewCell class] forCellReuseIdentifier:cellInformationID];
         [_placeOrderTableView registerClass:[PaymentTableViewCell class] forCellReuseIdentifier:cellPaymentID];
@@ -516,6 +552,7 @@ static NSString *cellDepositID          = @"cellDepositID";
     if (!_nextStepButton) {
         _nextStepButton = [[UIButton alloc] initForAutoLayout];
         _nextStepButton.layer.borderWidth = 1;
+        _nextStepButton.tag               = 0;
         _nextStepButton.layer.borderColor = [UIColor redColor].CGColor;
         [_nextStepButton.layer setCornerRadius:2];
         [_nextStepButton setTitle:@"提交订单" forState:UIControlStateNormal];
@@ -525,6 +562,20 @@ static NSString *cellDepositID          = @"cellDepositID";
     return _nextStepButton;
 }
 
+- (UIButton *) noChoiceButton {
+    if (!_noChoiceButton) {
+        _noChoiceButton = [[UIButton alloc] initForAutoLayout];
+        _noChoiceButton.layer.borderWidth = 1;
+        _noChoiceButton.tag               = 1;
+        _noChoiceButton.layer.borderColor = [UIColor redColor].CGColor;
+        [_noChoiceButton.layer setCornerRadius:2];
+        [_noChoiceButton setTitle:@"追加订单" forState:UIControlStateNormal];
+        [_noChoiceButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [_noChoiceButton addTarget:self action:@selector(didButton:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _noChoiceButton;
+}
+
 - (UILabel *) totalLable {
     if (!_totalLable) {
         _totalLable = [[UILabel alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 150, 22)];
@@ -532,7 +583,114 @@ static NSString *cellDepositID          = @"cellDepositID";
     }
     return _totalLable;
 }
+//状态  1未支付、2支付处理中、 3支付成功、 4预约成功、 5已消费、 6订单完成、 7退款过程中、 8？
+- (void) setOrderViewModel:(OrderViewModel *)orderViewModel {
+    _orderViewModel = orderViewModel;
+    
+    switch (_orderViewModel.orderStatus.intValue) {
+        case 1:
+            self.noChoiceButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+            [self.noChoiceButton setTitle:@"取消订单" forState:UIControlStateNormal];
+            [self.noChoiceButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            [self.nextStepButton setTitle:@"去支付" forState:UIControlStateNormal];
+            break;
+        case 3:
+            [self.nextStepButton setTitle:@"退款" forState:UIControlStateNormal];
+            break;
+        case 4:
+            [self.nextStepButton setTitle:@"退款" forState:UIControlStateNormal];
+            break;
+        case 5:
+            [self.nextStepButton setTitle:@"确认完成" forState:UIControlStateNormal];
+            break;
+        case 6:
+            self.noChoiceButton.hidden = YES;
+            [self.nextStepButton setTitle:@"查看评价" forState:UIControlStateNormal];
+            break;
+        case 7:
+            if (_orderViewModel.orderPayRefundStatus.intValue == 1) {
+                [self.nextStepButton setTitle:@"取消退款" forState:UIControlStateNormal];
+            }else {
+                self.nextStepButton.hidden = YES;
+            }
+            self.noChoiceButton.hidden = YES;
+            break;
+        case 8:
+            self.noChoiceButton.hidden = YES;
+            [self.nextStepButton setTitle:@"重新预约" forState:UIControlStateNormal];
+            break;
+        default:
+            break;
+    }
+    
+}
 
+//支付价格 -（订单状态）
+- (void) titleWithNameStatusDetails:(NSString *)str {
+
+    switch (self.orderViewModel.orderStatus.intValue) {
+        case 1:
+            [self titleWithName:str];
+            return;
+            break;
+        case 3:
+        {
+            str = [NSString stringWithFormat:@"%@(已支付)", str];
+        }
+            break;
+        case 4:
+        {
+            str = [NSString stringWithFormat:@"%@(预约成功)", str];
+            NSString *string = [NSString stringWithFormat:@"实付金额:￥%@", str];
+            NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:string];
+            [hintString addAttribute:NSForegroundColorAttributeName value:Color(64, 64, 64, 1) range:NSMakeRange(0, 5)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(5, string.length - 11)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(string.length - 6, 6)];
+            _totalLable.attributedText = hintString;
+        }
+            break;
+        case 6:
+        {
+            str = [NSString stringWithFormat:@"%@(已完成)", str];
+        }
+            break;
+        case 7:
+        {
+            if (_orderViewModel.orderPayRefundStatus.intValue != 1) {
+                str = [NSString stringWithFormat:@"%@(退款成功)", str];
+            }else {
+                str = [NSString stringWithFormat:@"%@(退款审核)", str];
+            }
+            
+            NSString *string = [NSString stringWithFormat:@"实付金额:￥%@", str];
+            NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:string];
+            [hintString addAttribute:NSForegroundColorAttributeName value:Color(64, 64, 64, 1) range:NSMakeRange(0, 5)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(5, string.length - 11)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(string.length - 6, 6)];
+            _totalLable.attributedText = hintString;
+            return;
+        }
+            break;
+        case 8:
+        {
+            str = [NSString stringWithFormat:@"%@(订单关闭)", str];
+            NSString *string = [NSString stringWithFormat:@"实付金额:￥%@", str];
+            NSMutableAttributedString *hintString = [[NSMutableAttributedString alloc] initWithString:string];
+            [hintString addAttribute:NSForegroundColorAttributeName value:Color(64, 64, 64, 1) range:NSMakeRange(0, 5)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(5, string.length - 11)];
+            [hintString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(string.length - 6, 6)];
+            _totalLable.attributedText = hintString;
+        }
+            break;
+        default:
+            break;
+    }
+    
+    if ([self.titleString isEqualToString:@"提交订单"]) {
+        self.noChoiceButton.hidden = YES;
+    }
+    
+}
 
 //文字颜色
 - (void) titleWithName:(NSString *)str {

@@ -14,6 +14,8 @@
 
 @property (nonatomic, copy) UserModel *userData;
 
+@property (nonatomic, strong) UIImage *imageUser;
+
 /**
  *  快速  初始化 一个自定义cell（汽配城列表cell）
  *

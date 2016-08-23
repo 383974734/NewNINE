@@ -371,9 +371,10 @@
 - (UITextField *) passwd {
     if (!_passwd) {
         _passwd = [[UITextField alloc] initForAutoLayout];
-        _passwd.placeholder     = @"请输入登录密码";
-        _passwd.backgroundColor = [UIColor whiteColor];
-        _passwd.clearButtonMode = UITextFieldViewModeWhileEditing;
+        _passwd.placeholder       = @"请输入登录密码";
+        _passwd.backgroundColor   = [UIColor whiteColor];
+        _passwd.clearButtonMode   = UITextFieldViewModeWhileEditing;
+        _passwd.secureTextEntry   = YES;
     }
     return _passwd;
 }

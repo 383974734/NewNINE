@@ -20,7 +20,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 #import "ScreenViewController.h"
 #import "MakeAppointmentViewController.h"
 #import "ModalViewController.h"
-#import "DesignerModalViewController.h"
+#import "LoginViewController.h"
 // ---------------------- controller ----------------------
 
 // ---------------------- view       ----------------------
@@ -35,7 +35,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 #import "StylistLevlsModel.h"
 // ---------------------- model      ----------------------
 
-@interface DesignerViewController ()<UITableViewDelegate, UITableViewDataSource, DesignerHeadViewDelegate, ClassificationViewDelegate, DesignerViewTableViewCellDelegate> {
+@interface DesignerViewController ()<UITableViewDelegate, UITableViewDataSource, DesignerHeadViewDelegate, ClassificationViewDelegate, DesignerViewTableViewCellDelegate, UITextFieldDelegate> {
     CLGeocoder *_geocoder;
 }
 
@@ -48,18 +48,25 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 @property (nonatomic, strong) UITableView           *designerTableView;
 /** 智能排序view*/
 @property (nonatomic, strong) ClassificationView    *classification;
+/** 搜索文字输入框*/
+@property (nonatomic, strong) UITextField           *searchTextField;
+/** 搜索 取消按钮*/
+@property (nonatomic, strong) UIButton              *cancelSearchButton;
+/** 搜索 图片*/
+@property (nonatomic, strong) UIImageView           *searchImageView;
+/** 搜索 背景*/
+@property (nonatomic, strong) UIView                *backView;
 
 #pragma mark - Data Propertys
 // ---------------------- 数据模型 ----------------------
 /** 美发师数据*/
 @property (nonatomic, strong) NSMutableArray *dataArray;
-
-/** 城市数据*/
-@property (nonatomic, strong) NSArray *cityArray;
-
 /** 职务数据*/
 @property (nonatomic, strong) NSMutableArray *stylistLevlsArray;
-
+/** 城市数据*/
+@property (nonatomic, strong) NSArray *cityArray;
+/** 设计师控制器 全部区域 数据*/
+@property (nonatomic, strong) NSArray *wholeRegionAray;
 
 
 @property (nonatomic, copy) NSString *page;
@@ -117,13 +124,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cancelOrderCallBack:) name:@"cancelOrderCallBack" object:nil];
     
     _geocoder=[[CLGeocoder alloc]init];
-    
-    if (GetUserDefault(@"stylistLevlsStr") != nil) {
-        self.levlId = GetUserDefault(@"stylistLevlsStr");//设计师职位ID
-        [self getStylistinfosWithData];
-    }
-    
-    
+
     self.map = [[RMMapLocation alloc] init];
     [RMMapLocation getGps:^(double lattitude, double longitude) {
         NSLog(@"%f", lattitude);
@@ -135,6 +136,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
         self.designerHeadView.strCity = GetUserDefault(@"hotCity");
         self.cityName = GetUserDefault(@"hotCity");
         [self getStylistinfosWithData];
+        [self getStudiosWithData:self.cityName];
     }
 }
 
@@ -189,8 +191,6 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
     self.locationCityStr = @"哈尔滨";
     SetUserDefault(self.locationCityStr, @"cityName");
     self.studioId   = @"";
-    NSArray *array = @[@"智能排序",@"美单最多",@"价格最高",@"价格最低"];
-    self.classification.designerArray = array;
     [self getHotCitysWithData];
     [self getStudiosWithData:@"哈尔滨"];
     [self getStylistinfosWithData];
@@ -213,14 +213,17 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
  *  设置导航控制器
  */
 - (void) settingNav {
-    
-//    [self settingNavigationBarTitle:@"设计师" textColor:nil titleFontSize:NAVIGATION_TITLE_FONT_SIZE];
+
 }
 
 /**
  *  添加控件
  */
 - (void) addUI {
+    [self.view addSubview:self.backView];
+    [self.view addSubview:self.searchImageView];
+    [self.view addSubview:self.searchTextField];
+    [self.view addSubview:self.cancelSearchButton];
     [self.view addSubview:self.designerHeadView];
     [self.view addSubview:self.designerTableView];
     [self.view addSubview:self.classification];
@@ -247,7 +250,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
  *  设置控件的自动布局
  */
 - (void) settingUIAutoLayout {
-    [self.designerTableView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(100, 0, 5, 0)];
+//    [self.designerTableView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(100, 0, 5, 0)];
     [self.classification autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(100, 0, 0, 0) ];
 }
 
@@ -260,26 +263,26 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
     NSMutableArray *muArray = [NSMutableArray array];
     
     [muArray addObject:[NSString stringWithFormat:@"page,%@", [NSString stringWithFormat:@"%d", index]]];
-    if (![self.values isEqualToString:@""]) {//价格排序 值 DESC ASC
-        [muArray addObject:[NSString stringWithFormat:@"values,%@", self.values]];
+    if (![self.values       isEqualToString:@""]) {//价格排序 值 DESC ASC
+        [muArray addObject:[NSString stringWithFormat:@"values,%@",      self.values]];
     }
-    if (![self.bought isEqualToString:@""]) {//美单排序 值 DESC ASC
-        [muArray addObject:[NSString stringWithFormat:@"bought,%@", self.bought]];
+    if (![self.bought       isEqualToString:@""]) {//美单排序 值 DESC ASC
+        [muArray addObject:[NSString stringWithFormat:@"bought,%@",      self.bought]];
     }
-    if (![self.starLevel isEqualToString:@""]) {//好评优先 值 DESC
-        [muArray addObject:[NSString stringWithFormat:@"starLevel,%@", self.starLevel]];
+    if (![self.starLevel    isEqualToString:@""]) {//好评优先 值 DESC
+        [muArray addObject:[NSString stringWithFormat:@"starLevel,%@",   self.starLevel]];
     }
-    if (![self.levlId isEqualToString:@""]) {//设计师职位ID
-        [muArray addObject:[NSString stringWithFormat:@"palevlIdge,%@", self.levlId]];
+    if (![self.levlId       isEqualToString:@""]) {//设计师职位ID
+        [muArray addObject:[NSString stringWithFormat:@"levlId,%@",      self.levlId]];
     }
-    if (![self.stylistName isEqualToString:@""]) {//设计师职位ID
+    if (![self.stylistName  isEqualToString:@""]) {//设计师名称
         [muArray addObject:[NSString stringWithFormat:@"stylistName,%@", self.stylistName]];
     }
-    if (![self.cityName isEqualToString:@""]) {//城市名称
-        [muArray addObject:[NSString stringWithFormat:@"cityName,%@", self.cityName]];
+    if (![self.cityName     isEqualToString:@""]) {//城市名称
+        [muArray addObject:[NSString stringWithFormat:@"cityName,%@",    self.cityName]];
     }
-    if (![self.studioId isEqualToString:@""]) {//门店ID
-        [muArray addObject:[NSString stringWithFormat:@"studioId,%@", self.studioId]];
+    if (![self.studioId     isEqualToString:@""]) {//门店ID
+        [muArray addObject:[NSString stringWithFormat:@"studioId,%@",    self.studioId]];
     }
 //    [SVProgressHUD showWithStatus:DATA_GET_DATA];
     [MainRequestTool mainGET:url parameters:muArray isEncrypt:YES swpResultSuccess:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull resultObject) {
@@ -317,7 +320,8 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
         [SVProgressHUD dismiss];
         NSLog(@"%@", resultObject);
         if (resultObject != nil) {
-            
+            self.wholeRegionAray                = resultObject;
+            self.classification.wholeRegionAray = self.wholeRegionAray;
             
         }else {
             NSLog(@"stylistinfo/getStudios%@没有数据", url);
@@ -373,6 +377,37 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
         [array addObject:model];
     }
     return array;
+}
+
+#pragma mark - UITextField delegate
+/**
+ *  UITextField 软键盘上return 按钮点击
+ *
+ *  @param textField
+ *
+ *  @return
+ */
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+
+    return YES;
+}
+
+/**
+ *  UITextField 已经结束编辑
+ *
+ *  @param textField
+ */
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    self.stylistName = textField.text;
+    [self getStylistinfosWithData];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+
 }
 
 #pragma mark UITableView DataSource
@@ -449,43 +484,78 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 - (void)designerHeadView:(DesignerHeadView *)designerHeadView buttonWithTag:(UIButton *)btn {
     if (btn.tag == 4) {
         NSLog(@"搜索");
+        [UIView animateWithDuration:0.3 animations:^{
+            self.designerTableView.frame = CGRectMake(0, 150, SCREEN_WIDTH, SCREEN_HEIGHT - 155);
+        }];
+        self.searchTextField.text = @"";
     }
     if (btn.tag == 0) {
         NSLog(@"区域");
-        DesignerModalViewController * modalView = [[DesignerModalViewController alloc]init];
-//        self.definesPresentationContext = YES; //self is presenting view controller
-        modalView.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.4];
-        modalView.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        [self presentViewController:modalView animated:YES completion:nil];
-
+        self.classification.hidden = NO;
+        _classification.designerStr = @"设计师区域";
+        self.classification.wholeRegionAray = self.wholeRegionAray;
         
-//        ModalViewController * modalView = [[ModalViewController alloc]init];
-//        [self presentViewController:modalView animated:YES completion:nil];
+        
+        __weak typeof(self) selfViewController = self;
+        self.classification.buttonTouchUpInside = ^(){
+            selfViewController.classification.hidden = YES;
+            [selfViewController.rdv_tabBarController setTabBarHidden:!selfViewController.classification.hidden animated:YES];
+        };
+        self.classification.classificationID = ^(NSString *strId, NSString *strName){
+            selfViewController.studioId = [NSString stringWithFormat:@"%@", strId];
+            [selfViewController getStylistinfosWithData];
+            selfViewController.designerHeadView.followStr = strName;
+            selfViewController.classification.hidden = YES;
+            [selfViewController.rdv_tabBarController setTabBarHidden:!selfViewController.classification.hidden animated:YES];
+        };
+        
+        
+        [self.rdv_tabBarController setTabBarHidden:!self.classification.hidden animated:YES];
     }
     if (btn.tag == 1) {
         NSLog(@"排序");
-        self.classification.hidden = !self.classification.hidden;
+        self.classification.hidden = NO;
+        NSArray *array = @[@"智能排序",@"美单最多",@"价格最高",@"价格最低"];
+        _classification.designerStr = @"设计师排序";
+        self.classification.designerArray = array;
+        [self.rdv_tabBarController setTabBarHidden:!self.classification.hidden animated:YES];
     }
     if (btn.tag == 2) {
         NSLog(@"筛选");
         ScreenViewController *screenView = [[ScreenViewController alloc] init];
-        if (self.stylistLevlsArray > 0) {
-            screenView.arrayData = self.stylistLevlsArray;
+        self.classification.hidden       = YES;
+        if (self.stylistLevlsArray       > 0) {
+            screenView.arrayData         = self.stylistLevlsArray;
+            screenView.stylistLevlsStrID = self.levlId;
+            screenView.screenViewID = ^(NSString *strID){
+                self.levlId = [NSString stringWithFormat:@"%@", strID];
+                [self getStylistinfosWithData];
+                self.designerHeadView.classificationStr = self.levlId;
+            };
+            
             [self.navigationController pushViewController:screenView animated:YES];
         }
     }
     if (btn.tag == 3) {
         NSLog(@"城市");
-        CityViewController *cityView = [[CityViewController alloc] init];
+        CityViewController *cityView   = [[CityViewController alloc] init];
         if (self.cityArray > 0) {
-            cityView.hotCityStr      = GetUserDefault(@"hotCity");
-            cityView.locationCityStr = self.locationCityStr;
-            cityView.cityArray       = self.cityArray;
+            cityView.hotCityStr        = GetUserDefault(@"hotCity");
+            cityView.locationCityStr   = self.locationCityStr;
+            cityView.cityArray         = self.cityArray;
+            self.classification.hidden = YES;
             [self.navigationController pushViewController:cityView animated:YES];
         }
     }
 }
 
+/**
+ *  点击发型分类出点的下拉列表点击代理
+ *
+ *  @param classificationView ClassificationView
+ *  @param classification     点击后相应的文字
+ *  @param classificationID   di
+ */
 - (void) classificationView:(ClassificationView *)classificationView didSelectRowWithClassification:(NSString *)classification classificationID:(NSString *)classificationID{
     index = 1 ;
     self.bought = @"";
@@ -502,7 +572,12 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
     if ([classification isEqualToString:@"价格最低"]) {
         self.values = @"ASC";
     }
-    self.classification.hidden = YES;
+    
+    if (classification != nil) {
+        self.designerHeadView.timeStr = classification;
+    }
+    self .classification.hidden = YES;
+    [self.rdv_tabBarController setTabBarHidden:!self.classification.hidden animated:YES];
     [self getStylistinfosWithData];
 }
 
@@ -514,6 +589,11 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
  *  @param stylistinfoId             预约的设计师id
  */
 - (void)designerViewTableViewCell:(DesignerViewTableViewCell *)designerViewTableViewCell stylistinfoId:(NSString *)stylistinfoId {
+    
+    if (!([GetUserDefault(userUid) length] > 0)){
+        [self goToLogin];
+        return;
+    }
     if (self.stateStr.intValue == 1) {
         if ([self.delegate respondsToSelector:@selector(designerViewController:stylistinfoId:)]) {
             [self.delegate designerViewController:self stylistinfoId:stylistinfoId];
@@ -522,8 +602,23 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
     }else {
         MakeAppointmentViewController *viewController = [[MakeAppointmentViewController alloc] init];
         viewController.stylistinfoId = stylistinfoId;
+        viewController.noChoice      = @"1";///** 是否是追加订单  1 否  2 是*/ //   1.不是追加订单    2.追加订单
         [self.navigationController pushViewController:viewController animated:YES];
     }
+}
+
+- (void)goToLogin {
+    LoginViewController *loginView = [[LoginViewController alloc] init];
+    [self.navigationController pushViewController:loginView animated:YES];
+}
+
+#pragma mark - 控件点击事件
+- (void)cancelSearchButtonClick:(UIButton *)btn {
+    [UIView animateWithDuration:0.3 animations:^{
+        self.designerTableView.frame = CGRectMake(0, 100, SCREEN_WIDTH, SCREEN_HEIGHT - 155);
+    }];
+    self.stylistName = @"";
+    [self getStylistinfosWithData];
 }
 
 #pragma mark - 下拉刷新 -- 上拉加载
@@ -556,7 +651,7 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
 
 - (UITableView *) designerTableView {
     if (!_designerTableView) {
-        _designerTableView              = [[UITableView alloc] initForAutoLayout];
+        _designerTableView              = [[UITableView alloc] initWithFrame:CGRectMake(0, 100, SCREEN_WIDTH, SCREEN_HEIGHT - 105)];
         _designerTableView.delegate     = self;
         _designerTableView.dataSource   = self;
         [_designerTableView registerClass:[DesignerViewTableViewCell class] forCellReuseIdentifier:cellID];
@@ -573,18 +668,47 @@ static NSString *cellID = @"DesignerViewTableViewCellID";
         _classification             = [[ClassificationView alloc] initForAutoLayout];
         _classification.hidden      = YES;
         _classification.delegate    = self;
-        _classification.designerStr = @"设计师";
     }
     return _classification;
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (UIView *) backView {
+    if (!_backView) {
+        _backView = [[UIView alloc] initWithFrame:CGRectMake(0, 105, SCREEN_WIDTH, 50)];
+        _backView.backgroundColor = [UIColor whiteColor];
+    }
+    return _backView;
 }
-*/
+
+- (UITextField *)searchTextField {
+    if (!_searchTextField) {
+        _searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(45, 110, SCREEN_WIDTH - 150, 35)];
+        _searchTextField.font            = [UIFont systemFontOfSize:14];
+        _searchTextField.placeholder     = @"请输入设计师姓名";
+        _searchTextField.delegate        = self;
+    }
+    return _searchTextField;
+}
+
+- (UIButton *) cancelSearchButton {
+    if (!_cancelSearchButton) {
+        _cancelSearchButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 60, 110, 40, 40)];
+        [_cancelSearchButton setTitleColor:UIColorFromRGB(0x9a9a9a) forState:UIControlStateNormal];
+        [_cancelSearchButton setTitle:@"取消" forState:UIControlStateNormal];
+        _cancelSearchButton.titleLabel.font = [UIFont systemFontOfSize:17];
+        [_cancelSearchButton addTarget:self action:@selector(cancelSearchButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cancelSearchButton;
+}
+
+- (UIImageView *) searchImageView {
+    if (!_searchImageView) {
+        _searchImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30, 110, SCREEN_WIDTH - 110, 35)];
+        _searchImageView.image  = [UIImage imageNamed:@"searchbar123"];
+        // contentMode：default is UIViewContentModeScaleToFill，要设置为UIViewContentModeCenter：使图片居中，防止图片填充整个imageView
+        _searchImageView.contentMode = UIViewContentModeCenter;
+    }
+    return _searchImageView;
+}
 
 @end

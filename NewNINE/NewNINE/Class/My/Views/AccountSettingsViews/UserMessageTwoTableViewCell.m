@@ -48,6 +48,7 @@
         cell = [[UserMessageTwoTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     cell.accessoryType       = UITableViewCellAccessoryDisclosureIndicator;
+    cell.selectionStyle      = UITableViewCellSelectionStyleNone;
     return cell;
 }
 

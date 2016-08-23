@@ -28,6 +28,14 @@
 
 @interface OrderTableViewCell : UITableViewCell
 
+/** 追加订单点击传值 ------ >  数据*/
+@property (nonatomic, copy) void(^IsAdditionalOrderButton)(NSIndexPath *index);
+/** 追加订单点击传值 ------ >  数据*/
+
+
+
+
+
 @property (nonatomic, assign) id<OrderTableViewCellDelegate> delegate;
 
 @property (nonatomic, strong)OrderViewModel *dataModel;

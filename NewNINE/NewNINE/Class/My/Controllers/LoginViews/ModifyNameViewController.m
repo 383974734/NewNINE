@@ -22,7 +22,7 @@
 #import "UserModel.h"
 // ---------------------- model      ----------------------
 
-@interface ModifyNameViewController ()
+@interface ModifyNameViewController ()<UITextFieldDelegate>
 
 #pragma mark - UI   Propertys
 // ---------------------- UI 控件 ----------------------
@@ -111,6 +111,7 @@
  *  数据初始化
  */
 - (void) initData {
+    [self.nameTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     UserModel *user = [UserModel shareInstance];
     self.nameTextField.text = user.userName;
 }
@@ -131,8 +132,6 @@
  *  设置导航控制器
  */
 - (void) settingNav {
-    
-//    [self settingNavigationBarTitle:@"模板" textColor:nil titleFontSize:NAVIGATION_TITLE_FONT_SIZE];
     [self setNavWithLeftBarButton:NO title:@"修改昵称"];
 }
 
@@ -219,7 +218,31 @@
     
 }
 
+#pragma mark - UITextField delegate
+/**
+ *  UITextField 软键盘上return 按钮点击
+ *
+ *  @param textField
+ *
+ *  @return
+ */
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
 
+
+- (void)textFieldDidChange:(UITextField *)textField
+{
+    
+    if (self.nameTextField.markedTextRange == nil) {//http://blog.csdn.net/smy2536327507/article/details/50778653
+        NSLog(@"%@", self.nameTextField.text);
+        if (self.nameTextField.text.length > 9) {
+            self.nameTextField.text = [self.nameTextField.text substringToIndex:9];
+        }
+    }
+}
 
 #pragma mark - 所有控件的点击事件
 /**
@@ -232,10 +255,7 @@
         [SVProgressHUD showInfoWithStatus:@"昵称不能为空"];
         return;
     }
-    if (self.nameTextField.text.length > 9) {
-        [SVProgressHUD showInfoWithStatus:@"昵称格式输入错误"];
-        return;
-    }
+    
     [self getEditUserNameWithData:self.nameTextField.text];
 }
 
@@ -253,6 +273,7 @@
     if (!_nameTextField) {
         _nameTextField                  = [[UITextField alloc] initForAutoLayout];
         _nameTextField.placeholder      = @"请输入昵称";
+        _nameTextField.delegate         = self;
         _nameTextField.clearButtonMode  = UITextFieldViewModeWhileEditing;
     }
     return _nameTextField;

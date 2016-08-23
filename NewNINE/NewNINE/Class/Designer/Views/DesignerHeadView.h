@@ -26,7 +26,14 @@
 
 @interface DesignerHeadView : UIView
 
+/** 当前选择的城市 */
 @property (nonatomic, copy) NSString *strCity;
+/** 当前选择的全部区域str */
+@property (nonatomic, copy) NSString *followStr;
+/** 当前选择的排序str */
+@property (nonatomic, copy) NSString *timeStr;
+/** 当前选择的筛选str */
+@property (nonatomic, copy) NSString *classificationStr;
 
 @property (nonatomic ,assign)id<DesignerHeadViewDelegate> delegate;
 
